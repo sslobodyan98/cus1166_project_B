@@ -8,6 +8,10 @@ verify_ssl = true
 [packages]
 pytest = "*"
 flask = "*"
+flask-sqlalchemy = "*"
+flask-bootstrap4 = "*"
+flask-wtf = "*"
+flask-wtforms = "*"
 
 [requires]
 python_version = "3.6"

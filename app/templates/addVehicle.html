@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Add Vehicle</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.make.label }}<br>
+            {{ form.make(size=32) }}
+            {% for error in form.make.errors %}
+            <span style="color: rebeccapurple;">[{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.model.label }}<br>
+            {{ form.model(size=32) }}
+            {% for error in form.model.errors %}
+            <span style="color: rebeccapurple;">[{{ error }}</span>
+            {% endfor %}
+        </p>
+{#        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>#}
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
