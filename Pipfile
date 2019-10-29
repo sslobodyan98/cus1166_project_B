@@ -12,6 +12,7 @@ flask-sqlalchemy = "*"
 flask-bootstrap4 = "*"
 flask-wtf = "*"
 flask-wtforms = "*"
+pipenv = "*"
 
 [requires]
 python_version = "3.6"

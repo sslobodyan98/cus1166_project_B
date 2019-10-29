@@ -4,14 +4,14 @@
     <div>
             Application:
             <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('login') }}">Login</a>
+            <!--<a href="{{ url_for('login') }}">Login</a>-->
             <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
     </div>
 
-    <h1>Hi, {{ user.user_name }}!</h1>
+    <h1>Hi, {{ current_user.user }}!</h1>
         {% for car in cars %}
         <div>
-            <p>{{ car.owner.user_name }} owns: <b> {{ car.car }} </b> </p>
+            <p>{{ car.owner.user }} owns: <b> {{ car.make }} </b> </p>
         </div>
         {% endfor %}
 {% endblock %}

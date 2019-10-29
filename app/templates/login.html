@@ -4,17 +4,18 @@
     <div>
             <a href="{{ url_for('index') }}">Home</a>
             <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+            <!--<a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
     </div>
 
     <h1>Sign In</h1>
+    <p>New Users  <a href="{{ url_for('register') }}">Sign Up Here!</a></p>
 
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
-            {% for error in form.username.errors %}
+            {{ form.user.label }}<br>
+            {{ form.user(size=32) }}
+            {% for error in form.user.errors %}
             <span style="color: rebeccapurple;">[{{ error }}</span>
             {% endfor %}
         </p>
