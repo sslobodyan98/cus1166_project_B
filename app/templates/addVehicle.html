@@ -10,6 +10,14 @@
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
+            {{ form.car_vin.label }}<br>
+            {{ form.car_vin(size=32) }}
+            {% for error in form.car_vin.errors %}
+            <span style="color: rebeccapurple;">[{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        <p>
             {{ form.make.label }}<br>
             {{ form.make(size=32) }}
             {% for error in form.make.errors %}
@@ -20,6 +28,22 @@
             {{ form.model.label }}<br>
             {{ form.model(size=32) }}
             {% for error in form.model.errors %}
+            <span style="color: rebeccapurple;">[{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.color.label }}<br>
+            {{ form.color(size=32) }}
+            {% for error in form.color.errors %}
+            <span style="color: rebeccapurple;">[{{ error }}</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.mileage.label }}<br>
+            {{ form.mileage(size=32) }}
+            {% for error in form.mileage.errors %}
             <span style="color: rebeccapurple;">[{{ error }}</span>
             {% endfor %}
         </p>

@@ -16,14 +16,14 @@
             {{ form.user.label }}<br>
             {{ form.user(size=32) }}
             {% for error in form.user.errors %}
-            <span style="color: rebeccapurple;">[{{ error }}</span>
+            <span style="color: #663399;">[{{ error }}</span>
             {% endfor %}
         </p>
         <p>
             {{ form.password.label }}<br>
             {{ form.password(size=32) }}
             {% for error in form.password.errors %}
-            <span style="color: rebeccapurple;">[{{ error }}</span>
+            <span style="color: #663399;">[{{ error }}</span>
             {% endfor %}
         </p>
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>

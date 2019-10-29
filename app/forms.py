@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm, Form
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 from app.models import User
 
@@ -12,8 +12,11 @@ class LoginForm(FlaskForm):
 
 
 class AddVehicle(Form):
+    car_vin = StringField('VIN Number', validators=[DataRequired])
     make = StringField('Make', validators=[DataRequired()])
     model = StringField('Model', validators=[DataRequired()])
+    color = StringField('Color', validators=[DataRequired])
+    mileage = IntegerField('Mileage', validators=[DataRequired])
     submit = SubmitField('Submit')
 
 
