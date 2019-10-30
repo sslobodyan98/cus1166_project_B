@@ -24,6 +24,14 @@ class AddVehicle(FlaskForm):
         if car_vin is not None:
             raise ValidationError('Please use a different VIN')
 
+class EditVehicleForm(FlaskForm):
+    car_vin = StringField('VIN Number', validators=[DataRequired()])
+    make = StringField('Make', validators=[DataRequired()])
+    model = StringField('Model', validators=[DataRequired()])
+    color = StringField('Color', validators=[DataRequired()])
+    mileage = IntegerField('Mileage', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
 
 class RegistrationForm(FlaskForm):
     user = StringField('User', validators=[DataRequired()])

@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, AddVehicle, RegistrationForm
+from app.forms import LoginForm, AddVehicle, RegistrationForm, EditVehicleForm
 from app.models import User, Car
 
 
@@ -63,6 +63,17 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
+@app.route('/user/<user>')
+@login_required
+def user(user):
+    user = User.query.filter_by(user=user).first_or_404()
+    cars = [
+        {'owner': user, 'car_vin': 'Test post #1'},
+        {'owner': user, 'car_vin': 'Test post #2'}
+    ]
+    return render_template('user.html', user=user, cars=cars)
+
+
 @app.route('/addVehicle', methods=['GET', 'POST'])
 def RegisterCar():
     form = AddVehicle()
@@ -73,58 +84,28 @@ def RegisterCar():
         db.session.commit()
         flash('You have added a car to use in our App!')
         return redirect(url_for('login'))
-    # if form.validate_on_submit():
-    #     flash('Vehicle addition requested for car_vin {}, make {}, model {}, color {},
-    #     mileage {}'.format(
-    #         form.car_vin.data, form.make.data, form.model.data, form.color.data
-    #         form.mileage.data))
-    #     return redirect(url_for('index'))
     return render_template('addVehicle.html', title='Add Vehicle', form=form)
 
 
+@app.route('/editVehicle', methods=['GET', 'POST']) #trying to edit current users
+@login_required                                     #vehicle info
+def editVehicle():
+    form = EditVehicleForm()
+    if form.validate_on_submit():
+        current_user.car_vin = form.car_vin.data
+        current_user.make = form.make.data
+        current_user.model = form.model.data
+        current_user.color = form.color.data
+        current_user.mileage = form.mileage.data
+        db.session.commit()
+        flash('Your vehicle changes have been saved')
+        return redirect(url_for('editVehicle'))
+    elif request.method == 'GET':
+        form.car_vin.data = current_user.car_vin
+        form.make.data = current_user.make
+        form.model.data = current_user.model
+        form.color.data = current_user.color
+        form.mileage.data = current_user.mileage
+    return render_template('editVehicle.html', title='Edit Vehicle',
+                           form=form)
 
-
-
-
-
-
-
-
-
-
-# @app.route('/new_Car', methods=['GET', 'POST'])
-# def new_Car():
-#     """
-#     ADD NEW CAR
-#
-#     """
-#     form = AddVehicle(request.form)
-#
-#
-#     if request.method == 'POST' and form.validate():
-#
-#         car = AddVehicle()
-#         save_changes(car, form, new=True)
-#         flash('Car added successfully!')
-#         return redirect('/')
-#
-#     return render_template('addVehicle.html', form=form)
-#
-# def save_changes(car, form, new=False):
-#     """
-#     Save changes to db
-#     """
-#     #Get data from form and assign it to correct attributes
-#     #of the SQLAlchemy table object
-#     car_vin = CarVin()
-#     car_vin.info = form.car_vin.data
-#
-#     car.car_vin = car_vin
-#     car.make = form.make.data
-#     car.model = form.model.data
-#     car.color = form.color.data
-#     car.mileage = form.mileage.data
-#
-#     if new:
-#         db_session.add(car)
-#         db_session.commit()
