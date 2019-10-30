@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm, Form
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
-from app.models import User
+from app.models import User, Car
 
 
 class LoginForm(FlaskForm):
@@ -11,18 +11,23 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
-class AddVehicle(Form):
-    car_vin = StringField('VIN Number', validators=[DataRequired])
+class AddVehicle(FlaskForm):
+    car_vin = StringField('VIN Number', validators=[DataRequired()])
     make = StringField('Make', validators=[DataRequired()])
     model = StringField('Model', validators=[DataRequired()])
-    color = StringField('Color', validators=[DataRequired])
-    mileage = IntegerField('Mileage', validators=[DataRequired])
+    color = StringField('Color', validators=[DataRequired()])
+    mileage = IntegerField('Mileage', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+    def validate_car_vin(self, car_vin):
+        car_vin = Car.query.filter_by(car_vin=car_vin.data).first()
+        if car_vin is not None:
+            raise ValidationError('Please use a different VIN')
 
 
 class RegistrationForm(FlaskForm):
     user = StringField('User', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired])
+    email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
