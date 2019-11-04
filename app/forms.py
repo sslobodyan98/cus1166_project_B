@@ -1,6 +1,6 @@
-from flask_wtf import FlaskForm, Form
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DateField,TimeField
+from wtforms.validators import DataRequired, ValidationError, EqualTo
 from app.models import User, Car
 
 
@@ -23,6 +23,7 @@ class AddVehicle(FlaskForm):
         car_vin = Car.query.filter_by(car_vin=car_vin.data).first()
         if car_vin is not None:
             raise ValidationError('Please use a different VIN')
+
 
 class EditVehicleForm(FlaskForm):
     car_vin = StringField('VIN Number', validators=[DataRequired()])
@@ -49,3 +50,16 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email')
+
+
+class AddAvailability(FlaskForm):
+    date = DateField('Date (year-month-date)', validators=[DataRequired()])
+    start_time = TimeField('Start Time', validators=[DataRequired()])
+    end_time = TimeField('End Time', validators=[DataRequired()])
+    submit = SubmitField('Add')
+
+
+class ScheduleAppointment(FlaskForm):
+    date = DateField('Date (year-month-date)', validators=[DataRequired()])
+    start_time = TimeField('Start Time', validators=[DataRequired()])
+    submit = SubmitField('Schedule')

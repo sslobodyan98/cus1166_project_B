@@ -2,8 +2,9 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, AddVehicle, RegistrationForm, EditVehicleForm
-from app.models import User, Car
+from app.forms import LoginForm, AddVehicle, RegistrationForm, EditVehicleForm, AddAvailability, ScheduleAppointment
+from app.models import User, Car, Availability, Schedules
+
 
 
 @app.route('/')
@@ -87,8 +88,8 @@ def RegisterCar():
     return render_template('addVehicle.html', title='Add Vehicle', form=form)
 
 
-@app.route('/editVehicle', methods=['GET', 'POST']) #trying to edit current users
-@login_required                                     #vehicle info
+@app.route('/editVehicle', methods=['GET', 'POST'])  # trying to edit current users
+@login_required  # vehicle info
 def editVehicle():
     form = EditVehicleForm()
     if form.validate_on_submit():
@@ -109,3 +110,27 @@ def editVehicle():
     return render_template('editVehicle.html', title='Edit Vehicle',
                            form=form)
 
+
+@app.route('/addAvailability', methods=['GET', 'POST'])
+def addAvailability():
+    form = AddAvailability()
+    if form.validate_on_submit():
+        time = Availability(user=current_user.user, date=form.date.data, start_time=form.start_time.data,
+                            end_time=form.end_time.data)
+        db.session.add(time)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('schedule.html', title='Add availability', form=form)
+
+
+@app.route('/ScheduleAppointment', methods=['GET', 'POST'])
+def Schedule():
+    form = ScheduleAppointment()
+    if form.validate_on_submit():
+
+        meeting = Schedules(user=current_user.user, appointment_date=form.date.data,appointment_time=form.start_time.data)
+        db.session.add(meeting)
+        db.session.commit()
+        return redirect(url_for('login'))
+
+    return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form)
