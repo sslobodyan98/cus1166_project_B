@@ -52,8 +52,10 @@ class Availability(db.Model):
 class Schedules(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(20), index=True)
+    mechanic = db.Column(db.String, index=True)
     appointment_date = db.Column(db.Date, index=True)
     appointment_time = db.Column(db.Time, index=True)
 
     def __repr__(self):
-        return '<Schedule {}'.format(self.user.appointment_date.appointment_time)
+        return '<Schedules {}'.format(self.user.mechanic.appointment_date.appointment_time)
+

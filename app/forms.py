@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DateField,TimeField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DateField, TimeField, \
+    SelectField
 from wtforms.validators import DataRequired, ValidationError, EqualTo
 from app.models import User, Car
 
@@ -54,12 +55,19 @@ class RegistrationForm(FlaskForm):
 
 class AddAvailability(FlaskForm):
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
-    start_time = TimeField('Start Time', validators=[DataRequired()])
-    end_time = TimeField('End Time', validators=[DataRequired()])
+    start_time = TimeField('Start Time',validators=[DataRequired()])
+    end_time= TimeField('End Time',validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
 class ScheduleAppointment(FlaskForm):
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
-    start_time = TimeField('Start Time', validators=[DataRequired()])
-    submit = SubmitField('Schedule')
+
+    start_time = TimeField('Start Time',validators=[DataRequired()])
+    # Mechanics=User.query.all()
+    # for x in Mechanics:
+    #     value=(x.user,x.user)
+    mechanic = SelectField('Mechanics',
+                           choices=[("John Doe", "John"), ("Dug Smith", "Dug"), ("Walter Green", "Walter")],
+                           validators=[DataRequired()])
+    submit = SubmitField('Add')

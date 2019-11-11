@@ -13,9 +13,15 @@
     </div>
 
     <h1>Hi, {{ current_user.user }}!</h1>
-        {% for car in cars %}
+        {% for x in cars %}
         <div>
-            <p>{{ car.owner.user }} owns: <b> {{ car.make }} </b> </p>
+            <p>{{ current_user.user }} owns: <b> {{ x.model }} </b> </p>
         </div>
         {% endfor %}
+        {% for x in appointments %}
+        <div>
+            <p>{{ current_user.user }} has an appointment on: <b> {{ x.appointment_date}}</b> at <b>{{x.appointment_time}}</b> with <b>{{x.mechanic}} </b> </p>
+        </div>
+        {% endfor %}
+
 {% endblock %}

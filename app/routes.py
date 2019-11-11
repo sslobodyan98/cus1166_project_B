@@ -6,22 +6,13 @@ from app.forms import LoginForm, AddVehicle, RegistrationForm, EditVehicleForm, 
 from app.models import User, Car, Availability, Schedules
 
 
-
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
-    cars = [
-        {
-            'owner': {'user': 'John'},
-            'car': 'Testing Car String'
-        },
-        {
-            'owner': {'user': 'Doe'},
-            'car': 'Testing Car String2'
-        }
-    ]
-    return render_template('index.html', title='Home', cars=cars)
+    cars=Car.query.all()
+    appointments=Schedules.query.all()
+    return render_template('index.html', title='Home', cars=cars,appointments=appointments)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -119,18 +110,27 @@ def addAvailability():
                             end_time=form.end_time.data)
         db.session.add(time)
         db.session.commit()
-        return redirect(url_for('login'))
-    return render_template('schedule.html', title='Add availability', form=form)
+        return redirect(url_for('index'))
+    return render_template('Mechanic_AvaialablityForm.html', title='Add availability', form=form)
 
 
 @app.route('/ScheduleAppointment', methods=['GET', 'POST'])
 def Schedule():
     form = ScheduleAppointment()
-    if form.validate_on_submit():
 
-        meeting = Schedules(user=current_user.user, appointment_date=form.date.data,appointment_time=form.start_time.data)
+    if form.validate_on_submit():
+        Scheduled = Schedules.query.all()
+        Availabilitys = Availability.query.all()
+        for x in Scheduled:
+            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and x.mechanic == form.mechanic.data:
+                return redirect(url_for('Schedule'))
+        for i in Availabilitys:
+            if(i.date == form.date.data and (form.start_time.data < i.start_time or form.start_time.data > i.end_time)):
+                return redirect(url_for('Schedule'))
+
+        meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data,appointment_date=form.date.data,
+                                                    appointment_time=form.start_time.data)
         db.session.add(meeting)
         db.session.commit()
-        return redirect(url_for('login'))
-
+        return redirect(url_for('index'))
     return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form)

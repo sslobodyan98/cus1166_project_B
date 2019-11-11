@@ -5,9 +5,9 @@
     <a href="{{ url_for('index') }}">Home</a>
     <a href="{{ url_for('login') }}">Login</a>
     <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
-    <a href="{{url_for('addAvailability')}}"> Add Availability</a>
 </div>
 <h1>Schedule Appointment!</h1>
+<h6>If you are not redirected to the home page your appointment has not been made and that time has been take or the mechanic is not available.<b> *Please try again with a differnet mechanic or time*</b></h6>
 <form action="" method="post">
     {{ form.hidden_tag() }}
     <p>
@@ -20,8 +20,18 @@
 
     <p>
         {{ form.start_time.label }}<br>
+        <h6>The time is in a 24 hour clock</h6>
         {{ form.start_time(size=10) }}
         {% for error in form.start_time.errors %}
+        <span style="color: rebeccapurple;">[{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.mechanic.label }}<br>
+        <h6>The time is in a 24 hour clock</h6>
+        {{ form.mechanic(size=10) }}
+        {% for error in form.mechanic.errors %}
         <span style="color: rebeccapurple;">[{{ error }}</span>
         {% endfor %}
     </p>
