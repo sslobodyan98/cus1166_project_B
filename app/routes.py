@@ -1,9 +1,15 @@
+'''
+Created route for Oil Change Form
+
+Taking mileage/update_miles out of Edit Vehicle, will be done in Oil Change
+'''
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, AddVehicle, RegistrationForm, EditVehicleForm
+from app.forms import LoginForm, AddVehicle, RegistrationForm, EditVehicleForm, OilChangeForm
 from app.models import User, Car
+from app.miles_utils import oil_change_calculation
 
 
 @app.route('/')
@@ -96,7 +102,6 @@ def editVehicle():
         current_user.make = form.make.data
         current_user.model = form.model.data
         current_user.color = form.color.data
-        current_user.mileage = form.mileage.data
         db.session.commit()
         flash('Your vehicle changes have been saved')
         return redirect(url_for('editVehicle'))
@@ -105,7 +110,25 @@ def editVehicle():
         form.make.data = current_user.make
         form.model.data = current_user.model
         form.color.data = current_user.color
-        form.mileage.data = current_user.mileage
     return render_template('editVehicle.html', title='Edit Vehicle',
                            form=form)
+
+@app.route('/oil_change', methods=['GET', 'POST'])
+@login_required
+def OilChange():
+    form = OilChangeForm()
+    if form.validate_on_submit(): #if submit button is pressed
+
+        miles_until_next_oil_change, oil_change_required = oil_change_calculation()
+
+        if oil_change_required: #if oil_change_required is True
+            flash('Miles left until your next oil change: ' + miles_until_next_oil_change + ', you need an oil change.')
+        elif not oil_change_required: #if oil_change_required is False
+            flash('Miles left until your next oil change: ' + miles_until_next_oil_change
+                  + ', you do not need an oil change.')
+
+        return redirect(url_for('oil_change'))
+    return render_template('oil_change.html', title='Oil Change', form=form)
+    #render vs redirect?
+
 

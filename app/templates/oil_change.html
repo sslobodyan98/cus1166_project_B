@@ -1,0 +1,15 @@
+<!--
+Displaying oil change info for make, model
+-->
+{% extends "base.html" %}
+{% block content %}
+    <div>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+        <a href="{{ url_for('editVehicle') }}">Edit Vehicle</a>
+        <a href="{{ url_for('OilChange') }}">Oil Change</a>
+    </div>
+
+    <h1>Oil Change for {{ current_user.cars.make }} {{ current_user.cars.model }}</h1>
+{% endblock %}
