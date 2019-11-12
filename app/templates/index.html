@@ -1,3 +1,8 @@
+<!--
+Adding appNotifications to index
+-->
+
+
 {% extends "base.html" %}
 
 {% block content %}
@@ -7,6 +12,7 @@
             <!--<a href="{{ url_for('login') }}">Login</a>-->
             <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
             <a href="{{ url_for('editVehicle')}}">Edit Vehicle</a>
+            <a href="{{url_for('appNotification')}}">Appointment Notifications</a>
             <a href="{{url_for('logout')}}">Logout</a>
     </div>
 

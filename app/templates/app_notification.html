@@ -1,0 +1,17 @@
+<!--
+Displaying info written in forms
+for in-app notification
+-->
+
+{% extends "base.html" %}
+{% block content %}
+    <div>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+        <a href="{{ url_for('editVehicle')}}">Edit Vehicle</a>
+        <a href="{{url_for('appNotification')}}">Appointment Notifications</a>
+    </div>
+
+    <h1>Upcoming appointments: </h1>
+{% endblock %}

@@ -1,9 +1,12 @@
+#adding appointment_date feild to Car table
+
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(UserMixin, db.Model):
+    print(db.Model)
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
@@ -32,6 +35,7 @@ class Car(db.Model):
     model = db.Column(db.String(120), index=True)
     color = db.Column(db.String(64), index=True)
     mileage = db.Column(db.Integer, index=True)
+    appointment_date = db.Column(db.datetime) #adding appointment_date
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
