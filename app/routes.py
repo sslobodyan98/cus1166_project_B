@@ -70,7 +70,7 @@ def user(user):
 def RegisterCar():
     form = AddVehicle()
     if form.validate_on_submit():
-        car = Car(car_vin=form.car_vin.data, make=form.make.data, model=form.model.data,
+        car = Car(user=current_user.user,car_vin=form.car_vin.data, make=form.make.data, model=form.model.data,
                   color=form.color.data, mileage=form.mileage.data)
         db.session.add(car)
         db.session.commit()
