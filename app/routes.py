@@ -134,3 +134,11 @@ def Schedule():
         db.session.commit()
         return redirect(url_for('index'))
     return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form)
+
+
+@app.route('/DisplayAvailability', methods=['GET', 'POST'])
+def DisplayAvailabilities():
+    Availabilities = Availability.query.all()
+    ScheduledAppointments = Schedules.query.all()
+    return render_template('DisplayMechanicAvailability.html',
+                           Availabilities=Availabilities,ScheduledAppointments=ScheduledAppointments)
