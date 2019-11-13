@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Hi Mechanics, {{ current_user.user }}!</h1>
+        {% for car in cars %}
+        <div>
+            <p>{{ car.owner.user }} owns: <b> {{ car.make }} </b> </p>
+        </div>
+        {% endfor %}
+{% endblock %}

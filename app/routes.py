@@ -2,8 +2,9 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, AddVehicle, RegistrationForm, EditVehicleForm
+from app.forms import LoginForm, AddVehicle, RegistrationForm
 from app.models import User, Car
+from sqlalchemy import or_
 
 
 @app.route('/')
@@ -23,22 +24,30 @@ def index():
     return render_template('index.html', title='Home', cars=cars)
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/login', methods=['GET', 'POST'])  # Route so that when Role=Mechanic it render
+def login():                                   # mechanicDashboard
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(user=form.user.data).first()
+        user = User.query.filter_by(user=form.user.data, role=form.role.data).first()
+        #role = User.query.filter_by(role=form.role.data).first()
+
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
+        # if role is None or not user.get_role(form.role.data):
+            # flash('Incorrect role')
+            # return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
+
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
-        return redirect(next_page)
-        return redirect(url_for('index'))
+            return redirect(next_page)
+        else:
+            return render_template('mechanicDashboard.html', form=form)
+
     return render_template('login.html', title='Sign In', form=form)
 
 
@@ -54,7 +63,7 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(user=form.user.data, email=form.email.data)
+        user = User(user=form.user.data, email=form.email.data, role=form.role.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -64,7 +73,6 @@ def register():
 
 
 @app.route('/user/<user>')
-@login_required
 def user(user):
     user = User.query.filter_by(user=user).first_or_404()
     cars = [
@@ -85,27 +93,3 @@ def RegisterCar():
         flash('You have added a car to use in our App!')
         return redirect(url_for('login'))
     return render_template('addVehicle.html', title='Add Vehicle', form=form)
-
-
-@app.route('/editVehicle', methods=['GET', 'POST']) #trying to edit current users
-@login_required                                     #vehicle info
-def editVehicle():
-    form = EditVehicleForm()
-    if form.validate_on_submit():
-        current_user.car_vin = form.car_vin.data
-        current_user.make = form.make.data
-        current_user.model = form.model.data
-        current_user.color = form.color.data
-        current_user.mileage = form.mileage.data
-        db.session.commit()
-        flash('Your vehicle changes have been saved')
-        return redirect(url_for('editVehicle'))
-    elif request.method == 'GET':
-        form.car_vin.data = current_user.car_vin
-        form.make.data = current_user.make
-        form.model.data = current_user.model
-        form.color.data = current_user.color
-        form.mileage.data = current_user.mileage
-    return render_template('editVehicle.html', title='Edit Vehicle',
-                           form=form)
-

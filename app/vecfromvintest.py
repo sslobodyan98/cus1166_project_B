@@ -1,4 +1,4 @@
-from vininfo import *
+from app.vininfo import *
 
 def main():
 	vin = 'SHSRD78816U437443'
