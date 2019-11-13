@@ -23,7 +23,7 @@
 	* Use-case: Book an appointment
      	* Description: Users will be able to book an appointment based on the mechanics availability
      	* Actor: Regular User
-     	* Assigned to : Blessy
+     	* Assigned to : Sarah Guthrie
      	* Refs: use-case_doc, issue (http://link_to_github_issue_item)
 
 * ID:007:
@@ -45,4 +45,11 @@
      	* Description: Either send a message to a mechanic via email or text. For reference look into using Twilio and its API.
      	* Actor: Regular User
     	* Assigned to : Marry Kelly
+     	* Refs: use-case_doc, issue (http://link_to_github_issue_item)
+	
+* ID:010: 
+	* Use-case: Edit an appointment
+     	* Description: Users will be able to edit an appointment 
+     	* Actor: Regular User
+     	* Assigned to : Blessy Varghese
      	* Refs: use-case_doc, issue (http://link_to_github_issue_item)
