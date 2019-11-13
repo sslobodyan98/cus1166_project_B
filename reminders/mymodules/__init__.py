@@ -14,3 +14,4 @@ def create_app(object_name):
     db.init_app(app)
     event.listen(Reminder, 'after_insert', on_reminder_save)
     â€¦
+ 

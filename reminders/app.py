@@ -25,6 +25,7 @@ mail = Mail (app)
 #Specifying the recipents
 
 
+
 @app.route ('/')
 def index():
     msg = Message('Oil Change Reminder Notification', recipients=['goped35282@hideemail.net'])
