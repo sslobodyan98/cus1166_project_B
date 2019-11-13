@@ -10,9 +10,9 @@ from app.models import User, Car, Availability, Schedules
 @app.route('/index')
 @login_required
 def index():
-    cars=Car.query.all()
-    appointments=Schedules.query.all()
-    return render_template('index.html', title='Home', cars=cars,appointments=appointments)
+    cars = Car.query.all()
+    appointments = Schedules.query.all()
+    return render_template('index.html', title='Home', cars=cars, appointments=appointments)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -70,7 +70,7 @@ def user(user):
 def RegisterCar():
     form = AddVehicle()
     if form.validate_on_submit():
-        car = Car(user=current_user.user,car_vin=form.car_vin.data, make=form.make.data, model=form.model.data,
+        car = Car(user=current_user.user, car_vin=form.car_vin.data, make=form.make.data, model=form.model.data,
                   color=form.color.data, mileage=form.mileage.data)
         db.session.add(car)
         db.session.commit()
@@ -125,11 +125,11 @@ def Schedule():
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and x.mechanic == form.mechanic.data:
                 return redirect(url_for('Schedule'))
         for i in Availabilitys:
-            if(i.date == form.date.data and (form.start_time.data < i.start_time or form.start_time.data > i.end_time)):
+            if i.date == form.date.data and (form.start_time.data < i.start_time or form.start_time.data > i.end_time):
                 return redirect(url_for('Schedule'))
 
-        meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data,appointment_date=form.date.data,
-                                                    appointment_time=form.start_time.data)
+        meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
+                            appointment_time=form.start_time.data)
         db.session.add(meeting)
         db.session.commit()
         return redirect(url_for('index'))
