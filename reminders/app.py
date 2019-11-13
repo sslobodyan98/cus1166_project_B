@@ -18,6 +18,8 @@ app.config['MAIL_MAX_EMAILS'] = None
 #app.config['MAIL_SUPPRESS_SEND'] = False
 app.config['MAIL_ASCII_ATTATCHMENTS'] = False
 
+from app.views import app
+app.run(debug=True)
 
 mail = Mail (app)
 #Specifying the recipents
@@ -41,7 +43,7 @@ def bulk():
                 {'Mike', 'Mike@example.com'}]
         #flask connection ( listing the group of users I have)
         #Back to max emails | email put the list of users or make it read from the database
-        msg = Message('Notification Reminder', recipients = [user ['email']])
+        msg = Message('Notification Reminder', recipients = [users ['email']])
         msg.body= 'Hey There! this is a reminder of your upcoming notification'
         conn.send(msg)
 
