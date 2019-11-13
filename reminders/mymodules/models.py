@@ -11,3 +11,4 @@ class Reminder(db.Model):
 
     def __repr__(self):
         return "<Reminder '{}'>".format(self.text[:20])
+  

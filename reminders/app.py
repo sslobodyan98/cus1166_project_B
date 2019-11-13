@@ -19,7 +19,6 @@ app.config['MAIL_MAX_EMAILS'] = None
 app.config['MAIL_ASCII_ATTATCHMENTS'] = False
 
 
-
 mail = Mail (app)
 #Specifying the recipents
 
