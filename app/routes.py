@@ -119,7 +119,7 @@ def OilChange():
     form = OilChangeForm()
     if form.validate_on_submit(): #if submit button is pressed
 
-        miles_until_next_oil_change, oil_change_required = oil_change_calculation()
+        miles_until_next_oil_change , oil_change_required = oil_change_calculation()
 
         if oil_change_required: #if oil_change_required is True
             flash('Miles left until your next oil change: ' + miles_until_next_oil_change + ', you need an oil change.')
@@ -130,5 +130,3 @@ def OilChange():
         return redirect(url_for('oil_change'))
     return render_template('oil_change.html', title='Oil Change', form=form)
     #render vs redirect?
-
-
