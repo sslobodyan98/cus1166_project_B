@@ -53,3 +53,11 @@
      	* Actor: Regular User
      	* Assigned to : Blessy Varghese
      	* Refs: use-case_doc, issue (http://link_to_github_issue_item)
+	
+* ID:011: 
+	* Use-case: Get VIN info
+     	* Description: Create a module to be used by the system to retreive information about a car, given a VIN number.
+     	* Actor: None/System
+     	* Assigned to : Brendan
+     	* Refs: use-case_doc, issue (http://link_to_github_issue_item)
+
