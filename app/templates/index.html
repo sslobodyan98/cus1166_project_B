@@ -21,9 +21,11 @@
             {% endif %}
         {% endfor %}
         {% for x in appointments %}
+            {%if current_user.user == x.user%}
         <div>
             <p>{{ current_user.user }} has an appointment on: <b> {{ x.appointment_date}}</b> at <b>{{x.appointment_time}}</b> with <b>{{x.mechanic}} </b> <a href="{{url_for('editAppointment')}}">Edit Appointment</a></p>
         </div>
+            {%endif%}
         {% endfor %}
 
 {% endblock %}
