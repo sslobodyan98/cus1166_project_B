@@ -1,9 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
+
 from app import app, db
-from app.forms import LoginForm, AddVehicle, RegistrationForm, EditVehicleForm, AddAvailability, ScheduleAppointment, \
-    EditAppointmentForm
+from app.forms import LoginForm, AddVehicle, RegistrationForm, EditVehicleForm, AddAvailability, ScheduleAppointment, EditAppointmentForm
 from app.models import User, Car, Availability, Schedules
 
 
@@ -142,8 +142,13 @@ def Schedule():
 def editAppointment():
     form = EditAppointmentForm()
     if form.validate_on_submit():
-        meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
-                            appointment_time=form.start_time.data)
-        db.session.add(meeting)
-        db.session.commit()
+        appointmentsMade = Schedules.query.all()
+        for x in appointmentsMade:
+            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data:
+                return redirect(url_for('editAppointments'))
+            elif current_user.user == x.user and form.date.data == x.appointment_date:
+                x.appointment_time = form.start_time.data
+                db.session.commit()
+                return redirect(url_for('index'))
+
     return render_template('EditApt.html', title='Edit Appointment', form=form)
