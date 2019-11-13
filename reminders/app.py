@@ -2,7 +2,6 @@ from flask import Flask
 from flask_mail import Mail, Message
 import smtplib
 
-
 app = Flask(__name__)
 
 app.config['DEBUG'] = True
