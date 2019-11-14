@@ -9,7 +9,9 @@ from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, EditVehicleForm, OilChangeForm
 from app.models import User, Car
-from app.miles_utils import oil_change_calculation
+from app.modules import miles_utils
+
+from app.modules.miles_utils import oil_change_calculation
 
 
 @app.route('/')
@@ -119,13 +121,17 @@ def OilChange():
     form = OilChangeForm()
     if form.validate_on_submit(): #if submit button is pressed
 
-        miles_until_next_oil_change , oil_change_required = oil_change_calculation()
+#<<<<<<< Updated upstream
+        #miles_until_next_oil_change , oil_change_required = oil_change_calculation()
+#=======
+        #miles_until_next_oil_change, oil_change_required = oil_change_calculation()
+#>>>>>>> Stashed changes
 
-        if oil_change_required: #if oil_change_required is True
-            flash('Miles left until your next oil change: ' + miles_until_next_oil_change + ', you need an oil change.')
-        elif not oil_change_required: #if oil_change_required is False
-            flash('Miles left until your next oil change: ' + miles_until_next_oil_change
-                  + ', you do not need an oil change.')
+        if miles_utils.oil_change_required: #if oil_change_required is True
+            flash('You need an oil change.\n' + 'Miles left until your next oil change: ' + miles_utils.miles_until_next_oil_change)
+
+        elif not miles_utils.oil_change_required: #if oil_change_required is False
+            flash('You do not need an oil change.\n' + 'Miles left until your next oil change: ' + miles_utils.miles_until_next_oil_change)
 
         return redirect(url_for('oil_change'))
     return render_template('oil_change.html', title='Oil Change', form=form)

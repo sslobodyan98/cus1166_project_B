@@ -56,5 +56,8 @@ class RegistrationForm(FlaskForm):
 class OilChangeForm(FlaskForm):
     mileage = IntegerField('Mileage at last oil change: ', validators=[DataRequired()]) #input field #default value = Car.mileage
     update_miles = IntegerField('Current Mileage: ') #input field #default value = Car.update_miles
-    miles_until_next_oil_change = IntegerField('Miles Until Next Oil Change') #data not required, will be filled in #make view only field
+
+    #get rid of miles_until_next_oil_change in forms, becasue user does not enter/edit
+    #miles_until_next_oil_change is displayed in routes
+
     submit = SubmitField('Submit') #bind this to the method that calculates miles_until_next_oil_change

@@ -27,11 +27,13 @@ def oil_change_calculation():
 
     if difference < 5000:
         miles_until_next_oil_change = difference
-        return miles_until_next_oil_change, False #oil_change_required = FALSE
+        oil_change_required = False
+        return miles_until_next_oil_change, oil_change_required #oil_change_required = FALSE
 
     elif difference >= 5000:
-        miles_until_next_oil_change = 0
-        return miles_until_next_oil_change, True #oil_change_required = TRUE
+        miles_until_next_oil_change = 5000 #not = 0
+        oil_change_required = True
+        return miles_until_next_oil_change, oil_change_required #oil_change_required = TRUE
 
     #adding update_miles to mileage AFTER USER DOES OIL CHANGE:
     mileage = Car.mileage + Car.update_miles

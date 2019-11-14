@@ -1,6 +1,9 @@
 <!--
 Displaying oil change info for make, model
-Error: How to let user choose which car to view/edit oil change info?
+
+How to let user choose which car to view/edit oil change info?
+
+Got rid of miles_until_next_oil change because it will be flashed in routes
 -->
 {% extends "base.html" %}
 {% block content %}
@@ -12,7 +15,7 @@ Error: How to let user choose which car to view/edit oil change info?
         <a href="{{ url_for('OilChange') }}">Oil Change</a>
     </div>
 
-    <h1>Oil Change for {{ current_user.cars.make }} {{ current_user.cars.model }}</h1>
+    <h1>Oil Change for {{ current_user.cars.car.make }} {{ current_user.cars.car.model }}</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
@@ -30,11 +33,5 @@ Error: How to let user choose which car to view/edit oil change info?
             {% endfor %}
         </p>
         <p>{{ form.submit() }}</p>
-        <p>
-            {{ form.miles_until_next_oil_change.label }}<br>
-            {{ form.miles_until_next_oil_change(size=32) }}<br>
-            {% for error in form.miles_until_next_oil_change.errors %}
-            <span style="color: #ff0000;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
 {% endblock %}
+        
