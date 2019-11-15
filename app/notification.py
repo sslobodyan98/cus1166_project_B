@@ -22,7 +22,7 @@ app.config['MAIL_MAX_EMAILS'] = None
 app.config['MAIL_ASCII_ATTATCHMENTS'] = False
 
 mail = Mail (app)
-  
+
 def check_and_notify (Car):
 
     difference = Car.update_miles - Car.mileage
@@ -35,7 +35,7 @@ def check_and_notify (Car):
         miles_until_next_oil_change = 0
         return miles_until_next_oil_change, True ,
 
-        msg = Message('Oil Change Reminder Notification', recipients=['goped35282@hideemail.net'])
+        msg = Message('Oil Change Reminder Notification', recipients=['car.maintenance.app1166@gmail.com'])
         msg.body = ' Hi, Its time for you to schedule your next car maintenance appointment as your oil needs to be changed!'
         msg.html = '<b>This is a Reminder Notification </b>'
 
