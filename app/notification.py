@@ -2,7 +2,7 @@ from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import Car
-from flask import Flask
+from flask import Flask, app
 from flask_mail import Mail, Message
 import smtplib
 

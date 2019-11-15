@@ -1,18 +1,21 @@
-<!--
-Displaying oil change info for make, model
-Error: How to let user choose which car to view/edit oil change info?
--->
+
 {% extends "base.html" %}
 {% block content %}
     <div>
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('login') }}">Login</a>
         <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
-        <a href="{{ url_for('editVehicle') }}">Edit Vehicle</a>
         <a href="{{ url_for('OilChange') }}">Oil Change</a>
     </div>
+{% for x in cars %}
+    {%if current_user.user == x.user%}
+        <h1>Oil Change for {{ x.make }} {{ x.model }}</h1>
+    {% endif %}
+{% endfor %}
 
-    <h1>Oil Change for {{ current_user.cars.make }} {{ current_user.cars.model }}</h1>
+
+
+
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
@@ -30,11 +33,5 @@ Error: How to let user choose which car to view/edit oil change info?
             {% endfor %}
         </p>
         <p>{{ form.submit() }}</p>
-        <p>
-            {{ form.miles_until_next_oil_change.label }}<br>
-            {{ form.miles_until_next_oil_change(size=32) }}<br>
-            {% for error in form.miles_until_next_oil_change.errors %}
-            <span style="color: #ff0000;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
+    </form>
 {% endblock %}

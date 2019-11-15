@@ -1,12 +1,3 @@
-<<<<<<< HEAD:app/models.py
-
-=======
-'''
-Added 'update_miles' to Car table
-
-***we only have one record of a car, we need a collection of cars (table) with all cars***
-'''
->>>>>>> origin/MaryG_mileage/oil_change:app/modules/models.py
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
