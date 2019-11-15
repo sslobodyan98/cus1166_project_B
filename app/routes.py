@@ -1,13 +1,31 @@
 
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
+from flask_mail import Mail, Message
 from werkzeug.urls import url_parse
 
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm,  OilChangeForm,AddAvailability, ScheduleAppointment, EditAppointmentForm
 from app.models import User, Car,Availability, Schedules
-from app.miles_utils import *
 
+import smtplib
+
+
+app.config['DEBUG'] = True
+app.config['TESTING'] = False
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+#app.config['MAIL_DEBUG'] = True
+app.config['MAIL_USERNAME'] = 'mariyamelshrieff@gmail.com'
+app.config['MAIL_PASSWORD']= 'AD22703259me'
+app.config['MAIL_DEFAULT_SENDER'] = 'mariyamelshrieff@gmail.com'
+app.config['MAIL_MAX_EMAILS'] = None
+#app.config['MAIL_SUPPRESS_SEND'] = False
+app.config['MAIL_ASCII_ATTATCHMENTS'] = False
+
+mail = Mail (app)
 
 
 @app.route('/')
@@ -154,14 +172,17 @@ def OilChange():
 
     if form.validate_on_submit(): #if submit button is pressed
         difference = form.update_miles.data - form.mileage.data
-        print(difference)
         if difference < 5000:
             miles_until_next=5000-form.update_miles.data
             return ("You dont need one")
         elif difference >= 5000:
+            msg = Message('Oil Change Reminder Notification', recipients=[current_user.email])
+
+            msg.body = 'Hi, Its time for you to schedule your next car maintenance appointment as your oil needs to be changed!'
+            msg.html = '<b>This is a Reminder Notification </b>'
+            mail.send(msg)
+
             return ("You need an oil change!")
-
-
 
         return redirect(url_for('oil_change'))
     return render_template('oil_change.html', title='Oil Change', form=form, cars=cars)
