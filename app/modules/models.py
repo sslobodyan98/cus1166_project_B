@@ -1,7 +1,5 @@
 '''
 Added 'update_miles' to Car table
-
-***we only have one record of a car, we need a collection of cars (table) with all cars***
 '''
 from app import db, login
 from flask_login import UserMixin
