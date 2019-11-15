@@ -1,0 +1,40 @@
+<!--
+Displaying oil change info for make, model
+Error: How to let user choose which car to view/edit oil change info?
+-->
+{% extends "base.html" %}
+{% block content %}
+    <div>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+        <a href="{{ url_for('editVehicle') }}">Edit Vehicle</a>
+        <a href="{{ url_for('OilChange') }}">Oil Change</a>
+    </div>
+
+    <h1>Oil Change for {{ current_user.cars.make }} {{ current_user.cars.model }}</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.mileage.label }}<br>
+            {{ form.mileage(size=32) }}<br>
+            {% for error in form.mileage.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.update_miles.label }}<br>
+            {{ form.update_miles(size=32) }}<br>
+            {% for error in form.update_miles.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+        <p>
+            {{ form.miles_until_next_oil_change.label }}<br>
+            {{ form.miles_until_next_oil_change(size=32) }}<br>
+            {% for error in form.miles_until_next_oil_change.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+{% endblock %}

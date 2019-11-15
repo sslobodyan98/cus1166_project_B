@@ -1,4 +1,12 @@
+<<<<<<< HEAD:app/models.py
 
+=======
+'''
+Added 'update_miles' to Car table
+
+***we only have one record of a car, we need a collection of cars (table) with all cars***
+'''
+>>>>>>> origin/MaryG_mileage/oil_change:app/modules/models.py
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -34,6 +42,7 @@ class Car(db.Model):
     model = db.Column(db.String(120), index=True)
     color = db.Column(db.String(64), index=True)
     mileage = db.Column(db.Integer, index=True)
+    update_miles = db.Column(db.Integer, index=True) #adding update_miles to Car table
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
