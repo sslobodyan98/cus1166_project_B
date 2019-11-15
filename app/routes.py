@@ -171,9 +171,18 @@ def OilChange():
 
 
     if form.validate_on_submit(): #if submit button is pressed
+        for x in cars:
+            if current_user.user == x.user and x.model == form.car.data:
+                x.update_miles = form.update_miles
+
+
         difference = form.update_miles.data - form.mileage.data
         if difference < 5000:
             miles_until_next=5000-form.update_miles.data
+            for x in cars:
+                if(current_user.user==x.user and x.model == form.car.data):
+                    x.miles_until_oil_change=miles_until_next
+
             return ("You dont need one")
         elif difference >= 5000:
             msg = Message('Oil Change Reminder Notification', recipients=[current_user.email])
@@ -184,7 +193,7 @@ def OilChange():
 
             return ("You need an oil change!")
 
-        return redirect(url_for('oil_change'))
+        db.session.commit()
     return render_template('oil_change.html', title='Oil Change', form=form, cars=cars)
 
 

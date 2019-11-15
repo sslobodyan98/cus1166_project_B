@@ -32,6 +32,13 @@
             <span style="color: #ff0000;">[{{ error }}]</span>
             {% endfor %}
         </p>
+        <p>
+            {{ form.car.label }}<br>
+            {{ form.car(size=32) }}<br>
+            {% for error in form.car.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
         <p>{{ form.submit() }}</p>
     </form>
 {% endblock %}
