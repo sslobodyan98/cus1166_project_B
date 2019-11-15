@@ -71,7 +71,11 @@ def user(user):
 def RegisterCar():
     form = AddVehicle()
     if form.validate_on_submit():
+<<<<<<< HEAD
         car = Car(user=current_user.user,car_vin=form.car_vin.data, make=form.make.data, model=form.model.data,
+=======
+        car = Car(user=current_user.user, car_vin=form.car_vin.data, make=form.make.data, model=form.model.data,
+>>>>>>> Sarah_Schedule
                   color=form.color.data, mileage=form.mileage.data)
         db.session.add(car)
         db.session.commit()
@@ -126,8 +130,12 @@ def Schedule():
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and x.mechanic == form.mechanic.data:
                 return redirect(url_for('Schedule'))
         for i in Availabilitys:
+<<<<<<< HEAD
             if (i.date == form.date.data and (
                     form.start_time.data < i.start_time or form.start_time.data > i.end_time)):
+=======
+            if i.date == form.date.data and (form.start_time.data < i.start_time or form.start_time.data > i.end_time):
+>>>>>>> Sarah_Schedule
                 return redirect(url_for('Schedule'))
 
         meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
@@ -138,6 +146,7 @@ def Schedule():
     return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form)
 
 
+<<<<<<< HEAD
 @app.route('/EditAppointment', methods=['GET', 'POST'])
 def editAppointment():
     form = EditAppointmentForm()
@@ -152,3 +161,11 @@ def editAppointment():
                 return redirect(url_for('index'))
 
     return render_template('EditApt.html', title='Edit Appointment', form=form)
+=======
+@app.route('/DisplayAvailability', methods=['GET', 'POST'])
+def DisplayAvailabilities():
+    Availabilities = Availability.query.all()
+    ScheduledAppointments = Schedules.query.all()
+    return render_template('DisplayMechanicAvailability.html',
+                           Availabilities=Availabilities,ScheduledAppointments=ScheduledAppointments)
+>>>>>>> Sarah_Schedule

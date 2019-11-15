@@ -28,6 +28,7 @@ def load_user(id):
 
 class Car(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(16), index=True)
     car_vin = db.Column(db.String(16), index=True, unique=True)
     make = db.Column(db.String(120), index=True)
     model = db.Column(db.String(120), index=True)

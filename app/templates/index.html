@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
     <div>
             Application:
@@ -15,10 +14,17 @@
     <h1>Hi, {{ current_user.user }}!</h1>
         {% for x in cars %}
             {%if current_user.user == x.user%}
+<<<<<<< HEAD
              <div>
                  <p>{{ current_user.user }} owns: <b> {{ x.model }} </b> </p>
              </div>
             {% endif %}
+=======
+        <div>
+            <p>{{ current_user.user }} owns: <b> {{ x.model }} </b> </p>
+        </div>
+            {%endif%}
+>>>>>>> Sarah_Schedule
         {% endfor %}
         {% for x in appointments %}
             {%if current_user.user == x.user%}
