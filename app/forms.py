@@ -76,6 +76,7 @@ class EditAppointmentForm(FlaskForm):
     submit = SubmitField('Update')
 
 class OilChangeForm(FlaskForm):
+    car = StringField('Which car', validators=[DataRequired()])
     mileage = IntegerField('Mileage at last oil change: ', validators=[DataRequired()]) #input field #default value = Car.mileage
     update_miles = IntegerField('Current Mileage: ') #input field #default value = Car.update_miles
     submit = SubmitField('Submit') #bind this to the method that calculates miles_until_next_oil_change
