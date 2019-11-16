@@ -1,3 +1,4 @@
+import datetime
 
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
@@ -5,11 +6,12 @@ from flask_mail import Mail, Message
 from werkzeug.urls import url_parse
 
 from app import app, db
-from app.forms import LoginForm, AddVehicle, RegistrationForm,  OilChangeForm,AddAvailability, ScheduleAppointment, EditAppointmentForm
-from app.models import User, Car,Availability, Schedules
+from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
+    EditAppointmentForm
+from app.models import User, Car, Availability, Schedules
 
+now = datetime.datetime.now()
 import smtplib
-
 
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
@@ -17,15 +19,15 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-#app.config['MAIL_DEBUG'] = True
+# app.config['MAIL_DEBUG'] = True
 app.config['MAIL_USERNAME'] = 'mariyamelshrieff@gmail.com'
-app.config['MAIL_PASSWORD']= 'AD22703259me'
+app.config['MAIL_PASSWORD'] = 'AD22703259me'
 app.config['MAIL_DEFAULT_SENDER'] = 'mariyamelshrieff@gmail.com'
 app.config['MAIL_MAX_EMAILS'] = None
-#app.config['MAIL_SUPPRESS_SEND'] = False
+# app.config['MAIL_SUPPRESS_SEND'] = False
 app.config['MAIL_ASCII_ATTATCHMENTS'] = False
 
-mail = Mail (app)
+mail = Mail(app)
 
 
 @app.route('/')
@@ -51,7 +53,7 @@ def login():
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
-        return redirect(next_page)
+            return redirect(next_page)
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
 
@@ -92,16 +94,13 @@ def user(user):
 def RegisterCar():
     form = AddVehicle()
     if form.validate_on_submit():
-
-        car = Car(user=current_user.user,car_vin=form.car_vin.data, make=form.make.data, model=form.model.data,
+        car = Car(user=current_user.user, car_vin=form.car_vin.data, make=form.make.data, model=form.model.data,
                   color=form.color.data, mileage=form.mileage.data)
         db.session.add(car)
         db.session.commit()
         flash('You have added a car to use in our App!')
         return redirect(url_for('login'))
     return render_template('addVehicle.html', title='Add Vehicle', form=form)
-
-
 
 
 @app.route('/addAvailability', methods=['GET', 'POST'])
@@ -130,13 +129,20 @@ def Schedule():
             if i.date == form.date.data and (form.start_time.data < i.start_time or form.start_time.data > i.end_time):
                 return redirect(url_for('Schedule'))
 
+        for x in Scheduled:
+            diff = x.appointment_date - datetime.date.today()
+            if diff.days > 3:  # check for 5 days
+                msg = Message('Appointment Reminder Notification', recipients=[current_user.email])
+                msg.body = 'You have an appointment scheduled in 3 days'
+                msg.html = '<p>You have an appointment scheduled in 3 days</p>'
+                mail.send(msg)
+
         meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
                             appointment_time=form.start_time.data)
         db.session.add(meeting)
         db.session.commit()
         return redirect(url_for('index'))
     return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form)
-
 
 
 @app.route('/EditAppointment', methods=['GET', 'POST'])
@@ -154,26 +160,33 @@ def editAppointment():
 
     return render_template('EditApt.html', title='Edit Appointment', form=form)
 
+
 @app.route('/DisplayAvailability', methods=['GET', 'POST'])
 def DisplayAvailabilities():
     Availabilities = Availability.query.all()
     ScheduledAppointments = Schedules.query.all()
     return render_template('DisplayMechanicAvailability.html',
-                           Availabilities=Availabilities,ScheduledAppointments=ScheduledAppointments)
+                           Availabilities=Availabilities, ScheduledAppointments=ScheduledAppointments)
+
 
 @app.route('/oil_change', methods=['GET', 'POST'])
 @login_required
 def OilChange():
     form = OilChangeForm()
-    cars=Car.query.all()
+    cars = Car.query.all()
 
+    if form.validate_on_submit():  # if submit button is pressed
+        for x in cars:
+            if current_user.user == x.user and x.model == form.car.data:
+                x.update_miles = form.update_miles
 
-
-
-    if form.validate_on_submit(): #if submit button is pressed
         difference = form.update_miles.data - form.mileage.data
         if difference < 5000:
-            miles_until_next=5000-form.update_miles.data
+            miles_until_next = 5000 - form.update_miles.data
+            for x in cars:
+                if (current_user.user == x.user and x.model == form.car.data):
+                    x.miles_until_oil_change = miles_until_next
+
             return ("You dont need one")
         elif difference >= 5000:
             msg = Message('Oil Change Reminder Notification', recipients=[current_user.email])
@@ -184,7 +197,5 @@ def OilChange():
 
             return ("You need an oil change!")
 
-        return redirect(url_for('oil_change'))
+        db.session.commit()
     return render_template('oil_change.html', title='Oil Change', form=form, cars=cars)
-
-
