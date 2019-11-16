@@ -133,7 +133,7 @@ def Schedule():
             diff = x.appointment_date - datetime.date.today()
             if diff.days > 3:  # check for 5 days
                 msg = Message('Appointment Reminder Notification', recipients=[current_user.email])
-                msg.body = 'You have an appointment scheduled in 3 days'
+                msg.body = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
                 msg.html = '<p>You have an appointment scheduled in 3 days</p>'
                 mail.send(msg)
 
@@ -180,14 +180,14 @@ def OilChange():
             if current_user.user == x.user and x.model == form.car.data:
                 x.update_miles = form.update_miles
 
-<<<<<<< HEAD
+
         difference = form.update_miles.data - form.mileage.data
         if difference < 5000:
             miles_until_next = 5000 - form.update_miles.data
             for x in cars:
                 if (current_user.user == x.user and x.model == form.car.data):
                     x.miles_until_oil_change = miles_until_next
-=======
+
     if form.validate_on_submit(): #if submit button is pressed
         for x in cars:
             if current_user.user == x.user and x.model == form.car.data:
@@ -200,17 +200,14 @@ def OilChange():
             for x in cars:
                 if(current_user.user==x.user and x.model == form.car.data):
                     x.miles_until_oil_change=miles_until_next
->>>>>>> cf100bf082a5d9ef2ce356ad7350cf433c7ddbde
+
 
             return ("You dont need one")
-        elif difference >= 5000:
-            msg = Message('Oil Change Reminder Notification', recipients=[current_user.email])
-
-            msg.body = 'Hi, Its time for you to schedule your next car maintenance appointment as your oil needs to be changed!'
-            msg.html = '<b>This is a Reminder Notification </b>'
-            mail.send(msg)
-
-            return ("You need an oil change!")
-
-        db.session.commit()
+        elif difference >= 5000:\
+    msg = Message('Oil Change Reminder Notification', recipients=[current_user.email])
+    msg.body = 'Hi, Its time for you to schedule your next car maintenance appointment as your oil needs to be changed!'
+    msg.html = '<b>This is a Reminder Notification </b>'
+    mail.send(msg)
+    return ("You need an oil change!")
+    db.session.commit()
     return render_template('oil_change.html', title='Oil Change', form=form, cars=cars)
