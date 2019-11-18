@@ -174,17 +174,6 @@ def DisplayAvailabilities():
 def OilChange():
     form = OilChangeForm()
     cars = Car.query.all()
-
-    if form.validate_on_submit():  # if submit button is pressed
-        # for x in cars:
-        #     if current_user.user == x.user and x.model == form.car.data:
-        #         x.update_miles = form.update_miles
-        # if difference < 5000:
-        #     miles_until_next = 5000 - form.update_miles.data
-        #     for x in cars:
-        #         if current_user.user == x.user and x.model == form.car.data:
-        #             x.miles_until_oil_change = miles_until_next
-        
     if form.validate_on_submit():  # if submit button is pressed
 
         difference = form.update_miles.data - form.mileage.data
