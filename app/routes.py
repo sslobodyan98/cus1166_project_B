@@ -184,7 +184,7 @@ def OilChange():
         #     for x in cars:
         #         if current_user.user == x.user and x.model == form.car.data:
         #             x.miles_until_oil_change = miles_until_next
-        difference = form.update_miles.data - form.mileage.data
+        
     if form.validate_on_submit():  # if submit button is pressed
 
         difference = form.update_miles.data - form.mileage.data
