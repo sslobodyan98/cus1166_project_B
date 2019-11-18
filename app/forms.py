@@ -5,18 +5,35 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Integ
 from wtforms.validators import DataRequired, ValidationError, EqualTo
 
 from flask_wtf import FlaskForm, Form
+<<<<<<< HEAD
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 
+=======
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, RadioField
+from wtforms.validators import DataRequired, ValidationError, EqualTo
+>>>>>>> origin/development
 from app.models import User, Car
 
 
 class LoginForm(FlaskForm):
     user = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
+    role = RadioField('Who are you?', choices=[('Car Owner', 'Car Owner'), ('Mechanic', 'Mechanic')],
+                      validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
+<<<<<<< HEAD
+=======
+    def get_role(self, role):
+        role = User.query.filter_by(role=role.data).first()
+        if role is not None:
+            raise ValidationError('Please select a role')
+
+
+
+>>>>>>> origin/development
 class AddVehicle(FlaskForm):
     car_vin = StringField('VIN Number', validators=[DataRequired()])
     make = StringField('Make', validators=[DataRequired()])
@@ -36,6 +53,8 @@ class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    role = RadioField('Who are you?', choices=[('Car Owner', 'Car Owner'), ('Mechanic', 'Mechanic')],
+                      validators=[DataRequired()])
     submit = SubmitField('Register')
 
     def validate_user(self, user):
@@ -48,6 +67,7 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email')
 
+<<<<<<< HEAD
 
 
 class AddAvailability(FlaskForm):
@@ -80,3 +100,9 @@ class OilChangeForm(FlaskForm):
     mileage = IntegerField('Mileage at last oil change: ', validators=[DataRequired()]) #input field #default value = Car.mileage
     update_miles = IntegerField('Current Mileage: ') #input field #default value = Car.update_miles
     submit = SubmitField('Submit') #bind this to the method that calculates miles_until_next_oil_change
+=======
+    def validate_role(self, role):
+        user = User.query.filter_by(role=role.data).first()
+        if user is not None:
+            raise ValidationError('Please select a role')
+>>>>>>> origin/development

@@ -6,6 +6,7 @@ from flask_mail import Mail, Message
 from werkzeug.urls import url_parse
 
 from app import app, db
+<<<<<<< HEAD
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
     EditAppointmentForm
 from app.models import User, Car, Availability, Schedules
@@ -28,6 +29,11 @@ app.config['MAIL_MAX_EMAILS'] = None
 app.config['MAIL_ASCII_ATTATCHMENTS'] = False
 
 mail = Mail(app)
+=======
+from app.forms import LoginForm, AddVehicle, RegistrationForm
+from app.models import User, Car
+from sqlalchemy import or_
+>>>>>>> origin/development
 
 
 @app.route('/')
@@ -39,22 +45,34 @@ def index():
     return render_template('index.html', title='Home', cars=cars, appointments=appointments)
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/login', methods=['GET', 'POST'])  # Route so that when Role=Mechanic it render
+def login():                                   # mechanicDashboard
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(user=form.user.data).first()
+        user = User.query.filter_by(user=form.user.data, role=form.role.data).first()
+        #role = User.query.filter_by(role=form.role.data).first()
+
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
+        # if role is None or not user.get_role(form.role.data):
+            # flash('Incorrect role')
+            # return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
+
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
             return redirect(next_page)
+<<<<<<< HEAD
         return redirect(url_for('index'))
+=======
+        else:
+            return render_template('mechanicDashboard.html', form=form)
+
+>>>>>>> origin/development
     return render_template('login.html', title='Sign In', form=form)
 
 
@@ -70,7 +88,7 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(user=form.user.data, email=form.email.data)
+        user = User(user=form.user.data, email=form.email.data, role=form.role.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -80,7 +98,6 @@ def register():
 
 
 @app.route('/user/<user>')
-@login_required
 def user(user):
     user = User.query.filter_by(user=user).first_or_404()
     cars = [
@@ -101,6 +118,7 @@ def RegisterCar():
         flash('You have added a car to use in our App!')
         return redirect(url_for('login'))
     return render_template('addVehicle.html', title='Add Vehicle', form=form)
+<<<<<<< HEAD
 
 
 @app.route('/addAvailability', methods=['GET', 'POST'])
@@ -188,3 +206,5 @@ def OilChange():
             mail.send(msg)
             return "You need an oil change"
     return render_template('oil_change.html', title='Oil Change', form=form, cars=cars)
+=======
+>>>>>>> origin/development
