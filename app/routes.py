@@ -39,21 +39,15 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-
     if form.validate_on_submit():
 
         user = User.query.filter_by(user=form.user.data).first()
 
         if user.role == 'Car Owner' and user.check_password(form.password.data):
-
             login_user(user, remember=form.remember_me.data)
-
             return redirect(url_for('index'))
-
         elif user.role == 'Mechanic' and user.check_password(form.password.data):
-
             login_user(user, remember=form.remember_me.data)
-
             return redirect(url_for('mechanicDashboard'))
 
     return render_template('login.html', title='Sign In', form=form)
