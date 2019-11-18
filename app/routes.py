@@ -6,6 +6,7 @@ from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
     EditAppointmentForm
 from app.models import User, Car, Availability, Schedules
+
 now = datetime.datetime.now()
 import smtplib
 
@@ -25,6 +26,7 @@ app.config['MAIL_ASCII_ATTATCHMENTS'] = False
 
 mail = Mail(app)
 
+
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -35,16 +37,12 @@ def index():
 
 
 @app.route('/login', methods=['GET', 'POST'])
-
 def login():
-
     form = LoginForm()
 
     if form.validate_on_submit():
 
         user = User.query.filter_by(user=form.user.data).first()
-
-
 
         if user.role == 'Car Owner' and user.check_password(form.password.data):
 
@@ -58,11 +56,7 @@ def login():
 
             return redirect(url_for('mechanicDashboard'))
 
-
-
     return render_template('login.html', title='Sign In', form=form)
-
-
 
 
 @app.route('/logout')
@@ -107,7 +101,6 @@ def RegisterCar():
         flash('You have added a car to use in our App!')
         return redirect(url_for('login'))
     return render_template('addVehicle.html', title='Add Vehicle', form=form)
-
 
 
 @app.route('/addAvailability', methods=['GET', 'POST'])
@@ -195,10 +188,9 @@ def OilChange():
             mail.send(msg)
             return "You need an oil change"
     return render_template('oil_change.html', title='Oil Change', form=form, cars=cars)
+
+
 @app.route('/mechanicDashboard')
-
 @login_required
-
 def mechanicDashboard():
-
     return render_template('mechanicDashboard.html', title='Mechanic Dashboard')
