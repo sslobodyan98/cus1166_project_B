@@ -7,8 +7,8 @@ from app.models import User, Car
 class LoginForm(FlaskForm):
     user = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    role = RadioField('Who are you?', choices=[('Car Owner', 'Car Owner'), ('Mechanic', 'Mechanic')],
-                      validators=[DataRequired()])
+    # role = RadioField('Who are you?', choices=[('Car Owner', 'Car Owner'), ('Mechanic', 'Mechanic')],
+    #                   validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
@@ -51,8 +51,3 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email')
-
-    def validate_role(self, role):
-        user = User.query.filter_by(role=role.data).first()
-        if user is not None:
-            raise ValidationError('Please select a role')

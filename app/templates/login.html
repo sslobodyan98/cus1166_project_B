@@ -26,13 +26,7 @@
             <span style="color: #663399;">[{{ error }}</span>
             {% endfor %}
         </p>
-        <p>
-            {{ form.role.label }}<br>
-            {{ form.role(size=64) }}<br>
-            {% for error in form.role.errors %}
-            <span style="color: #ff0000;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
+
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>{{ form.submit() }}</p>
     </form>

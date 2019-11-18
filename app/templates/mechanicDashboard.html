@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hi Mechanics, {{ current_user.user }}!</h1>
+
+    <div>
+            Application:
+            <a href="{{url_for('logout')}}">Logout</a>
+    </div>
+
+    <h1>Mechanic View: {{ current_user.user }}!</h1>
         {% for car in cars %}
         <div>
             <p>{{ car.owner.user }} owns: <b> {{ car.make }} </b> </p>
