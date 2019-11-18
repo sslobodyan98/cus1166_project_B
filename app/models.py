@@ -53,9 +53,11 @@ class Car(db.Model):
         self.mileage = mileage
 
     def __repr__(self):
-<<<<<<< HEAD
         return '<Car {}'.format(self.car_vin.make.model)
+        return '<Car VIN {}, Car Make{}>'.format(self.car_vin, self.make)
 
+    def return_car_vin(self):
+        return '<Car Make {}>'.format(self.make)
 
 class Availability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -78,9 +80,5 @@ class Schedules(db.Model):
     def __repr__(self):
         return '<Schedules {}'.format(self.user.mechanic.appointment_date.appointment_time)
 
-=======
-        return '<Car VIN {}, Car Make{}>'.format(self.car_vin, self.make)
 
-    def return_car_vin(self):
-        return '<Car Make {}>'.format(self.make)
->>>>>>> origin/development
+
