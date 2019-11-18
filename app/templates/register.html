@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div>
+            <a href="{{ url_for('login') }}">Login</a>
+    </div>
     <h1>Register</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
@@ -29,6 +32,13 @@
             {{ form.password2.label }}<br>
             {{ form.password2(size=32) }}<br>
             {% for error in form.password2.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.role.label }}<br>
+            {{ form.role(size=64) }}<br>
+            {% for error in form.role.errors %}
             <span style="color: #ff0000;">[{{ error }}]</span>
             {% endfor %}
         </p>

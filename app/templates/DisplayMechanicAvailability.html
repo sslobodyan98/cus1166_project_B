@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>The mechanic is available during these times</h2>
+    {% for x in Availabilities %}
+        <p>{{ x.user}} is available on {{x.date}} from :  {{ x.start_time }}  to {{x.end_time}}</p>
+    {% endfor %}
+<table id="myTable">
+<h2>Booked appointment are</h2>
+    <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Time</th>
+
+    </tr>
+
+    {% for x in ScheduledAppointments %}
+        <tr>
+            <td>{{x.mechanic}}</td>
+            <td>{{x.appointment_date}}</td>
+            <td>{{x.appointment_time}} <a href="{{url_for('Schedule')}}"> Book your own appointment</a></td>
+
+        </tr>
+
+    {% endfor%}
+</table>
+{% endblock %}

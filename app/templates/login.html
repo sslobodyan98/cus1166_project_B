@@ -1,32 +1,65 @@
 {% extends "base.html" %}
 
+
+
 {% block content %}
+
     <div>
+
             <a href="{{ url_for('index') }}">Home</a>
+
             <a href="{{ url_for('login') }}">Login</a>
+
             <!--<a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
+
     </div>
 
+
+
     <h1>Sign In</h1>
+
     <p>New Users  <a href="{{ url_for('register') }}">Sign Up Here!</a></p>
 
+
+
     <form action="" method="post" novalidate>
+
         {{ form.hidden_tag() }}
+
         <p>
+
             {{ form.user.label }}<br>
+
             {{ form.user(size=32) }}
+
             {% for error in form.user.errors %}
+
             <span style="color: #663399;">[{{ error }}</span>
+
             {% endfor %}
+
         </p>
+
         <p>
+
             {{ form.password.label }}<br>
+
             {{ form.password(size=32) }}
+
             {% for error in form.password.errors %}
+
             <span style="color: #663399;">[{{ error }}</span>
+
             {% endfor %}
+
         </p>
+
+
+
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+
         <p>{{ form.submit() }}</p>
+
     </form>
+
 {% endblock %}
