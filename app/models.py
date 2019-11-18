@@ -34,7 +34,6 @@ class Car(db.Model):
     color = db.Column(db.String(64), index=True)
     mileage = db.Column(db.Integer, index=True)
     miles_until_oil_change = db.Column(db.Integer, index=True)
-    update_miles = db.Column(db.Integer, index=True) #adding update_miles to Car table
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
