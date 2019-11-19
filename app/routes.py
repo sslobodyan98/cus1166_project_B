@@ -92,8 +92,12 @@ def RegisterCar():
                   color=form.color.data, mileage=form.mileage.data)
         db.session.add(car)
         db.session.commit()
-        flash('You have added a car to use in our App!')
-        return redirect(url_for('login'))
+        if user.role == 'Car Owner' and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect(url_for('index'))
+        elif user.role == 'Mechanic' and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect(url_for('mechanicDashboard'))
     return render_template('addVehicle.html', title='Add Vehicle', form=form)
 
 
@@ -105,23 +109,29 @@ def addAvailability():
                             end_time=form.end_time.data)
         db.session.add(time)
         db.session.commit()
-        return redirect(url_for('index'))
+        if user.role == 'Car Owner' and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect(url_for('index'))
+        elif user.role == 'Mechanic' and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect(url_for('mechanicDashboard'))
     return render_template('Mechanic_AvaialablityForm.html', title='Add availability', form=form)
 
 
 @app.route('/ScheduleAppointment', methods=['GET', 'POST'])
 def Schedule():
     form = ScheduleAppointment()
-
+    mechanics = User.query.filter_by(role='Mechanic')
     if form.validate_on_submit():
         Scheduled = Schedules.query.all()
         Availabilitys = Availability.query.all()
         for x in Scheduled:
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and x.mechanic == form.mechanic.data:
-                return redirect(url_for('Schedule'))
+                flash("Appointment can't be made because the time or mechanic is not available")
         for i in Availabilitys:
-            if i.date == form.date.data and (form.start_time.data < i.start_time or form.start_time.data > i.end_time):
-                return redirect(url_for('Schedule'))
+            if i.mechanic == form.Mechanics.data and i.date == form.date.data and (
+                    form.start_time.data < i.start_time or form.start_time.data > i.end_time):
+                flash("Appointment can't be made because the time or mechanic is not available")
 
         for x in Scheduled:
             diff = x.appointment_date - datetime.date.today()
@@ -136,7 +146,7 @@ def Schedule():
         db.session.add(meeting)
         db.session.commit()
         return redirect(url_for('index'))
-    return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form)
+    return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form, mechanics=mechanics)
 
 
 @app.route('/EditAppointment', methods=['GET', 'POST'])
@@ -187,4 +197,6 @@ def OilChange():
 @app.route('/mechanicDashboard')
 @login_required
 def mechanicDashboard():
-    return render_template('mechanicDashboard.html', title='Mechanic Dashboard')
+    cars = Car.query.all()
+    schedules = Schedules.query.all()
+    return render_template('mechanicDashboard.html', title='Mechanic Dashboard', cars=cars, schedules=schedules)

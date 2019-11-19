@@ -45,7 +45,8 @@ class Car(db.Model):
     miles_until_oil_change = db.Column(db.Integer, index=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, car_vin, make, model, color, mileage):
+    def __init__(self, user,car_vin, make, model, color, mileage):
+        self.user = user
         self.car_vin = car_vin
         self.make = make
         self.model = model
@@ -53,7 +54,7 @@ class Car(db.Model):
         self.mileage = mileage
 
     def __repr__(self):
-        return '<Car {}'.format(self.car_vin.make.model)
+        return '<Car {}'.format(self.user.car_vin.make.model.color.mileage)
         return '<Car VIN {}, Car Make{}>'.format(self.car_vin, self.make)
 
     def return_car_vin(self):
@@ -73,6 +74,7 @@ class Availability(db.Model):
 class Schedules(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(20), index=True)
+    vehicle = db.Column(db.String, index =True)
     mechanic = db.Column(db.String, index=True)
     appointment_date = db.Column(db.Date, index=True)
     appointment_time = db.Column(db.Time, index=True)

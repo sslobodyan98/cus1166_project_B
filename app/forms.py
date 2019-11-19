@@ -1,5 +1,4 @@
-
-
+from flask import flash
 from flask_wtf import FlaskForm, Form
 
 
@@ -68,15 +67,15 @@ class AddAvailability(FlaskForm):
 
 
 class ScheduleAppointment(FlaskForm):
+    vehicle = StringField('Which Car', validators=[DataRequired()])
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
 
     start_time = TimeField('Start Time', validators=[DataRequired()])
-    # Mechanics=User.query.all()
-    # for x in Mechanics:
-    #     value=(x.user,x.user)
-    mechanic = SelectField('Mechanics',
-                           choices=[("John Doe", "John"), ("Dug Smith", "Dug"), ("Walter Green", "Walter")],
-                           validators=[DataRequired()])
+    Mechanics=User.query.filter_by(role='mechanic')
+    for x in Mechanics:
+        flash(x.user)
+    mechanic = StringField('Mechanics',validators=[DataRequired()])
+
     submit = SubmitField('Add')
 
 
