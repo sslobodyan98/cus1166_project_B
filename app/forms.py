@@ -69,11 +69,7 @@ class AddAvailability(FlaskForm):
 class ScheduleAppointment(FlaskForm):
     vehicle = StringField('Which Car', validators=[DataRequired()])
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
-
     start_time = TimeField('Start Time', validators=[DataRequired()])
-    Mechanics=User.query.filter_by(role='mechanic')
-    for x in Mechanics:
-        flash(x.user)
     mechanic = StringField('Mechanics',validators=[DataRequired()])
 
     submit = SubmitField('Add')
@@ -90,4 +86,10 @@ class OilChangeForm(FlaskForm):
     submit = SubmitField('Submit') #bind this to the method that calculates miles_until_next_oil_change
 
 
+class DeleteAppointmentForm(FlaskForm):
+    date = DateField('Date (year-month-date)', validators=[DataRequired()])
+    start_time = TimeField('Start Time', validators=[DataRequired()])
+    mechanic = StringField('Mechanics',validators=[DataRequired()])
+    car = StringField('Car', validators=[DataRequired()])
+    submit = SubmitField('Delete')
 

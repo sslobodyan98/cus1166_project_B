@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-    EditAppointmentForm
+    EditAppointmentForm, DeleteAppointmentForm
 from app.models import User, Car, Availability, Schedules
 
 now = datetime.datetime.now()
@@ -113,9 +113,7 @@ def addAvailability():
 def Schedule():
     form = ScheduleAppointment()
 
-    mechanics=User.query.filter_by(role='Mechanic')
-
-
+    mechanics = User.query.filter_by(role='Mechanic')
 
     if form.validate_on_submit():
         Scheduled = Schedules.query.all()
@@ -131,7 +129,6 @@ def Schedule():
                 return redirect(url_for('Schedule'))
         for i in Availabilitys:
             if i.date == form.date.data and (form.start_time.data < i.start_time or form.start_time.data > i.end_time):
-
                 return redirect(url_for('Schedule'))
 
         for x in Scheduled:
@@ -143,12 +140,12 @@ def Schedule():
                 mail.send(msg)
                 return redirect(url_for('index'))
         meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
-                            appointment_time=form.start_time.data)
+                            appointment_time=form.start_time.data, vehicle=form.vehicle.data)
         db.session.add(meeting)
         db.session.commit()
         return redirect(url_for('index'))
 
-    return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form,mechanics=mechanics)
+    return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form, mechanics=mechanics)
 
     return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form)
 
@@ -169,6 +166,21 @@ def editAppointment():
     return render_template('EditApt.html', title='Edit Appointment', form=form)
 
 
+@app.route('/DeleteAppointment', methods=['GET', 'POST'])
+def deleteAppointment():
+    form = DeleteAppointmentForm()
+    if form.validate_on_submit():
+        appointmentsMade = Schedules.query.all()
+        for x in appointmentsMade:
+            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and x.mechanic == form.mechanic.data and x.vehicle == form.car.data:
+
+                db.session.delete(x)
+                db.session.commit()
+                return redirect(url_for('index'))
+
+    return render_template('delete_appointment.html', title='Edit Appointment', form=form)
+
+
 @app.route('/DisplayAvailability', methods=['GET', 'POST'])
 def DisplayAvailabilities():
     Availabilities = Availability.query.all()
@@ -186,7 +198,7 @@ def OilChange():
         for x in cars:
             if x.user == current_user.user and x.model == form.car.data:
                 difference = form.update_miles.data - x.mileage
-                x.mileage= form.update_miles.data
+                x.mileage = form.update_miles.data
                 x.miles_until_oil_change = 5000 - form.update_miles.data
                 db.session.commit()
             if difference < 5000:
@@ -199,16 +211,13 @@ def OilChange():
                 mail.send(msg)
                 return redirect(url_for('Schedule'))
 
-
     return render_template('oil_change.html', title='Oil Change', form=form, cars=cars)
 
 
 @app.route('/mechanicDashboard')
 @login_required
 def mechanicDashboard():
-
-    schedule=Schedules.query.all()
-    return render_template('mechanicDashboard.html', title='Mechanic Dashboard',schedule=schedule)
+    schedule = Schedules.query.all()
+    return render_template('mechanicDashboard.html', title='Mechanic Dashboard', schedule=schedule)
 
     return render_template('mechanicDashboard.html', title='Mechanic Dashboard')
-
