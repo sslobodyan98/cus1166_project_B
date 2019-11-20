@@ -1,14 +1,21 @@
 {% extends "base.html" %}
 
 
-
 {% block content %}
 
     <div>
 
-            <a href="{{ url_for('index') }}">Home</a>
+         <ul class="nav nav-pills">
+            <li role="presentation" class="active"><a href="{{ url_for('index') }}">Home</a></li>
 
-            <a href="{{ url_for('login') }}">Login</a>
+
+             <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
+
+
+
+         <!--   <a href="{{ url_for('index') }}">Home</a>
+
+            <a href="{{ url_for('login') }}">Login</a> -->
 
             <!--<a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
 
@@ -18,12 +25,13 @@
 
     <h1>Sign In</h1>
 
+
     <p>New Users  <a href="{{ url_for('register') }}">Sign Up Here!</a></p>
 
 
 
     <form action="" method="post" novalidate>
-
+<div class="jumbotron">
         {{ form.hidden_tag() }}
 
         <p>
@@ -60,6 +68,8 @@
 
         <p>{{ form.submit() }}</p>
 
+
+</div>
     </form>
 
 {% endblock %}

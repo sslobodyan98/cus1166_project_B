@@ -2,16 +2,30 @@
 
 {% block content %}
 <div>
-    <a href="{{ url_for('index') }}">Home</a>
+
+ <ul class="nav nav-pills">
+            <li role="presentation" > <a href="{{ url_for('index') }}">Home</a></li>
+
+             <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+
+             <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+
+             <li role="presentation" class="active"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
+
+       <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
+
+   <!-- <a href="{{ url_for('index') }}">Home</a>
     <a href="{{ url_for('logout') }}">Logout</a>
-    <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+    <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
+
 </div>
 <h1>Schedule Appointment!</h1>
 {%for x in mechanics%}
 <h4>Available mechanics are, {{x.user}}</h4>
 {%endfor%}
-<h4 style="color:red;"><em>Unsure what appointment are available,</em><a href="{{url_for('DisplayAvailabilities')}}">click here </a></h4>
+<h4 style="color:red;"><em>Show Available Appointments</em> <br> <a href="{{url_for('DisplayAvailabilities')}}">click here </a></h4>
 <form action="" method="post">
+      <div class="jumbotron">
     {{ form.hidden_tag() }}
     <p>
         {{ form.date.label }}<br>
@@ -48,6 +62,7 @@
     </p>
 
     <p>{{ form.submit() }}</p>
+      </div>
 </form>
 
 {% endblock %}
