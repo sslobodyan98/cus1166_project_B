@@ -2,15 +2,12 @@
 
 {% block content %}
 
-<a href="{{url_for('addAvailability')}}"> Add Availability</a>
-<a href="{{url_for('logout')}}">Logout</a>
-    <h1>Hi {{ current_user.user }}!</h1>
 
 
  <div>
     <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="{{ url_for('index') }}">Home</a></li>
-            <li role="presentation"><a href="{{url_for('addAvailability')}}">Schedule Appointment</a></li>
+            <li role="presentation" class="active"><a href="{{ url_for('mechanicDashboard') }}">Home</a></li>
+            <li role="presentation"><a href="{{url_for('addAvailability')}}">Add Availability</a></li>
             <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
          </ul>
 
@@ -21,7 +18,7 @@
         {% for car in cars %}
             {%if current_user.user == car.user%}
         <div>
-            <<div class="jumbotron">
+        <div class="jumbotron">
             <p>{{ current_user.user }} owns: <b> a {{car.make}} {{ car.model }} </b> </p>
         </div>
             {%endif%}
@@ -31,8 +28,9 @@
         <div>
             {%if current_user.user == x.mechanic%}
             <p>You have an appointment booked for {{ x.appointment_date }} at <b> {{ x.appointment_time }} </b> </p>
-        </div>
-        </div>
-            {%endif%}
+             {%endif%}
         {% endfor %}
+        </div>
+        </div>
+
 {% endblock %}

@@ -2,17 +2,15 @@
 
 {% block content %}
 <div>
-        <!--  <a href="{{ url_for('index') }}">Home</a>
-          <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
+    <ul class="nav nav-pills">
+            <li role="presentation" class="active"><a href="{{ url_for('mechanicDashboard') }}">Home</a></li>
+            <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+         </ul>
 
-     <li role="presentation"><a href="{{ url_for('index') }}">Home</a></li>
-     <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
-     <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
-
-  </div>
+ </div>
   <h1>Add Availability!</h1>
   <form action="" method="post">
-      <<div class="jumbotron">
+      <div class="jumbotron">
       {{ form.hidden_tag() }}
       <p>
           {{ form.date.label }}<br>
