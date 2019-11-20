@@ -25,12 +25,13 @@
 
     <h1>Sign In</h1>
 
+
     <p>New Users  <a href="{{ url_for('register') }}">Sign Up Here!</a></p>
 
 
 
     <form action="" method="post" novalidate>
-
+<div class="jumbotron">
         {{ form.hidden_tag() }}
 
         <p>
@@ -68,7 +69,7 @@
         <p>{{ form.submit() }}</p>
 
 
-
+</div>
     </form>
 
 {% endblock %}
