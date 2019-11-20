@@ -8,7 +8,7 @@
 </div>
 <h1>Schedule Appointment!</h1>
 {%for x in mechanics%}
-<h4 ><em>Available mechanics are, {{x.user}}</em></h4>
+<h4>Available mechanics are, {{x.user}}</h4>
 {%endfor%}
 <h4 style="color:red;"><em>Unsure what appointment are available,</em><a href="{{url_for('DisplayAvailabilities')}}">click here </a></h4>
 <form action="" method="post">
@@ -35,6 +35,14 @@
         {{ form.mechanic.label }}<br>
         {{ form.mechanic(size=10) }}
         {% for error in form.mechanic.errors %}
+        <span style="color: rebeccapurple;">[{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+
+        {{ form.vehicle.label }}<br>
+        {{ form.vehicle(size=10) }}
+        {% for error in form.vehicle.errors %}
         <span style="color: rebeccapurple;">[{{ error }}</span>
         {% endfor %}
     </p>
