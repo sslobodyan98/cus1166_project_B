@@ -1,0 +1,5 @@
+Blessy Varghese
+Use Case Description:
+User is able to Edit an already created appointment from the date and change time. 
+It will check again if the current user is the user of the booked appointment as
+well as the availability of the chosen mechanic. 
