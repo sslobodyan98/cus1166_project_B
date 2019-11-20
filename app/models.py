@@ -65,6 +65,15 @@ class Car(db.Model):
     def return_car_vin(self):
         return '<Car Make {}>'.format(self.make)
 
+class Message(db.Model):
+    messaseID = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+    recipient_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<Message {}>'.format(self.body)
 
 class Availability(db.Model):
     id = db.Column(db.Integer, primary_key=True)

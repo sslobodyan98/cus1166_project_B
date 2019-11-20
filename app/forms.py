@@ -56,8 +56,10 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email')
 
-
-
+class MessageForm(FlaskForm):
+    message = TextAreaField(_l('Message'), validators=[
+        DataRequired(), Length(min=0, max=140)])
+    submit = SubmitField(_l('Submit'))
 
 class AddAvailability(FlaskForm):
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
@@ -94,4 +96,3 @@ class OilChangeForm(FlaskForm):
         user = User.query.filter_by(role=role.data).first()
         if user is not None:
             raise ValidationError('Please select a role')
-

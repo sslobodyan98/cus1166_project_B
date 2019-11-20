@@ -8,4 +8,13 @@
     {{ car.owner.user }} owns: <b>{{ car.car_vin }}</b>
     </p>
     {% endfor %}
+
+    {% if user != current_user %}
+        <p>
+            <a href="{{ url_for('main.send_message',
+                    recipient=user.username) }}">
+                {{ _('Send private message') }}
+            </a>
+        </p>
+    {% endif %}
 {% endblock %}
