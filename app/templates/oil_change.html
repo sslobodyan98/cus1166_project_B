@@ -29,13 +29,6 @@
         <div class="jumbotron">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.mileage.label }}<br>
-            {{ form.mileage(size=32) }}<br>
-            {% for error in form.mileage.errors %}
-            <span style="color: #ff0000;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
             {{ form.update_miles.label }}<br>
             {{ form.update_miles(size=32) }}<br>
             {% for error in form.update_miles.errors %}
