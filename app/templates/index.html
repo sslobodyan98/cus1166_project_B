@@ -32,7 +32,7 @@
             {%if current_user.user == x.user%}
 
              <div>
-                 <p>{{ current_user.user }} owns: <b> {{ x.model }} </b> </p>
+                 <p>{{ current_user.user }} owns: <b> {{ x.model }}</b>  and has <b>{{x.miles_until_oil_change}}</b> miles until they need an oil change</b> </p>
              </div>
             {% endif %}
         {%endfor%}
