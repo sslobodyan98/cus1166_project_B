@@ -45,8 +45,12 @@ class Car(db.Model):
     miles_until_oil_change = db.Column(db.Integer, index=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+<<<<<<< HEAD
 
     def __init__(self, user,car_vin, make, model, color, mileage):
+=======
+    def __init__(self, user, car_vin, make, model, color, mileage):
+>>>>>>> 14f3236af2374a418de15071db83bdb63dcc7231
         self.user = user
         self.car_vin = car_vin
         self.make = make
