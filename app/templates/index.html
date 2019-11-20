@@ -1,17 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
     <div>
-            Application:
-            <a href="{{ url_for('index') }}">Home</a>
+            <ul class="nav nav-pills">
+            <li role="presentation" class="active"><a href="{{ url_for('index') }}">Home</a></li>
+
+             <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+
+             <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+
+             <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
+
+                <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+            </ul>
+
+         <!--   <a href="{{ url_for('index') }}">Home</a> -->
             <!--<a href="{{ url_for('login') }}">Login</a>-->
-            <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+         <!--     <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
 
             <a href="{{ url_for('OilChange') }}">Oil Change</a>
 
             <a href="{{url_for('logout')}}">Logout</a>
 
-            <a href="{{url_for('Schedule')}}"> Schedule Appointment</a>
+            <a href="{{url_for('Schedule')}}"> Schedule Appointment</a>-->
+
     </div>
+
+  <div class="jumbotron">
+  <div class="container">
+  <!-- Content here -->
 
     <h1>Hi, {{ current_user.user }}!</h1>
         {% for x in cars %}
@@ -29,6 +45,9 @@
         <div>
             <p>{{ current_user.user }} has an appointment on: <b> {{ x.appointment_date}}</b> at <b>{{x.appointment_time}}</b> with <b>{{x.mechanic}} </b> <a href="{{url_for('editAppointment')}}">Edit Appointment</a></p>
         </div>
+        </div>
+
+
             {%endif%}
         {% endfor %}
 

@@ -2,9 +2,21 @@
 
 {% block content %}
 <div>
-    <a href="{{ url_for('index') }}">Home</a>
+ <ul class="nav nav-pills">
+            <li role="presentation" > <a href="{{ url_for('index') }}">Home</a></li>
+
+             <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+
+             <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+
+             <li role="presentation" class="active"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
+
+       <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
+
+   <!-- <a href="{{ url_for('index') }}">Home</a>
     <a href="{{ url_for('logout') }}">Logout</a>
-    <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+    <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
+
 </div>
 <h1>Schedule Appointment!</h1>
 {%for x in mechanics%}

@@ -2,8 +2,13 @@
 
 {% block content %}
 <div>
-          <a href="{{ url_for('index') }}">Home</a>
-          <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+        <!--  <a href="{{ url_for('index') }}">Home</a>
+          <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
+
+     <li role="presentation"><a href="{{ url_for('index') }}">Home</a></li>
+     <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+     <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
+
   </div>
   <h1>Add Availability!</h1>
   <form action="" method="post">
