@@ -112,28 +112,26 @@ def addAvailability():
 @app.route('/ScheduleAppointment', methods=['GET', 'POST'])
 def Schedule():
     form = ScheduleAppointment()
-<<<<<<< HEAD
-    mechanics=User.query.filter_by(role='Mechanic')
-=======
 
->>>>>>> 14f3236af2374a418de15071db83bdb63dcc7231
+    mechanics=User.query.filter_by(role='Mechanic')
+
+
+
     if form.validate_on_submit():
         Scheduled = Schedules.query.all()
         Availabilitys = Availability.query.all()
         for x in Scheduled:
-<<<<<<< HEAD
+
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and \
                     x.mechanic == form.mechanic.data:
                 return redirect(url_for('Schedule'))
         for i in Availabilitys:
             if i.user == form.mechanic.data and i.date == form.date.data and (form.start_time.data < i.start_time or
                                                                               form.start_time.data > i.end_time):
-=======
-            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and x.mechanic == form.mechanic.data:
                 return redirect(url_for('Schedule'))
         for i in Availabilitys:
             if i.date == form.date.data and (form.start_time.data < i.start_time or form.start_time.data > i.end_time):
->>>>>>> 14f3236af2374a418de15071db83bdb63dcc7231
+
                 return redirect(url_for('Schedule'))
 
         for x in Scheduled:
@@ -149,11 +147,10 @@ def Schedule():
         db.session.add(meeting)
         db.session.commit()
         return redirect(url_for('index'))
-<<<<<<< HEAD
+
     return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form,mechanics=mechanics)
-=======
+
     return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form)
->>>>>>> 14f3236af2374a418de15071db83bdb63dcc7231
 
 
 @app.route('/EditAppointment', methods=['GET', 'POST'])
@@ -204,9 +201,9 @@ def OilChange():
 @app.route('/mechanicDashboard')
 @login_required
 def mechanicDashboard():
-<<<<<<< HEAD
+
     schedule=Schedules.query.all()
     return render_template('mechanicDashboard.html', title='Mechanic Dashboard',schedule=schedule)
-=======
+
     return render_template('mechanicDashboard.html', title='Mechanic Dashboard')
->>>>>>> 14f3236af2374a418de15071db83bdb63dcc7231
+
