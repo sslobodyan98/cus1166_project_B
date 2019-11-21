@@ -7,9 +7,6 @@ from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, Ad
     EditAppointmentForm, DeleteAppointmentForm
 from app.models import User, Car, Availability, Schedules
 
-now = datetime.datetime.now()
-import smtplib
-
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -17,9 +14,9 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 # app.config['MAIL_DEBUG'] = True
-app.config['MAIL_USERNAME'] = 'mariyamelshrieff@gmail.com'
-app.config['MAIL_PASSWORD'] = 'AD22703259me'
-app.config['MAIL_DEFAULT_SENDER'] = 'mariyamelshrieff@gmail.com'
+app.config['MAIL_USERNAME'] = 'groupbsoftwareengineering1166@gmail.com'
+app.config['MAIL_PASSWORD'] = 'SoftwareEngineering1166'
+app.config['MAIL_DEFAULT_SENDER'] = 'groupbsoftwareengineering1166@gmail.com'
 app.config['MAIL_MAX_EMAILS'] = None
 # app.config['MAIL_SUPPRESS_SEND'] = False
 app.config['MAIL_ASCII_ATTATCHMENTS'] = False
@@ -33,6 +30,21 @@ mail = Mail(app)
 def index():
     cars = Car.query.all()
     appointments = Schedules.query.all()
+    appointments = Schedules.query.all()
+    for x in appointments:
+        diff = x.appointment_date - datetime.date.today()
+        if diff.days == 3:
+            msg = Message('Appointment Reminder Notification', recipients=[current_user.email])
+            msg.body = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
+            msg.html = '<p>You have an appointment scheduled in 3 days</p>'
+            mail.send(msg)
+        elif diff.days < 1:
+            msg = Message('Follow up for oil change appointment', recipients=[current_user.email])
+            msg.body = ''
+            msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey and review ' \
+                       'your mechanic we would highly appreciate it. <a ' \
+                       'href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a> '
+            mail.send(msg)
     return render_template('index.html', title='Home', cars=cars, appointments=appointments)
 
 
@@ -114,31 +126,22 @@ def Schedule():
     form = ScheduleAppointment()
 
     mechanics = User.query.filter_by(role='Mechanic')
-
+    availabilities = Availability.query.all()
     if form.validate_on_submit():
-        Scheduled = Schedules.query.all()
-        Availabilitys = Availability.query.all()
-        for x in Scheduled:
+        appointments = Schedules.query.all()
+        for x in appointments:
 
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and \
                     x.mechanic == form.mechanic.data:
                 return redirect(url_for('Schedule'))
-        for i in Availabilitys:
+        for i in availabilities:
             if i.user == form.mechanic.data and i.date == form.date.data and (form.start_time.data < i.start_time or
                                                                               form.start_time.data > i.end_time):
                 return redirect(url_for('Schedule'))
-        for i in Availabilitys:
-            if i.date == form.date.data and (form.start_time.data < i.start_time or form.start_time.data > i.end_time):
+        for i in availabilities:
+            if i.user == form.mechanic.data and i.date == form.date.data and (
+                    form.start_time.data < i.start_time or form.start_time.data > i.end_time):
                 return redirect(url_for('Schedule'))
-
-        for x in Scheduled:
-            diff = x.appointment_date - datetime.date.today()
-            if diff.days > 3:  # check for 5 days
-                msg = Message('Appointment Reminder Notification', recipients=[current_user.email])
-                msg.body = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
-                msg.html = '<p>You have an appointment scheduled in 3 days</p>'
-                mail.send(msg)
-                return redirect(url_for('index'))
         meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
                             appointment_time=form.start_time.data, vehicle=form.vehicle.data)
         db.session.add(meeting)
@@ -147,15 +150,13 @@ def Schedule():
 
     return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form, mechanics=mechanics)
 
-    return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form)
-
 
 @app.route('/EditAppointment', methods=['GET', 'POST'])
 def editAppointment():
     form = EditAppointmentForm()
     if form.validate_on_submit():
-        appointmentsMade = Schedules.query.all()
-        for x in appointmentsMade:
+        appointments = Schedules.query.all()
+        for x in appointments:
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data:
                 return redirect(url_for('editAppointments'))
             elif current_user.user == x.user and form.date.data == x.appointment_date:
@@ -170,10 +171,9 @@ def editAppointment():
 def deleteAppointment():
     form = DeleteAppointmentForm()
     if form.validate_on_submit():
-        appointmentsMade = Schedules.query.all()
-        for x in appointmentsMade:
+        appointments = Schedules.query.all()
+        for x in appointments:
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and x.mechanic == form.mechanic.data and x.vehicle == form.car.data:
-
                 db.session.delete(x)
                 db.session.commit()
                 return redirect(url_for('index'))
@@ -183,10 +183,10 @@ def deleteAppointment():
 
 @app.route('/DisplayAvailability', methods=['GET', 'POST'])
 def DisplayAvailabilities():
-    Availabilities = Availability.query.all()
-    ScheduledAppointments = Schedules.query.all()
+    availabilities = Availability.query.all()
+    appointments = Schedules.query.all()
     return render_template('DisplayMechanicAvailability.html',
-                           Availabilities=Availabilities, ScheduledAppointments=ScheduledAppointments)
+                           availabilities=availabilities, appointments=appointments)
 
 
 @app.route('/oil_change', methods=['GET', 'POST'])
@@ -201,15 +201,15 @@ def OilChange():
                 x.mileage = form.update_miles.data
                 x.miles_until_oil_change = 5000 - form.update_miles.data
                 db.session.commit()
-            if difference < 5000:
-                return redirect(url_for('index'))
-            elif difference >= 5000:
-                msg = Message('Oil Change Reminder Notification', recipients=[current_user.email])
-                msg.body = 'Hi, Its time for you to schedule your next car maintenance appointment as your oil needs to ' \
-                           'be changed! '
-                msg.html = '<b>This is a Reminder Notification </b>'
-                mail.send(msg)
-                return redirect(url_for('Schedule'))
+        if difference < 5000:
+            return redirect(url_for('index'))
+        elif difference >= 5000:
+            msg = Message('Oil Change Reminder Notification', recipients=[current_user.email])
+            msg.body = 'Hi, Its time for you to schedule your next car maintenance appointment as your oil needs to ' \
+                       'be changed! '
+            msg.html = '<b>This is a Reminder Notification </b>'
+            mail.send(msg)
+            return redirect(url_for('Schedule'))
 
     return render_template('oil_change.html', title='Oil Change', form=form, cars=cars)
 
@@ -217,7 +217,5 @@ def OilChange():
 @app.route('/mechanicDashboard')
 @login_required
 def mechanicDashboard():
-    schedule = Schedules.query.all()
-    return render_template('mechanicDashboard.html', title='Mechanic Dashboard', schedule=schedule)
-
-    return render_template('mechanicDashboard.html', title='Mechanic Dashboard')
+    appointments = Schedules.query.all()
+    return render_template('mechanicDashboard.html', title='Mechanic Dashboard', appointments=appointments)

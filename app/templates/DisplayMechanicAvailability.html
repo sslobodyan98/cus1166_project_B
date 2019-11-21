@@ -2,7 +2,7 @@
 
 {% block content %}
 <h2>The mechanic is available during these times</h2>
-    {% for x in Availabilities %}
+    {% for x in availabilities %}
         <p>{{ x.user}} is available on {{x.date}} from :  {{ x.start_time }}  to {{x.end_time}}</p>
     {% endfor %}
 <table id="myTable">
@@ -14,7 +14,7 @@
 
     </tr>
 
-    {% for x in ScheduledAppointments %}
+    {% for x in appointments %}
         <tr>
             <td>{{x.mechanic}}</td>
             <td>{{x.appointment_date}}</td>
