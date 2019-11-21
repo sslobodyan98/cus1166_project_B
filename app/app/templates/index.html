@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div>
+            Application:
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+    </div>
+
+    <h1>Hi, {{ user.user_name }}!</h1>
+        {% for car in cars %}
+        <div>
+            <p>{{ car.owner.user_name }} owns: <b> {{ car.car }} </b> </p>
+        </div>
+        {% endfor %}
+{% endblock %}

@@ -1,9 +1,8 @@
 from flask import flash
 from flask_wtf import FlaskForm, Form
 
-
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, RadioField, DateField,\
-    TimeField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, RadioField, DateField, \
+    TimeField, SelectField, DecimalField
 from wtforms.validators import DataRequired, ValidationError, EqualTo
 
 from app.models import User, Car
@@ -19,8 +18,6 @@ class LoginForm(FlaskForm):
         role = User.query.filter_by(role=role.data).first()
         if role is not None:
             raise ValidationError('Please select a role')
-
-
 
 
 class AddVehicle(FlaskForm):
@@ -57,8 +54,6 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Please use a different email')
 
 
-
-
 class AddAvailability(FlaskForm):
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
     start_time = TimeField('Start Time', validators=[DataRequired()])
@@ -70,7 +65,7 @@ class ScheduleAppointment(FlaskForm):
     vehicle = StringField('Which Car', validators=[DataRequired()])
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
     start_time = TimeField('Start Time', validators=[DataRequired()])
-    mechanic = StringField('Mechanics',validators=[DataRequired()])
+    mechanic = StringField('Mechanics', validators=[DataRequired()])
 
     submit = SubmitField('Add')
 
@@ -80,16 +75,23 @@ class EditAppointmentForm(FlaskForm):
     start_time = TimeField('Update Start Time', validators=[DataRequired()])
     submit = SubmitField('Update')
 
+
 class OilChangeForm(FlaskForm):
     car = StringField('Which car', validators=[DataRequired()])
-    update_miles = IntegerField('Current Mileage: ') #input field #default value = Car.update_miles
-    submit = SubmitField('Submit') #bind this to the method that calculates miles_until_next_oil_change
+    update_miles = IntegerField('Current Mileage: ')  # input field #default value = Car.update_miles
+    submit = SubmitField('Submit')  # bind this to the method that calculates miles_until_next_oil_change
 
 
 class DeleteAppointmentForm(FlaskForm):
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
     start_time = TimeField('Start Time', validators=[DataRequired()])
-    mechanic = StringField('Mechanics',validators=[DataRequired()])
+    mechanic = StringField('Mechanics', validators=[DataRequired()])
     car = StringField('Car', validators=[DataRequired()])
     submit = SubmitField('Delete')
 
+
+class ReviewMechanic(FlaskForm):
+    mechanic = StringField('Mechanic name', validators=[DataRequired])
+    rating = IntegerField('Rating from 0-5', validators=[DataRequired])
+    comments = StringField('Any feedback')
+    submit = SubmitField('Submit')

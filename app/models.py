@@ -45,9 +45,7 @@ class Car(db.Model):
     miles_until_oil_change = db.Column(db.Integer, index=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-
-
-    def __init__(self, user,car_vin, make, model, color, mileage):
+    def __init__(self, user, car_vin, make, model, color, mileage):
         self.user = user
         self.car_vin = car_vin
         self.make = make
@@ -84,3 +82,13 @@ class Schedules(db.Model):
 
     def __repr__(self):
         return '<Schedules {}'.format(self.user.mechanic.appointment_date.appointment_time)
+
+
+class Reviews(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mechanic = db.Column(db.String(20), index=True)
+    rating = db.Column(db.Integer, index=True)
+    comments = db.Column(db.String(1000), index=True)
+
+    def __repr__(self):
+        return '<Reviews {}'.format(self.mechanic.rating.comments)

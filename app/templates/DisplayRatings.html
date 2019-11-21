@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% for x in all_reviews%}
-        {{x.mechanic}} has a rating of {{x.rating}}
+  {%for x in sort_reviews%}
+        {%if x.mechanic and x.id %}
+           <h2>{{x.mechanic}} has a rating of {{x.rating}}</h2>
+        {%endif%}
     {%endfor%}
 {%endblock%}
 

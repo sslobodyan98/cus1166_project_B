@@ -4,8 +4,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-    EditAppointmentForm, DeleteAppointmentForm
-from app.models import User, Car, Availability, Schedules
+    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic
+from app.models import User, Car, Availability, Schedules, Reviews
 
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
@@ -40,10 +40,9 @@ def index():
             mail.send(msg)
         elif diff.days < 1:
             msg = Message('Follow up for oil change appointment', recipients=[current_user.email])
-            msg.body = ''
-            msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey and review ' \
-                       'your mechanic we would highly appreciate it. <a ' \
-                       'href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a> '
+            msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey and review ' \
+                       'your mechanic we would highly appreciate it.'
+            msg.html = ' <a href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a>'
             mail.send(msg)
     return render_template('index.html', title='Home', cars=cars, appointments=appointments)
 
@@ -201,6 +200,7 @@ def OilChange():
                 x.mileage = form.update_miles.data
                 x.miles_until_oil_change = 5000 - form.update_miles.data
                 db.session.commit()
+        print(difference)
         if difference < 5000:
             return redirect(url_for('index'))
         elif difference >= 5000:
@@ -219,3 +219,27 @@ def OilChange():
 def mechanicDashboard():
     appointments = Schedules.query.all()
     return render_template('mechanicDashboard.html', title='Mechanic Dashboard', appointments=appointments)
+
+
+@app.route('/review_appointment', methods=['GET', 'POST'])
+@login_required
+def rate_mechanic():
+    form = ReviewMechanic()
+    ratings_already = Reviews.query.filter_by(mechanic=form.mechanic.data)
+    average_score = 0
+    if form.submit():
+        for x in ratings_already:
+            average_score += x.rating
+            print(average_score)
+        review_made = Reviews(mechanic=form.mechanic.data, comments=form.comments.data, rating=average_score)
+        db.session.add(review_made)
+        db.session.commit()
+    return render_template('MechanicRating.html', title='Mechanic Dashboard', form=form)
+
+
+@app.route('/view_reviews')
+@login_required
+def view_rating():
+    sort_reviews = Reviews.query.order_by(Reviews.mechanic)
+
+    return render_template('DisplayRatings.html', title='Mechanic Dashboard', sort_reviews=sort_reviews)

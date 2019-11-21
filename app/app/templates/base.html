@@ -1,19 +1,18 @@
 {% extends "bootstrap/base.html" %}
-<!--<link rel="stylesheet" media="screen" href="bootstrap/bootstrap.min.css">-->
-<!--<link rel="stylesheet" href="bootstrap/bootstrap-theme.min.css">-->
 <html>
     <head>
       {% if title %}
-      <title>{{ title }} - Maintenance Reminder </title>
+      <title>{{ title }} - Application</title>
       {% else %}
-      <title> <b>Welcome to Maintenance Reminder!  </b></title>
+      <title>Welcome to Application!</title>
       {% endif %}
     </head>
     <body>
         <div>
-               <ul class="nav nav-pills">
-             <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
-            </ul>
+            Application:
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}
@@ -27,6 +26,3 @@
         {% endwith %}
         {% block content %}{% endblock %}
     </body>
-
-</html>
-

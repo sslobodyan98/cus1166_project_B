@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+    </div>
+    <h1>Add Vehicle</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.make.label }}<br>
+            <input  type="text" name="make"><br>
+            {% for error in form.make.errors %}
+            <span style="color: rebeccapurple;">[{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.model.label }}<br>
+              <input  type="text" name="model"><br>
+            {% for error in form.model.errors %}
+            <span style="color: rebeccapurple;">[{{ error }}</span>
+            {% endfor %}
+        </p>
+{#        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>#}
+        <p><input type="submit" value="Submit"></p>
+    </form>
+{% endblock %}

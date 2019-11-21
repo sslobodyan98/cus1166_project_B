@@ -1,0 +1,48 @@
+
+{% extends "base.html" %}
+{% block content %}
+    <div>
+
+         <ul class="nav nav-pills">
+            <li role="presentation" ><a href="{{ url_for('index') }}">Home</a></li>
+
+             <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+
+             <li role="presentation"class="active"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+
+             <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
+
+              <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
+
+       <!-- <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
+        <a href="{{ url_for('OilChange') }}">Oil Change</a> -->
+         </ul>
+    </div>
+<h2>Oil Change</h2>
+
+
+
+
+    <form action="" method="post">
+        <div class="jumbotron">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.update_miles.label }}<br>
+            {{ form.update_miles(size=32) }}<br>
+            {% for error in form.update_miles.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.car.label }}<br>
+            {{ form.car(size=32) }}<br>
+            {% for error in form.car.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+        </div>
+    </form>
+{% endblock %}
