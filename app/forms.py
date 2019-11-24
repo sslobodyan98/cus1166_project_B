@@ -91,7 +91,7 @@ class DeleteAppointmentForm(FlaskForm):
 
 
 class ReviewMechanic(FlaskForm):
-    mechanic = StringField('Mechanic name', validators=[DataRequired])
-    rating = IntegerField('Rating from 0-5', validators=[DataRequired])
-    comments = StringField('Any feedback')
+    mechanic = StringField('Mechanic name', validators=[DataRequired()])
+    rating = DecimalField('Rating from 0-5', validators=[DataRequired()])
+    comments = StringField('Mechanic name',validators=[DataRequired()])
     submit = SubmitField('Submit')

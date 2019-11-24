@@ -1,10 +1,32 @@
 {% extends "base.html" %}
-
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 {% block content %}
-  {%for x in sort_reviews%}
-        {%if x.mechanic and x.id %}
-           <h2>{{x.mechanic}} has a rating of {{x.rating}}</h2>
-        {%endif%}
-    {%endfor%}
-{%endblock%}
+ <div>
+     <ul class="nav nav-pills">
+         <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+         <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+         <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
+         <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+         <li role="presentation"><a href="{{ url_for('index') }}">Home</a></li>
+         {% if current_user.user == 'Mechanic'%}
+                <li role="presentation" class="active"><a href="{{ url_for('mechanicDashboard') }}">Home</a></li>
+         {% endif %}
+            </ul>
+    </div>
 
+  <div class="jumbotron">
+  <div class="container">
+   {% for x in mechanics_ratings %}
+      <h2>{{x. mechanic}} received an average rating of  {{x.average}}<br></h2>
+        {% for i in all_reviews %}
+            {% if x.mechanic == i.mechanic%}
+                <h4>{{i.user}} rated {{i.mechanic}} as a {{i.rating}} out of 5 {{i.user}} thought {{i.mechanic}}
+                    was {{i.comment}} <br></h4>
+            {% endif %}
+        {% endfor %}
+{% endfor %}
+{%endblock%}
+  </div>
+  </div>

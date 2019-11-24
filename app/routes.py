@@ -5,7 +5,7 @@ from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
     EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic
-from app.models import User, Car, Availability, Schedules, Reviews
+from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings
 
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
@@ -225,21 +225,37 @@ def mechanicDashboard():
 @login_required
 def rate_mechanic():
     form = ReviewMechanic()
-    ratings_already = Reviews.query.filter_by(mechanic=form.mechanic.data)
-    average_score = 0
-    if form.submit():
-        for x in ratings_already:
-            average_score += x.rating
-            print(average_score)
-        review_made = Reviews(mechanic=form.mechanic.data, comments=form.comments.data, rating=average_score)
+    all_reviews = Reviews.query.order_by(Reviews.mechanic)
+    all_averages = Mechanic_Ratings.query.all()
+    if form.validate_on_submit():
+        total = 0
+        total_reviews = []
+        review_made = Reviews(mechanic=form.mechanic.data, comment=form.comments.data, rating=form.rating.data,
+                              user=current_user.user)
         db.session.add(review_made)
+
+        for x in all_reviews:
+            if x.mechanic == form.mechanic.data:
+                total_reviews += [x.rating]
+
+        for x in total_reviews:
+            total += x
+        avg = total / len(total_reviews)
+        print(avg)
+        for j in all_averages:
+            if Mechanic_Ratings.query.filter_by(mechanic=form.mechanic.data) is not None:
+                j.average = round(avg,2)
+            else:
+                mechanic_reviews = Mechanic_Ratings(mechanic=form.mechanic.data, average=round(avg,2))
+                db.session.add(mechanic_reviews)
         db.session.commit()
-    return render_template('MechanicRating.html', title='Mechanic Dashboard', form=form)
+    return render_template('MechanicRating.html', title='Review Mechanic', form=form)
 
 
 @app.route('/view_reviews')
 @login_required
 def view_rating():
-    sort_reviews = Reviews.query.order_by(Reviews.mechanic)
-
-    return render_template('DisplayRatings.html', title='Mechanic Dashboard', sort_reviews=sort_reviews)
+    mechanics_ratings = Mechanic_Ratings.query.all()
+    all_reviews = Reviews.query.all()
+    return render_template('DisplayRatings.html', title='Mechanic Dashboard', mechanics_ratings=mechanics_ratings,
+                           all_reviews=all_reviews)

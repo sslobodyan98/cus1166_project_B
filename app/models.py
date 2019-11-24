@@ -86,9 +86,22 @@ class Schedules(db.Model):
 
 class Reviews(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    mechanic = db.Column(db.String(20), index=True)
-    rating = db.Column(db.Integer, index=True)
-    comments = db.Column(db.String(1000), index=True)
+    mechanic = db.Column(db.String, index=True)
+    rating = db.Column(db.DECIMAL, index=True)
+    comment = db.Column(db.String, index=True)
+    user = db.Column(db.Integer, index=True)
 
     def __repr__(self):
-        return '<Reviews {}'.format(self.mechanic.rating.comments)
+        return '<Reviews {}'.format(self.mechanic.rating.user)
+
+
+class Mechanic_Ratings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mechanic = db.Column(db.String, index=True)
+    average = db.Column(db.DECIMAL, index=True)
+
+    def __repr__(self):
+        return '<Reviews {}'.format(self.mechanic.average)
+
+
+
