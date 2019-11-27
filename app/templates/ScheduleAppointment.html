@@ -1,31 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+.meet-the-team {
+  position: absolute;
+  right: 15px;
+  top: 22%;
+  text-align: center;
+}
+#team-member {
+  border-radius: 50%;
+  width: 80px;
+  border: 2px solid #1A237E;
+  margin-bottom: 30px;
+}
+.dropdown-des {
+  display: none;
+  position: absolute;
+  background-color: #e3f2fd;
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);  z-index: 1;
+}
+
+.team-members:hover .dropdown-des {
+  display: block;
+}
+</style>
 <div>
-
- <ul class="nav nav-pills">
-            <li role="presentation" > <a href="{{ url_for('index') }}">Home</a></li>
-
-             <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
-
-             <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
-
-       <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
-
-   <!-- <a href="{{ url_for('index') }}">Home</a>
-    <a href="{{ url_for('logout') }}">Logout</a>
-    <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
- </ul>
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+        <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+        <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
+        <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
+        <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+    </ul>
 </div>
+
+
+
 <h1>Schedule Appointment!</h1>
-<h5><b>If not redirected home the appointment wasn't succesful</b></h5>
-<h5>Available mechanics are, </h5>
-{%for x in mechanics%}
-{{x.user}},
-{%endfor%}
+<h5><b>If not redirected home the appointment wasn't successful</b></h5>
 <h4 style="color:red;"><em>Show Available Appointments</em> <a href="{{url_for('DisplayAvailabilities')}}"><svg style="width:24px;height:24px" viewBox="0 0 24 24">
     <path fill="#000000" d="M9,10H7V12H9V10M13,10H11V12H13V10M17,10H15V12H17V10M19,3H18V1H16V3H8V1H6V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V8H19V19Z" />
 </svg> </a></h4>
+
 <form action="" method="post">
       <div class="jumbotron">
     {{ form.hidden_tag() }}
@@ -66,5 +84,20 @@
     <p>{{ form.submit() }}</p>
       </div>
 </form>
+<div class="meet-the-team">
+  <h3>Available Mechanics</h3>
+
+    {%for x in mechanics%}
+         <div class="team-members">
+        <img id="team-member" src="http://blog.springfield.k12.or.us/yolanda/files/2009/02/person-placeholder-1.png"
+             alt="team member">
+        <div class="dropdown-des">
+            <h4> {{x.user}}</h4>
+        </div>
+
+</div>
+    {%endfor%}
+
+</div>
 
 {% endblock %}

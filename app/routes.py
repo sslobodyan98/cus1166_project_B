@@ -6,6 +6,7 @@ from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
     EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic
 from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings
+from flask import Flask
 
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
@@ -19,9 +20,45 @@ app.config['MAIL_PASSWORD'] = 'SoftwareEngineering1166'
 app.config['MAIL_DEFAULT_SENDER'] = 'groupbsoftwareengineering1166@gmail.com'
 app.config['MAIL_MAX_EMAILS'] = None
 # app.config['MAIL_SUPPRESS_SEND'] = False
-app.config['MAIL_ASCII_ATTATCHMENTS'] = False
+app.config['MAIL_ASCII_ATTACHMENTS'] = False
 
 mail = Mail(app)
+
+
+def appointment_reminder():
+    appointments = Schedules.query.all()
+    users = User.query.all()
+
+    with app.app_context():
+        for x in appointments:
+            diff = x.appointment_date - datetime.date.today()
+            for i in users:
+                if diff.days == 3 and i.user == x.user and i.role == 'Car Owner':
+                    msg = Message('Appointment Reminder Notification', recipients=[i.email])
+                    msg.html = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
+                    mail.send(msg)
+                if diff.days < 1 and i.user == x.user and i.role == 'Car Owner':
+                    msg = Message('Follow up for oil change appointment', recipients=[i.email])
+                    msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+                               'and review your mechanic we would highly appreciate it.'
+                    msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+                               'and review your mechanic we would highly appreciate it.' \
+                               ' <a href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a>'
+                    mail.send(msg)
+                if diff.days < 1 and x.mechanic == i.user and i.role == 'Mechanic':
+                    msg = Message('Follow up for oil change appointment', recipients=[i.email])
+                    msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+                               'and review your mechanic we would highly appreciate it.'
+                    msg.html = 'Hello, I hope your appointment went well. If you could please take a second to ' \
+                               'suggest other repairs that the customer may need we would highly appreciate it.' \
+                               ' <a href=""> Click here to access review</a>'
+# @ MARIYAM PUT THE URL FOR THE MECHANIC SUGGESTION PART IN THE HREF
+                    mail.send(msg)
+
+    return app
+
+
+appointment_reminder()
 
 
 @app.route('/')
@@ -30,20 +67,6 @@ mail = Mail(app)
 def index():
     cars = Car.query.all()
     appointments = Schedules.query.all()
-    appointments = Schedules.query.all()
-    for x in appointments:
-        diff = x.appointment_date - datetime.date.today()
-        if diff.days == 3:
-            msg = Message('Appointment Reminder Notification', recipients=[current_user.email])
-            msg.body = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
-            msg.html = '<p>You have an appointment scheduled in 3 days</p>'
-            mail.send(msg)
-        elif diff.days < 1:
-            msg = Message('Follow up for oil change appointment', recipients=[current_user.email])
-            msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey and review ' \
-                       'your mechanic we would highly appreciate it.'
-            msg.html = ' <a href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a>'
-            mail.send(msg)
     return render_template('index.html', title='Home', cars=cars, appointments=appointments)
 
 
@@ -244,11 +267,13 @@ def rate_mechanic():
         print(avg)
         for j in all_averages:
             if Mechanic_Ratings.query.filter_by(mechanic=form.mechanic.data) is not None:
-                j.average = round(avg,2)
+                if j.mechanic == form.mechanic.data:
+                    j.average = round(avg, 2)
             else:
-                mechanic_reviews = Mechanic_Ratings(mechanic=form.mechanic.data, average=round(avg,2))
+                mechanic_reviews = Mechanic_Ratings(mechanic=form.mechanic.data, average=round(avg, 2))
                 db.session.add(mechanic_reviews)
         db.session.commit()
+        return redirect(url_for('view_rating'))
     return render_template('MechanicRating.html', title='Review Mechanic', form=form)
 
 

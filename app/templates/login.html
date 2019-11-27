@@ -3,25 +3,6 @@
 
 {% block content %}
 
-    <div>
-
-         <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="{{ url_for('index') }}">Home</a></li>
-
-
-             <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
-
-
-
-         <!--   <a href="{{ url_for('index') }}">Home</a>
-
-            <a href="{{ url_for('login') }}">Login</a> -->
-
-            <!--<a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
-         </ul>
-    </div>
-
-
 
     <h1>Sign In</h1>
 
@@ -42,7 +23,7 @@
 
             {% for error in form.user.errors %}
 
-            <span style="color: #663399;">[{{ error }}</span>
+            <span style="color: #9d0100;">[{{ error }}</span>
 
             {% endfor %}
 
@@ -56,7 +37,7 @@
 
             {% for error in form.password.errors %}
 
-            <span style="color: #663399;">[{{ error }}</span>
+            <span style="color: #9d0100;">[{{ error }}</span>
 
             {% endfor %}
 

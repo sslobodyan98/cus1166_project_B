@@ -95,3 +95,4 @@ class ReviewMechanic(FlaskForm):
     rating = DecimalField('Rating from 0-5', validators=[DataRequired()])
     comments = StringField('Mechanic name',validators=[DataRequired()])
     submit = SubmitField('Submit')
+
