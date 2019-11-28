@@ -28,7 +28,7 @@
     {%endif%}
 {% endfor %}
 
-    {% for x in schedule %}
+    {% for x in schedules %}
     <div>
         {%if current_user.user == x.mechanic%}
             <p>You have an appointment booked for {{ x.appointment_date }} at <b> {{ x.appointment_time }} </b></p>

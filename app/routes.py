@@ -30,7 +30,6 @@ mail = Mail(app)
 def index():
     cars = Car.query.all()
     appointments = Schedules.query.all()
-    appointments = Schedules.query.all()
     for x in appointments:
         diff = x.appointment_date - datetime.date.today()
         if diff.days == 3:
@@ -61,7 +60,6 @@ def login():
         elif user.role == 'Mechanic' and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect(url_for('mechanicDashboard'))
-
     return render_template('login.html', title='Sign In', form=form)
 
 
@@ -158,7 +156,7 @@ def editAppointment():
         appointments = Schedules.query.all()
         for x in appointments:
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data:
-                return redirect(url_for('editAppointments'))
+                return render_template('EditApt.html', title='Edit Appointment', form=form)
             elif current_user.user == x.user and form.date.data == x.appointment_date:
                 x.appointment_time = form.start_time.data
                 db.session.commit()
@@ -198,8 +196,8 @@ def OilChange():
         for x in cars:
             if x.user == current_user.user and x.model == form.car.data:
                 difference = form.update_miles.data - x.mileage
+                x.miles_until_oil_change = 5000 - difference
                 x.mileage = form.update_miles.data
-                x.miles_until_oil_change = 5000 - form.update_miles.data
                 db.session.commit()
         if difference < 5000:
             return redirect(url_for('index'))
