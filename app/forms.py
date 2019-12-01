@@ -19,8 +19,6 @@ class LoginForm(FlaskForm):
         role = User.query.filter_by(role=role.data).first()
         if role is not None:
             raise ValidationError('Please select a role')
-
-#Forgot Password
 '''
 class ForgotPasswordForm(FlaskForm):
     user = StringField('Username', validators=[DataRequired()])
@@ -36,7 +34,6 @@ class ForgotPasswordForm(FlaskForm):
         if user is None: #if email NOT found
             raise ValidationError('Please try a different email.')
 '''
-#Reset Password
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('Enter New Password', validators=[DataRequired()])
     password2 = PasswordField('Repeat New Password', validators=[DataRequired(), EqualTo('password')])

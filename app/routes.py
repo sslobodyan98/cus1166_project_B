@@ -5,7 +5,6 @@ from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
     EditAppointmentForm, DeleteAppointmentForm, ResetPasswordForm
-    #, ForgotPasswordForm
 from app.models import User, Car, Availability, Schedules
 
 app.config['DEBUG'] = True
@@ -64,8 +63,6 @@ def login():
             return redirect(url_for('mechanicDashboard'))
 
     return render_template('login.html', title='Sign In', form=form)
-
-#Forgot password:
 '''
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def ForgotPassword():
@@ -78,7 +75,6 @@ def ForgotPassword():
         #return redirect(url_for('ResetPassword'))
     return render_template('forgot_password.html', title='forgot_password', form=form) #users=users?
 '''
-#Reset password:
 @app.route('/resetPassword', methods=['GET', 'POST'])
 def ResetPassword():
     form = ResetPasswordForm()
