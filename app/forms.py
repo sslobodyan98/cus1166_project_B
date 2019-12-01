@@ -35,8 +35,8 @@ class ForgotPasswordForm(FlaskForm):
             raise ValidationError('Please try a different email.')
 '''
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField('Enter New Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat New Password', validators=[DataRequired(), EqualTo('password')])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Change password')
 
 class AddVehicle(FlaskForm):

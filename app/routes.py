@@ -78,16 +78,14 @@ def ForgotPassword():
 @app.route('/resetPassword', methods=['GET', 'POST'])
 def ResetPassword():
     form = ResetPasswordForm()
-    users = User.query.all()  # query all users
     if form.validate_on_submit():
-        for x in users:  # ?
-            if x.user == current_user.user:
-                db.session.delete(x.password)  # delete old password
-                x.set_password(form.password.data)  # get new password data that they entered
-                db.session.add(x.password)  # add new password
-                db.session.commit()  # commit
-                flash('Your password has been changed')
-                return redirect(url_for('login'))  # redirect to login page
+        #user = current_user #?
+        db.session.delete(user.password_hash)  # delete old password
+        user.set_password(form.password.data) # get new password data that they entered
+        #add new password to db ?
+        db.session.commit()  # commit changes
+        flash('Your password has been changed')
+        return redirect(url_for('login'))  # redirect to login page
     return render_template('reset_password.html', title='Reset Password', form=form)
 
 @app.route('/logout')
