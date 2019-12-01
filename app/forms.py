@@ -20,8 +20,27 @@ class LoginForm(FlaskForm):
         if role is not None:
             raise ValidationError('Please select a role')
 
-
-
+#Forgot Password
+'''
+class ForgotPasswordForm(FlaskForm):
+    user = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    submit = SubmitField('Reset Password')
+    def validate_user(self, user):
+        user = User.query.filter_by(user=user.data).first() #query through users
+        if user is None: #if user NOT found
+            raise ValidationError('User not found. Please try a different name.')
+    # if user IS found
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first() #query through email addresses FOR user???
+        if user is None: #if email NOT found
+            raise ValidationError('Please try a different email.')
+'''
+#Reset Password
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Enter New Password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat New Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Change password')
 
 class AddVehicle(FlaskForm):
     car_vin = StringField('VIN Number', validators=[DataRequired()])

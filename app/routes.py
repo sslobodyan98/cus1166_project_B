@@ -4,7 +4,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-    EditAppointmentForm, DeleteAppointmentForm
+    EditAppointmentForm, DeleteAppointmentForm, ResetPasswordForm
+    #, ForgotPasswordForm
 from app.models import User, Car, Availability, Schedules
 
 app.config['DEBUG'] = True
@@ -64,6 +65,34 @@ def login():
 
     return render_template('login.html', title='Sign In', form=form)
 
+#Forgot password:
+'''
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def ForgotPassword():
+    form = ForgotPasswordForm()
+    if form.validate_on_submit():
+        msg = Message('Reset Password', recipients=[current_user.email])
+        msg.body = 'Click the link below to reset your password:' '(link)'
+        msg.html = '<b>Reset Password</b>'
+        mail.send(msg)
+        #return redirect(url_for('ResetPassword'))
+    return render_template('forgot_password.html', title='forgot_password', form=form) #users=users?
+'''
+#Reset password:
+@app.route('/resetPassword', methods=['GET', 'POST'])
+def ResetPassword():
+    form = ResetPasswordForm()
+    users = User.query.all()  # query all users
+    if form.validate_on_submit():
+        for x in users:  # ?
+            if x.user == current_user.user:
+                db.session.delete(x.password)  # delete old password
+                x.set_password(form.password.data)  # get new password data that they entered
+                db.session.add(x.password)  # add new password
+                db.session.commit()  # commit
+                flash('Your password has been changed')
+                return redirect(url_for('login'))  # redirect to login page
+    return render_template('reset_password.html', title='Reset Password', form=form)
 
 @app.route('/logout')
 def logout():
