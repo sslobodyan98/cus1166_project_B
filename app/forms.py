@@ -21,12 +21,12 @@ class LoginForm(FlaskForm):
             raise ValidationError('Please select a role')
 
 class ForgotPasswordForm(FlaskForm):
-    user = StringField('Username', validators=[DataRequired()])
+    user = StringField('Enter username', validators=[DataRequired()])
     submit = SubmitField('Send Email')
 
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    password = PasswordField('Enter new password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat new password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Change password')
 
 class AddVehicle(FlaskForm):

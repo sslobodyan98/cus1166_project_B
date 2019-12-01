@@ -67,31 +67,34 @@ def login():
 @app.route('/forgotPassword', methods=['GET', 'POST'])
 def ForgotPassword():
     form = ForgotPasswordForm()
-    if form.validate_on_submit():
-        '''
-        #FIRST, create temporary password:
-        db.session.delete(user.password_hash)  #delete old password
-        user.set_password('temporarypassword') #set new password to temporary passsword, change to random generator
-        #add new password to db ?
-        db.session.commit()  # commit changes
-        '''
-        #OR link to reset password???? But will it let you in if no password????? Also mobile
-        msg = Message('Forgot Password', recipients=[current_user.email])
-        msg.body = 'Hello, you are receiving this email because you forgot your account password.' \
-            'href="http://127.0.0.1:5000/reset_password"> Click here to reset your password</a> '
-        msg.html = '<p>Link to reset password</p>'
-        mail.send(msg)
+    users = User.query.all() #query through users
+    if form.validate_on_submit(): #if submit button is pressed
+        for x in users: #for users
+            if x.user == form.user.data: #if a user in users == username entered in form
+                # OR link to reset password???? But will it let you in if no password????? Also mobile
+                msg = Message('Forgot Password', recipients=[x.email])
+                msg.body = ' '
+                msg.html = 'Link to reset password: <a ' \
+                       'href="http://127.0.0.1:5000/resetPassword"> Click here to reset password</a> '
+                mail.send(msg)
     return render_template('forgot_password.html', title='Forgot Password', form=form)
 
 @app.route('/resetPassword', methods=['GET', 'POST'])
 def ResetPassword():
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        #user = current_user #?
-        db.session.delete(user.password.data)  #delete old password
+        # re-enter old password?
+
+        #db.session.delete(user.password_hash.data)  #delete old password
+
         user.set_password(form.password.data) #set new password data that they entered
+
         #add new password to db ?
+
+        #check that new password isn't same as old?
+
         db.session.commit()  #commit changes
+
         flash('Your password has been changed')
         return redirect(url_for('login'))  #redirect to login page
     return render_template('reset_password.html', title='Reset Password', form=form)
