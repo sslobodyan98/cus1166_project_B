@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-    EditAppointmentForm, DeleteAppointmentForm
+    EditAppointmentForm, DeleteAppointmentForm, DeleteVehicleForm
 from app.models import User, Car, Availability, Schedules
 
 app.config['DEBUG'] = True
@@ -108,6 +108,19 @@ def RegisterCar():
         return redirect(url_for('index'))
     return render_template('addVehicle.html', title='Add Vehicle', form=form)
 
+
+@app.route('/DeleteVehicle', methods=['GET', 'POST'])
+def deleteVehicle():
+    form = DeleteVehicleForm()
+    if form.validate_on_submit():
+        cars = Car.query.all()
+        for x in cars:
+            if x.car_vin == form.car_info.data:
+                db.session.delete(x)
+                db.session.commit()
+                return redirect(url_for('index'))
+
+    return render_template('delete_vehicle.html', title='Delete Vehicle', form=form)
 
 @app.route('/addAvailability', methods=['GET', 'POST'])
 def addAvailability():

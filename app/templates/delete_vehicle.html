@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+
+ <ul class="nav nav-pills">
+            <li role="presentation" > <a href="{{ url_for('index') }}">Home</a></li>
+
+             <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+
+             <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+
+       <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
+
+   <!-- <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
+ </ul>
+</div>
+
+<h1>Delete Vehicle!</h1>
+
+<form action="" method="post">
+    <div class="jumbotron" >
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.car_info.label }}<br>
+        {{ form.car_info(size=10) }}
+        {% for error in form.car_info.errors %}
+        <span style="color: rebeccapurple;">[{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>{{ form.submit() }}</p>
+    </div>
+</form>
+{% endblock %}

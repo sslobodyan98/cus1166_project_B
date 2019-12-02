@@ -36,6 +36,10 @@ class AddVehicle(FlaskForm):
         if car_vin is not None:
             raise ValidationError('Please use a different VIN')
 
+class DeleteVehicleForm(FlaskForm):
+    car_info = StringField('VIN Number', validators=[DataRequired()])
+    submit = SubmitField('Delete')
+
 
 class RegistrationForm(FlaskForm):
     user = StringField('User', validators=[DataRequired()])
@@ -55,8 +59,6 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email')
-
-
 
 
 class AddAvailability(FlaskForm):
