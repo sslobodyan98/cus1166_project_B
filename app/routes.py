@@ -58,7 +58,7 @@ def appointment_reminder():
     return app
 
 
-# appointment_reminder()
+appointment_reminder()
 
 
 @app.route('/')
@@ -67,24 +67,7 @@ def appointment_reminder():
 def index():
     cars = Car.query.all()
     appointments = Schedules.query.all()
-<<<<<<< HEAD
-=======
-    for x in appointments:
-        diff = x.appointment_date - datetime.date.today()
-        if diff.days == 3:
-            msg = Message('Appointment Reminder Notification', recipients=[current_user.email])
-            msg.body = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
-            msg.html = '<p>You have an appointment scheduled in 3 days</p>'
-            mail.send(msg)
-        elif diff.days < 1:
-            msg = Message('Follow up for oil change appointment', recipients=[current_user.email])
-            msg.body = ''
-            msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey and review ' \
-                       'your mechanic we would highly appreciate it. <a ' \
-                       'href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a> '
-            mail.send(msg)
->>>>>>> 0698bbb604b2e95cbb821982c10de9e17c5bb669
-    return render_template('index.html', title='Home', cars=cars, appointments=appointments)
+    return render_template('index.html', title='Home',cars=cars, appointments=appointments)
 
 
 @app.route('/login', methods=['GET', 'POST'])

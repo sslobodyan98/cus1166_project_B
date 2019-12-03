@@ -9,23 +9,20 @@
     <p>New Users  <a href="{{ url_for('register') }}">Sign Up Here!</a></p>
 
     <form action="" method="post" novalidate>
-<div class="jumbotron">
-        {{ form.hidden_tag() }}
+    <div class="jumbotron">
 
+        {{ form.hidden_tag() }}
         <p>
 
             {{ form.user.label }}<br>
             {{ form.user(size=32) }}
             {% for error in form.user.errors %}
-<<<<<<< HEAD
 
             <span style="color: #9d0100;">[{{ error }}</span>
 
             {% endfor %}
-=======
-            <span style="color: #663399;">[{{ error }}</span>
-            span≥{% endfor %}
->>>>>>> 0698bbb604b2e95cbb821982c10de9e17c5bb669
+
+
 
         </p>
 
@@ -34,13 +31,7 @@
             {{ form.password.label }}<br>
             {{ form.password(size=32) }}
             {% for error in form.password.errors %}
-<<<<<<< HEAD
-
             <span style="color: #9d0100;">[{{ error }}</span>
-
-=======
-            <span style="color: #663399;">[{{ error }}</span>
->>>>>>> 0698bbb604b2e95cbb821982c10de9e17c5bb669
             {% endfor %}
 
         </p>
