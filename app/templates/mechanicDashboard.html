@@ -13,29 +13,18 @@
 </div>
 
 
-
-
+<div class="jumbotron">
+<div class="container text-center">
 <h1>Hi {{ current_user.user }}!</h1>
-
-{% for car in cars %}
-    {%if current_user.user == car.user%}
-<div>
-    <div class="jumbotron">
-        <p>{{ current_user.user }} owns: <b> a {{car.make}} {{ car.model }} </b></p>
-    </div>
-
-    {%endif%}
-{% endfor %}
-
-    {% for x in schedule %}
+{% for x in appointments %}
     <div>
         {%if current_user.user == x.mechanic%}
-            <p>You have an appointment booked for {{ x.appointment_date }} at <b> {{ x.appointment_time }} </b></p>
+            <p>You have a <b>{{x.appointment_type}}</b> appointment booked for {{ x.appointment_date }} at <b> {{ x.appointment_time }} </b></p>
         {%endif%}
     </div>
-    {% endfor %}
+{% endfor %}
+
 </div>
-
-
+</div>
 
 {% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div>
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="{{url_for('index') }}">Home</a></li>
+        <li role="presentation"><a href="{{ url_for('RegisterCar') }}" >Add Vehicle</a></li>
+        <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+        <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
+        <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
+        <li role="presentation" class="active"><a href="{{url_for('recommendations')}}">Suggested Recommendations</a> </li>
+        <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+    </ul>
+</div>
+
+<table class="table container">
+    <thead>
+    <tr>
+        <th scope="col">Service</th>
+        <th scope="col">Recommendation</th>
+        <th scope="col">Schedule an appointment</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for x in recommendations_made%}
+        {% if current_user.user == x.user%}
+            <tr><br>
+                <td>Tire Rotations</td>
+                <td>{{x.Tire_rotations}}</td>
+                {% if x.Tire_rotations == "Yes" %}
+                <td><a href="{{url_for('Schedule')}}"> Book your own appointment</a></td>
+                {% endif %}
+
+            <tr>
+                <td>Registration</td>
+                <td>{{x.Registration_update}}</td>
+                {% if x.Registration_update == "Yes" %}
+                <td><a href="{{url_for('Schedule')}}"> Book your own appointment</a></td>
+                {% endif %}
+
+            </tr>
+             <tr>
+                <td>Break Change</td>
+                <td>{{x.Change_break}}</td>
+                {% if x.Change_break == "Yes" %}
+                 <td><a href="{{url_for('Schedule')}}"> Book your own appointment</a></td>
+                {% endif %}
+
+            </tr>
+            <tr>
+                <td>Car Wash</td>
+                <td>{{x.Car_Wash}}</td>
+                {% if x.Car_Wash == "Yes" %}
+                <td><a href="{{url_for('Schedule')}}"> Book your own appointment</a></td>
+                {% endif %}
+
+            </tr>
+            <tr>
+                <td>Oil Change</td>
+                <td>{{x.Oil_change}}</td>
+                {% if x.Oil_change == "Yes" %}
+                <td><a href="{{url_for('Schedule')}}"> Book your own appointment</a></td>
+                {% endif %}
+
+            </tr>
+
+
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

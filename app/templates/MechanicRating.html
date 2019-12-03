@@ -4,18 +4,20 @@
 
 <div>
     <ul class="nav nav-pills">
-        <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+        <li role="presentation"><a href="{{url_for('index') }}">Home</a></li>
+        <li role="presentation"><a href="{{ url_for('RegisterCar') }}" >Add Vehicle</a></li>
         <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
         <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
         <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
+        <li role="presentation"><a href="{{url_for('recommendations')}}">Suggested Recommendations</a> </li>
         <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
     </ul>
-</div>
 
 
 <form action="" method="post">
-    <div class="jumbotron">
-        {{ form.hidden_tag() }}
+<div class="jumbotron">
+
+    {{ form.hidden_tag() }}
     <p>
         {{ form.mechanic.label }}<br>
         {{ form.mechanic }}
@@ -41,7 +43,8 @@
     </p>
 
     <p>{{ form.submit() }}</p>
-      </div>
+
+</div>
 </form>
 
 {% endblock %}

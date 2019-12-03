@@ -66,7 +66,9 @@ class ScheduleAppointment(FlaskForm):
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
     start_time = TimeField('Start Time', validators=[DataRequired()])
     mechanic = StringField('Mechanics', validators=[DataRequired()])
-
+    appointment_type = SelectField(choices=[('Oil Change', 'Oil Change'), ('Tire Rotation', 'Tire Rotation'),
+                                            ('Registration', 'Registration'), ('Break Change', 'Break Change'),
+                                            ('Car Wash', 'Car Wash')], validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
@@ -93,6 +95,21 @@ class DeleteAppointmentForm(FlaskForm):
 class ReviewMechanic(FlaskForm):
     mechanic = StringField('Mechanic name', validators=[DataRequired()])
     rating = DecimalField('Rating from 0-5', validators=[DataRequired()])
-    comments = StringField('Mechanic name',validators=[DataRequired()])
+    comments = StringField('Mechanic name', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+
+class Suggestions(FlaskForm):
+    user = StringField('Who is the user', validators=[DataRequired()])
+    Tire_rotations = RadioField('Does the customer need a tire rotation', choices=[('Yes', 'Yes'), ('No', 'No')],
+                                validators=[DataRequired()])
+    Registration_update = RadioField('Does the customer need a registration update',
+                                     choices=[('Yes', 'Yes'), ('No', 'No')],
+                                     validators=[DataRequired()])
+    Change_break = RadioField('Does the customer need their breaks changed', choices=[('Yes', 'Yes'), ('No', 'No')],
+                              validators=[DataRequired()])
+    Car_Wash = RadioField('Does the customer need a car wash', choices=[('Yes', 'Yes'), ('No', 'No')],
+                          validators=[DataRequired()])
+    Oil_change = RadioField('Does the customer need an oil change', choices=[('Yes', 'Yes'), ('No', 'No')],
+                            validators=[DataRequired()])
+    submit = SubmitField('Submit')

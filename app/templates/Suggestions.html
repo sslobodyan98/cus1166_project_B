@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div>
+    <ul class="nav nav-pills">
+            <li role="presentation"><a href="{{ url_for('mechanicDashboard') }}">Home</a></li>
+            <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
+            <li role="presentation"><a href="{{url_for('addAvailability')}}">Add Availability</a></li>
+            <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+    </ul>
+</div>
+
+
+
+<div class="jumbotron">
+<div class="text-center container">
+    <h2>Reccomendations</h2>
+
+    <form action="" method="post" class="text-center container">
+
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.user.label }}<br>
+            {{ form.user}}<br>
+            {% for error in form.user.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.Tire_rotations.label }}<br>
+            {{ form.Tire_rotations}}<br>
+            {% for error in form.Tire_rotations.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.Registration_update.label }}<br>
+            {{ form.Registration_update}}<br>
+            {% for error in form.Registration_update.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.Change_break.label }}<br>
+            {{ form.Change_break}}<br>
+            {% for error in form.Change_break.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.Car_Wash.label }}<br>
+            {{ form.Car_Wash}}<br>
+            {% for error in form.Car_Wash.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.Oil_change.label }}<br>
+            {{ form.Oil_change}}<br>
+            {% for error in form.Oil_change.errors %}
+            <span style="color: #ff0000;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>{{ form.submit() }}</p>
+    </form>
+
+</div>
+</div>
+{% endblock %}

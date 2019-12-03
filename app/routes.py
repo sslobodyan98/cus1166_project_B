@@ -4,8 +4,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic
-from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings
+    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions
+from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings, Recommendations
 from flask import Flask
 
 app.config['DEBUG'] = True
@@ -51,14 +51,14 @@ def appointment_reminder():
                                'and review your mechanic we would highly appreciate it.'
                     msg.html = 'Hello, I hope your appointment went well. If you could please take a second to ' \
                                'suggest other repairs that the customer may need we would highly appreciate it.' \
-                               ' <a href=""> Click here to access review</a>'
-# @ MARIYAM PUT THE URL FOR THE MECHANIC SUGGESTION PART IN THE HREF
+                               '<a href="http://127.0.0.1:5000/suggest_recommendations"> Click here to access ' \
+                               'review</a> '
                     mail.send(msg)
 
     return app
 
 
-appointment_reminder()
+# appointment_reminder()
 
 
 @app.route('/')
@@ -146,9 +146,8 @@ def addAvailability():
 @app.route('/ScheduleAppointment', methods=['GET', 'POST'])
 def Schedule():
     form = ScheduleAppointment()
-
-    mechanics = User.query.filter_by(role='Mechanic')
     availabilities = Availability.query.all()
+    mechanics = User.query.filter_by(role="Mechanic")
     if form.validate_on_submit():
         appointments = Schedules.query.all()
         for x in appointments:
@@ -165,7 +164,8 @@ def Schedule():
                     form.start_time.data < i.start_time or form.start_time.data > i.end_time):
                 return redirect(url_for('Schedule'))
         meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
-                            appointment_time=form.start_time.data, vehicle=form.vehicle.data)
+                            appointment_time=form.start_time.data, vehicle=form.vehicle.data,
+                            appointment_type=form.appointment_type.data)
         db.session.add(meeting)
         db.session.commit()
         return redirect(url_for('index'))
@@ -265,14 +265,22 @@ def rate_mechanic():
             total += x
         avg = total / len(total_reviews)
         print(avg)
-        for j in all_averages:
-            if Mechanic_Ratings.query.filter_by(mechanic=form.mechanic.data) is not None:
-                if j.mechanic == form.mechanic.data:
-                    j.average = round(avg, 2)
-            else:
-                mechanic_reviews = Mechanic_Ratings(mechanic=form.mechanic.data, average=round(avg, 2))
-                db.session.add(mechanic_reviews)
+
+        if Mechanic_Ratings.query.first() is None:
+            mechanic_reviews = Mechanic_Ratings(mechanic=form.mechanic.data, average=round(avg, 2))
+            db.session.add(mechanic_reviews)
+        else:
+            for j in all_averages:
+                if Mechanic_Ratings.query.filter_by(mechanic=form.mechanic.data) is None:
+                    if j.mechanic == form.mechanic.data:
+                        print("2nd if")
+                        j.average = round(avg, 2)
+                else:
+                    print("else")
+                    mechanic_reviews = Mechanic_Ratings(mechanic=form.mechanic.data, average=round(avg, 2))
+                    db.session.add(mechanic_reviews)
         db.session.commit()
+
         return redirect(url_for('view_rating'))
     return render_template('MechanicRating.html', title='Review Mechanic', form=form)
 
@@ -282,5 +290,31 @@ def rate_mechanic():
 def view_rating():
     mechanics_ratings = Mechanic_Ratings.query.all()
     all_reviews = Reviews.query.all()
-    return render_template('DisplayRatings.html', title='Mechanic Dashboard', mechanics_ratings=mechanics_ratings,
-                           all_reviews=all_reviews)
+    users = User.query.filter_by(role='Mechanic')
+    return render_template('DisplayRatings.html', title='Mechanic Reviews', mechanics_ratings=mechanics_ratings,
+                           all_reviews=all_reviews, users=users)
+
+
+@app.route('/suggest_recommendations', methods=['GET', 'POST'])
+@login_required
+def suggest_recommendations():
+    form = Suggestions()
+    if form.validate_on_submit():
+        recommendations_suggested = Recommendations(user=form.user.data, Tire_rotations=form.Tire_rotations.data,
+                                                    Registration_update=form.Registration_update.data,
+                                                    Change_break=form.Change_break.data, Car_Wash=form.Car_Wash.data,
+                                                    Oil_change=form.Oil_change.data)
+        db.session.add(recommendations_suggested)
+        db.session.commit()
+
+        return redirect(url_for('mechanicDashboard'))
+
+    return render_template('Suggestions.html', title='Recommendations', form=form)
+
+
+@app.route('/suggested_recommendations', methods=['GET', 'POST'])
+@login_required
+def recommendations():
+    recommendations_made = Recommendations.query.all()
+    return render_template('Suggestions_Proposed.html', title='Recommendations Made',
+                           recommendations_made=recommendations_made)
