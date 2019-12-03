@@ -6,6 +6,7 @@
 <div>
     <ul class="nav nav-pills">
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         <li role="presentation" class="active"><a href="{{ url_for('index') }}">Home</a></li>
         <li role="presentation"><a href="{{url_for('addAvailability')}}">Add Availability</a></li>
@@ -17,34 +18,38 @@
             <li role="presentation"><a href="{{url_for('addAvailability')}}">Add Availability</a></li>
             <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
 >>>>>>> Sarah_Schedule
+=======
+            <li role="presentation" class="active"><a href="{{ url_for('mechanicDashboard') }}">Home</a></li>
+            <li role="presentation"><a href="{{url_for('addAvailability')}}">Add Availability</a></li>
+            <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+>>>>>>> 0698bbb604b2e95cbb821982c10de9e17c5bb669
     </ul>
 </div>
 
+<h1>Hi, {{ current_user.user }}!</h1>
+        {% for x in cars %}
+            {%if current_user.user == x.user%}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+             <div>
+                 <p>{{ current_user.user }} owns: <b> {{ x.model }}</b>  and has <b>{{x.miles_until_oil_change}}</b> miles until they need an oil change</b> </p>
+             </div>
+            {% endif %}
+        {%endfor%}
+>>>>>>> 0698bbb604b2e95cbb821982c10de9e17c5bb669
 
 
-<h1>Hi {{ current_user.user }}!</h1>
+        {% for x in appointments %}
+            {%if current_user.user == x.mechanic%}
+        <div>
+            <p>{{ current_user.user }} has an appointment on: <b> {{ x.appointment_date}}</b> at <b>{{x.appointment_time}}</b>
+            </p>
+        </div>
+{%endif%}
 
-{% for car in cars %}
-    {%if current_user.user == car.user%}
-<div>
-    <div class="jumbotron">
-        <p>{{ current_user.user }} owns: <b> a {{car.make}} {{ car.model }} </b></p>
-    </div>
-
-    {%endif%}
-{% endfor %}
-
-    {% for x in schedule %}
-    <div>
-        {%if current_user.user == x.mechanic%}
-            <p>You have an appointment booked for {{ x.appointment_date }} at <b> {{ x.appointment_time }} </b></p>
-        {%endif%}
-    </div>
-    {% endfor %}
-</div>
-
+{%endfor%}
 
 =======
 <div class="jumbotron">

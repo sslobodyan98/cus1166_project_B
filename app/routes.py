@@ -67,6 +67,23 @@ def appointment_reminder():
 def index():
     cars = Car.query.all()
     appointments = Schedules.query.all()
+<<<<<<< HEAD
+=======
+    for x in appointments:
+        diff = x.appointment_date - datetime.date.today()
+        if diff.days == 3:
+            msg = Message('Appointment Reminder Notification', recipients=[current_user.email])
+            msg.body = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
+            msg.html = '<p>You have an appointment scheduled in 3 days</p>'
+            mail.send(msg)
+        elif diff.days < 1:
+            msg = Message('Follow up for oil change appointment', recipients=[current_user.email])
+            msg.body = ''
+            msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey and review ' \
+                       'your mechanic we would highly appreciate it. <a ' \
+                       'href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a> '
+            mail.send(msg)
+>>>>>>> 0698bbb604b2e95cbb821982c10de9e17c5bb669
     return render_template('index.html', title='Home', cars=cars, appointments=appointments)
 
 
@@ -83,7 +100,6 @@ def login():
         elif user.role == 'Mechanic' and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect(url_for('mechanicDashboard'))
-
     return render_template('login.html', title='Sign In', form=form)
 
 
@@ -180,7 +196,7 @@ def editAppointment():
         appointments = Schedules.query.all()
         for x in appointments:
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data:
-                return redirect(url_for('editAppointments'))
+                return render_template('EditApt.html', title='Edit Appointment', form=form)
             elif current_user.user == x.user and form.date.data == x.appointment_date:
                 x.appointment_time = form.start_time.data
                 db.session.commit()
@@ -220,8 +236,8 @@ def OilChange():
         for x in cars:
             if x.user == current_user.user and x.model == form.car.data:
                 difference = form.update_miles.data - x.mileage
+                x.miles_until_oil_change = 5000 - difference
                 x.mileage = form.update_miles.data
-                x.miles_until_oil_change = 5000 - form.update_miles.data
                 db.session.commit()
         print(difference)
         if difference < 5000:

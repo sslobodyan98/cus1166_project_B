@@ -2,6 +2,7 @@
 
 {% block content %}
 <div>
+<<<<<<< HEAD
     <ul class="nav nav-pills">
         <li role="presentation" class="active"><a href="{{url_for('index') }}">Home</a></li>
         <li role="presentation"><a href="{{ url_for('RegisterCar') }}" >Add Vehicle</a></li>
@@ -11,6 +12,22 @@
         <li role="presentation"><a href="{{url_for('recommendations')}}">Suggested Recommendations</a> </li>
         <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
     </ul>
+=======
+
+      <ul class="nav nav-pills">
+            <li role="presentation"><a href="{{ url_for('index') }}">Home</a></li>
+
+             <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+
+             <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+
+      </ul>
+
+  <!--  <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
+</div>
+>>>>>>> 0698bbb604b2e95cbb821982c10de9e17c5bb669
 <h1>Edit Appointment!</h1>
 
 <form action="" method="post" class="text-center">

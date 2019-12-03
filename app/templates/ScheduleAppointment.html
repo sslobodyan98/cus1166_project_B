@@ -42,7 +42,48 @@
             {% endfor %}
         </p>
 
+<<<<<<< HEAD
         <p>
+=======
+   <!-- <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
+ </ul>
+</div>
+<h1>Schedule Appointment!</h1>
+<h5><b>If not redirected home the appointment wasn't succesful</b></h5>
+<h5>Available mechanics: </h5>
+<table id="mechanics">
+<table style="width:25%;">
+
+  <tr style="border: 1px solid;">
+    <th>Mechanic</th>
+    <th>Contact Info</th>
+    <th>Rating</th>
+  </tr>
+
+  {%for x in mechanics%}
+  <tr table style="border: 1px solid;">
+    <td>{{x.user}}</td>
+    <td>{{x.email}}</td>
+    <!-- <td>{{x.rating}}</td> not done yet -->
+  </tr>
+  {%endfor%}
+</table>
+<h4 style="color:red;"><em>Show Available Appointments</em> <a href="{{url_for('DisplayAvailabilities')}}"><svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="#000000" d="M9,10H7V12H9V10M13,10H11V12H13V10M17,10H15V12H17V10M19,3H18V1H16V3H8V1H6V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V8H19V19Z" />
+</svg> </a></h4>
+<form action="" method="post">
+      <div class="jumbotron">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.date.label }}<br>
+        {{ form.date(size=10) }}
+        {% for error in form.date.errors %}
+        <span style="color: rebeccapurple;">[{{ error }}</span>
+        {% endfor %}
+    </p>
+>>>>>>> 0698bbb604b2e95cbb821982c10de9e17c5bb669
 
             {{ form.mechanic.label }}<br>
 
