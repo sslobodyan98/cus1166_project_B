@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <div>
     <ul class="nav nav-pills">
-        <li role="presentation" class="active"><a href="{{url_for('index') }}">Home</a></li>
+        <li role="presentation"><a href="{{url_for('index') }}">Home</a></li>
         <li role="presentation"><a href="{{ url_for('RegisterCar') }}" >Add Vehicle</a></li>
         <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
         <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
@@ -11,30 +12,39 @@
         <li role="presentation"><a href="{{url_for('recommendations')}}">Suggested Recommendations</a> </li>
         <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
     </ul>
-<h1>Edit Appointment!</h1>
 
-<form action="" method="post" class="text-center">
-    <div class="jumbotron">
+
+<form action="" method="post">
+<div class="jumbotron">
+
     {{ form.hidden_tag() }}
-
     <p>
-        {{ form.date.label }}<br>
-        {{ form.date(size=10) }}
-        {% for error in form.date.errors %}
+        {{ form.mechanic.label }}<br>
+        {{ form.mechanic }}
+        {% for error in form.mechanic.errors %}
         <span style="color: rebeccapurple;">[{{ error }}</span>
         {% endfor %}
     </p>
 
     <p>
-        {{ form.start_time.label }}<br>
-        <h6>The time is in a 24 hour clock</h6>
-        {{ form.start_time(size=10) }}
-        {% for error in form.start_time.errors %}
+        {{ form.rating.label }}<br>
+        {{ form.rating }}
+        {% for error in form.rating.errors %}
+        <span style="color: rebeccapurple;">[{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.comments.label }}<br>
+        {{ form.comments(size=100) }}
+        {% for error in form.comments.errors %}
         <span style="color: rebeccapurple;">[{{ error }}</span>
         {% endfor %}
     </p>
 
     <p>{{ form.submit() }}</p>
-    </div>
+
+</div>
 </form>
+
 {% endblock %}

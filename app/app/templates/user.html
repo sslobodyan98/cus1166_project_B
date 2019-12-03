@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>User: {{ user.user }}</h1>
+    <hr>
+    {% for car in cars %}
+    <p>
+    {{ car.owner.user }} owns: <b>{{ car.car_vin }}</b>
+    </p>
+    {% endfor %}
+{% endblock %}

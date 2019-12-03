@@ -1,8 +1,119 @@
 {% extends "base.html" %}
-
 {% block content %}
-    {% for x in all_reviews%}
-        {{x.mechanic}} has a rating of {{x.rating}}
-    {%endfor%}
+<style>
+
+#mySidenav{
+    position: absolute;
+    margin-top: 10px;
+}
+#mySidenav a {
+    position: fixed;
+    margin-left: -20px;
+    transition: 0.3s;
+    padding: 15px;
+    width: 100px;
+    text-decoration: none;
+    font-size: 20px;
+    color: black;
+    background-color: rgba(24, 104, 173, 0.29);
+    border-radius: 0 5px 5px 0;
+    text-align: center;
+}
+#mySidenav a:hover {
+  left: 0;
+}
+#comments {
+    border-radius: 25px;
+    border: 2px solid #000000;
+    padding: 5px;
+    background-color: rgba(199, 201, 191, 0.23);
+    margin-top: 20px;
+}
+#user_profile_image {
+    border-radius: 50%;
+    width: 40px;
+    border: 2px solid #1868ad;
+}
+
+.mechanic_profile_card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: 10px auto auto;
+    text-align: center;
+}
+.rating {
+    color: #5e5e5e;
+    font-size: 18px;
+}
+button {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+}
+
+button:hover{
+  opacity: 0.7;
+}
+
+</style>
+
+<ul class="nav nav-pills">
+ {% if current_user.role == 'Mechanic'%}
+            <li role="presentation"><a href="{{ url_for('mechanicDashboard') }}">Home</a></li>
+            <li role="presentation" class="active"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
+            <li role="presentation"><a href="{{url_for('addAvailability')}}">Add Availability</a></li>
+            <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+ {% else %}
+
+        <li role="presentation"><a href="{{url_for('index') }}">Home</a></li>
+        <li role="presentation"><a href="{{ url_for('RegisterCar') }}" >Add Vehicle</a></li>
+        <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+        <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
+        <li role="presentation" class="active"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
+        <li role="presentation"><a href="{{url_for('recommendations')}}">Suggested Recommendations</a> </li>
+        <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+{% endif %}
+</ul>
+
+<div id="mySidenav" class="sidenav">
+    {% for m in users %}
+        <a href="#{{m.user}}" id="about">{{m.user}}</a><br><br><br>
+    {% endfor %}
+</div>
+
+<div class="container">
+{% for x in mechanics_ratings %}
+
+    <div class="mechanic_profile_card" id="{{x.mechanic}}">
+        <img src="https://images.unsplash.com/photo-1568236700632-c0cfc08f486a?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjE0NTg5fQ" alt="Bob" style="width:100%">
+            <h1>{{x.mechanic}}</h1>
+            <p class="rating">Average rating:</p>
+            <p class="rating" style="color: rgba(255,0,0,0.6);">{{x.average}}</p>
+            <a href="{{url_for('Schedule')}}" style="text-decoration: none;font-size: 22px;color: black;" >
+                <p><button>Schedule Appointment</button></p></a>
+    </div>
+
+    {% for i in all_reviews %}
+        {% if x.mechanic == i.mechanic%}
+            <div id="comments">
+                <h4><img id="user_profile_image" src="http://blog.springfield.k12.or.us/yolanda/files/2009/02/person-placeholder-1.png"
+                 alt="team member">  {{i.user}} rated {{i.mechanic}} as a <b>{{i.rating}}</b> out of 5 </h4>
+                <h4>"{{i.comment}}"<br></h4>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+{% endfor %}
+
+</div>
+
+
 {%endblock%}
 

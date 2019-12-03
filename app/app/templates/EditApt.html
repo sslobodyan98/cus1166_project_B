@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+
+      <ul class="nav nav-pills">
+            <li role="presentation"><a href="{{ url_for('index') }}">Home</a></li>
+
+             <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+
+             <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+
+            </ul>
+
+  <!--  <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
+</div>
+<h1>Edit Appointment!</h1>
+
+<form action="" method="post">
+    <div class="jumbotron">
+    {{ form.hidden_tag() }}
+
+    <p>
+        {{ form.date.label }}<br>
+        {{ form.date(size=10) }}
+        {% for error in form.date.errors %}
+        <span style="color: rebeccapurple;">[{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.start_time.label }}<br>
+        <h6>The time is in a 24 hour clock</h6>
+        {{ form.start_time(size=10) }}
+        {% for error in form.start_time.errors %}
+        <span style="color: rebeccapurple;">[{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>{{ form.submit() }}</p>
+    </div>
+</form>
+{% endblock %}

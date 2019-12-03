@@ -5,15 +5,23 @@
 
 <div>
     <ul class="nav nav-pills">
+<<<<<<< HEAD
 
         <li role="presentation" class="active"><a href="{{ url_for('index') }}">Home</a></li>
         <li role="presentation"><a href="{{url_for('addAvailability')}}">Add Availability</a></li>
         <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
 
+=======
+            <li role="presentation" class="active"><a href="{{ url_for('mechanicDashboard') }}">Home</a></li>
+            <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
+            <li role="presentation"><a href="{{url_for('addAvailability')}}">Add Availability</a></li>
+            <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+>>>>>>> Sarah_Schedule
     </ul>
 </div>
 
 
+<<<<<<< HEAD
 
 
 <h1>Hi {{ current_user.user }}!</h1>
@@ -38,5 +46,20 @@
 </div>
 
 
+=======
+<div class="jumbotron">
+<div class="container text-center">
+<h1>Hi {{ current_user.user }}!</h1>
+{% for x in appointments %}
+    <div>
+        {%if current_user.user == x.mechanic%}
+            <p>You have a <b>{{x.appointment_type}}</b> appointment booked for {{ x.appointment_date }} at <b> {{ x.appointment_time }} </b></p>
+        {%endif%}
+    </div>
+{% endfor %}
+
+</div>
+</div>
+>>>>>>> Sarah_Schedule
 
 {% endblock %}

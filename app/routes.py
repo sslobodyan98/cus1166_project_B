@@ -4,8 +4,9 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-    EditAppointmentForm, DeleteAppointmentForm
-from app.models import User, Car, Availability, Schedules
+    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions
+from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings, Recommendations
+from flask import Flask
 
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
@@ -19,9 +20,45 @@ app.config['MAIL_PASSWORD'] = 'SoftwareEngineering1166'
 app.config['MAIL_DEFAULT_SENDER'] = 'groupbsoftwareengineering1166@gmail.com'
 app.config['MAIL_MAX_EMAILS'] = None
 # app.config['MAIL_SUPPRESS_SEND'] = False
-app.config['MAIL_ASCII_ATTATCHMENTS'] = False
+app.config['MAIL_ASCII_ATTACHMENTS'] = False
 
 mail = Mail(app)
+
+
+def appointment_reminder():
+    appointments = Schedules.query.all()
+    users = User.query.all()
+
+    with app.app_context():
+        for x in appointments:
+            diff = x.appointment_date - datetime.date.today()
+            for i in users:
+                if diff.days == 3 and i.user == x.user and i.role == 'Car Owner':
+                    msg = Message('Appointment Reminder Notification', recipients=[i.email])
+                    msg.html = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
+                    mail.send(msg)
+                if diff.days < 1 and i.user == x.user and i.role == 'Car Owner':
+                    msg = Message('Follow up for oil change appointment', recipients=[i.email])
+                    msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+                               'and review your mechanic we would highly appreciate it.'
+                    msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+                               'and review your mechanic we would highly appreciate it.' \
+                               ' <a href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a>'
+                    mail.send(msg)
+                if diff.days < 1 and x.mechanic == i.user and i.role == 'Mechanic':
+                    msg = Message('Follow up for oil change appointment', recipients=[i.email])
+                    msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+                               'and review your mechanic we would highly appreciate it.'
+                    msg.html = 'Hello, I hope your appointment went well. If you could please take a second to ' \
+                               'suggest other repairs that the customer may need we would highly appreciate it.' \
+                               '<a href="http://127.0.0.1:5000/suggest_recommendations"> Click here to access ' \
+                               'review</a> '
+                    mail.send(msg)
+
+    return app
+
+
+# appointment_reminder()
 
 
 @app.route('/')
@@ -30,21 +67,6 @@ mail = Mail(app)
 def index():
     cars = Car.query.all()
     appointments = Schedules.query.all()
-    appointments = Schedules.query.all()
-    for x in appointments:
-        diff = x.appointment_date - datetime.date.today()
-        if diff.days == 3:
-            msg = Message('Appointment Reminder Notification', recipients=[current_user.email])
-            msg.body = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
-            msg.html = '<p>You have an appointment scheduled in 3 days</p>'
-            mail.send(msg)
-        elif diff.days < 1:
-            msg = Message('Follow up for oil change appointment', recipients=[current_user.email])
-            msg.body = ''
-            msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey and review ' \
-                       'your mechanic we would highly appreciate it. <a ' \
-                       'href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a> '
-            mail.send(msg)
     return render_template('index.html', title='Home', cars=cars, appointments=appointments)
 
 
@@ -124,9 +146,8 @@ def addAvailability():
 @app.route('/ScheduleAppointment', methods=['GET', 'POST'])
 def Schedule():
     form = ScheduleAppointment()
-
-    mechanics = User.query.filter_by(role='Mechanic')
     availabilities = Availability.query.all()
+    mechanics = User.query.filter_by(role="Mechanic")
     if form.validate_on_submit():
         appointments = Schedules.query.all()
         for x in appointments:
@@ -143,7 +164,8 @@ def Schedule():
                     form.start_time.data < i.start_time or form.start_time.data > i.end_time):
                 return redirect(url_for('Schedule'))
         meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
-                            appointment_time=form.start_time.data, vehicle=form.vehicle.data)
+                            appointment_time=form.start_time.data, vehicle=form.vehicle.data,
+                            appointment_type=form.appointment_type.data)
         db.session.add(meeting)
         db.session.commit()
         return redirect(url_for('index'))
@@ -201,6 +223,7 @@ def OilChange():
                 x.mileage = form.update_miles.data
                 x.miles_until_oil_change = 5000 - form.update_miles.data
                 db.session.commit()
+        print(difference)
         if difference < 5000:
             return redirect(url_for('index'))
         elif difference >= 5000:
@@ -219,3 +242,79 @@ def OilChange():
 def mechanicDashboard():
     appointments = Schedules.query.all()
     return render_template('mechanicDashboard.html', title='Mechanic Dashboard', appointments=appointments)
+
+
+@app.route('/review_appointment', methods=['GET', 'POST'])
+@login_required
+def rate_mechanic():
+    form = ReviewMechanic()
+    all_reviews = Reviews.query.order_by(Reviews.mechanic)
+    all_averages = Mechanic_Ratings.query.all()
+    if form.validate_on_submit():
+        total = 0
+        total_reviews = []
+        review_made = Reviews(mechanic=form.mechanic.data, comment=form.comments.data, rating=form.rating.data,
+                              user=current_user.user)
+        db.session.add(review_made)
+
+        for x in all_reviews:
+            if x.mechanic == form.mechanic.data:
+                total_reviews += [x.rating]
+
+        for x in total_reviews:
+            total += x
+        avg = total / len(total_reviews)
+        print(avg)
+
+        if Mechanic_Ratings.query.first() is None:
+            mechanic_reviews = Mechanic_Ratings(mechanic=form.mechanic.data, average=round(avg, 2))
+            db.session.add(mechanic_reviews)
+        else:
+            for j in all_averages:
+                if Mechanic_Ratings.query.filter_by(mechanic=form.mechanic.data) is None:
+                    if j.mechanic == form.mechanic.data:
+                        print("2nd if")
+                        j.average = round(avg, 2)
+                else:
+                    print("else")
+                    mechanic_reviews = Mechanic_Ratings(mechanic=form.mechanic.data, average=round(avg, 2))
+                    db.session.add(mechanic_reviews)
+        db.session.commit()
+
+        return redirect(url_for('view_rating'))
+    return render_template('MechanicRating.html', title='Review Mechanic', form=form)
+
+
+@app.route('/view_reviews')
+@login_required
+def view_rating():
+    mechanics_ratings = Mechanic_Ratings.query.all()
+    all_reviews = Reviews.query.all()
+    users = User.query.filter_by(role='Mechanic')
+    return render_template('DisplayRatings.html', title='Mechanic Reviews', mechanics_ratings=mechanics_ratings,
+                           all_reviews=all_reviews, users=users)
+
+
+@app.route('/suggest_recommendations', methods=['GET', 'POST'])
+@login_required
+def suggest_recommendations():
+    form = Suggestions()
+    if form.validate_on_submit():
+        recommendations_suggested = Recommendations(user=form.user.data, Tire_rotations=form.Tire_rotations.data,
+                                                    Registration_update=form.Registration_update.data,
+                                                    Change_break=form.Change_break.data, Car_Wash=form.Car_Wash.data,
+                                                    Oil_change=form.Oil_change.data)
+        db.session.add(recommendations_suggested)
+        db.session.commit()
+
+        return redirect(url_for('mechanicDashboard'))
+
+    return render_template('Suggestions.html', title='Recommendations', form=form)
+
+
+@app.route('/suggested_recommendations', methods=['GET', 'POST'])
+@login_required
+def recommendations():
+    recommendations_made = Recommendations.query.all()
+    return render_template('Suggestions_Proposed.html', title='Recommendations Made',
+                           recommendations_made=recommendations_made)
