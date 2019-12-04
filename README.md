@@ -1,27 +1,26 @@
-#### CUS Project Template.
-This repository serves as a starting point for your project. It is organize  in a way to allows the monitoring of project deliverables.
+#### CUS1166 Project Group B.
 
 #### Basic folder structure.
-- `app` : folder you implement your Flask project.
-- `app.py`: In the main file that starts your sample project.
-- `tests`: Here you need to include all unit and functional test for your project.
-- `project_management` : In this folder you are expected to store all project documentation, and project deliverables associated with the course.
+- `models.py` : includes database models.
+- `app.py`: Is the main file that starts your project.
+- `migrate`: Provides version control of the DB throughout the project.
+- `app.db` : Is the main database in the project.
+- `forms.py` : includes the file for forms through the web application.
+- `routes.py`: includes the logic throughout the project
+#### CUS1166 Flask application.
 
-#### Basic Flask application.
+Once the project is cloned, all dependencies are met and you have a virtual environment setup
 
-A basic flask application is provided for you. The project uses `pipenv` virtual environment. Make sure you install `pipenv` on your machine.
-
-Enter the virtual enviroment py typing
+Type in:
 
 ```shell
-pipenv shell
+flask db init
+flask db migrate
+flask db upgrade
 ```
-You might need to specify the flask app name running the command.
-```shell  
- export FLASK_APP=app.py
-```
-You can start the basic application by issuing the command.
+This will provide you with a clean DB on your machine.
 
+Then, type in:
 ```shell
 flask run
 ```

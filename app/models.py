@@ -42,16 +42,18 @@ class Car(db.Model):
     model = db.Column(db.String(120), index=True)
     color = db.Column(db.String(64), index=True)
     mileage = db.Column(db.Integer, index=True)
+    registration_date = db.Column(db.Date, index=True)
     miles_until_oil_change = db.Column(db.Integer, index=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, user, car_vin, make, model, color, mileage):
+    def __init__(self, user, car_vin, make, model, color, mileage, registration_date):
         self.user = user
         self.car_vin = car_vin
         self.make = make
         self.model = model
         self.color = color
         self.mileage = mileage
+        self.registration_date = registration_date
 
     def __repr__(self):
         return '<Car {}'.format(self.user.car_vin.make.model.color.mileage)
@@ -94,6 +96,9 @@ class Reviews(db.Model):
     comment = db.Column(db.String, index=True)
     user = db.Column(db.Integer, index=True)
 
+    # confirm_service = db.Column(db.String, index=True)
+    # confirm_paid = db.Column(db.String, index=True)
+
     def __repr__(self):
         return '<Reviews {}'.format(self.mechanic.rating.user)
 
@@ -118,3 +123,7 @@ class Recommendations(db.Model):
 
     def __repr__(self):
         return '<Reviews {}'.format(self.Tire_rotations.Registration_update.Change_break.Car_Wash.Oil_change)
+
+    # def __init__(self, confirm_service, confirm_paid):
+    #     self.confirm_service = confirm_service
+    #     self.confirm_paid = confirm_paid

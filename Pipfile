@@ -13,6 +13,8 @@ flask-bootstrap4 = "*"
 flask-wtf = "*"
 flask-wtforms = "*"
 pipenv = "*"
+dateutil = "*"
+timedelta = "*"
 
 [requires]
 python_version = "3.6"
