@@ -80,9 +80,11 @@ class Schedules(db.Model):
     appointment_date = db.Column(db.Date, index=True)
     appointment_time = db.Column(db.Time, index=True)
     appointment_type = db.Column(db.String, index=True)
+    status = db.Column(db.String, index=True)
 
     def __repr__(self):
-        return '<Schedules {}'.format(self.user.mechanic.appointment_date.appointment_time)
+        return '<Schedules {}'.format(
+            self.user.vehicle.mechanic.appointment_date.appointment_time.appointment_type.status)
 
 
 class Reviews(db.Model):
