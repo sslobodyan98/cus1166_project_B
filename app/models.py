@@ -80,9 +80,11 @@ class Schedules(db.Model):
     appointment_date = db.Column(db.Date, index=True)
     appointment_time = db.Column(db.Time, index=True)
     appointment_type = db.Column(db.String, index=True)
+    status = db.Column(db.String, index=True)
+
 
     def __repr__(self):
-        return '<Schedules {}'.format(self.user.mechanic.appointment_date.appointment_time)
+        return '<Schedules {}'.format(self.user.mechanic.appointment_date.appointment_time.status)
 
 
 class Reviews(db.Model):
@@ -91,6 +93,7 @@ class Reviews(db.Model):
     rating = db.Column(db.DECIMAL, index=True)
     comment = db.Column(db.String, index=True)
     user = db.Column(db.Integer, index=True)
+
 
     def __repr__(self):
         return '<Reviews {}'.format(self.mechanic.rating.user)
