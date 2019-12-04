@@ -85,7 +85,8 @@ class Schedules(db.Model):
     status = db.Column(db.String, index=True)
 
     def __repr__(self):
-        return '<Schedules {}'.format(self.user.mechanic.appointment_date.appointment_time.status)
+        return '<Schedules {}'.format(
+            self.user.vehicle.mechanic.appointment_date.appointment_time.appointment_type.status)
 
 
 class Reviews(db.Model):
