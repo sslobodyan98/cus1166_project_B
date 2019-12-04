@@ -69,7 +69,7 @@ mail = Mail(app)
 def index():
     cars = Car.query.all()
     appointments = Schedules.query.all()
-    return render_template('index.html', title='Home',cars=cars, appointments=appointments)
+    return render_template('index.html', title='Home', cars=cars, appointments=appointments)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -188,7 +188,7 @@ def Schedule():
                 return redirect(url_for('Schedule'))
         meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
                             appointment_time=form.start_time.data, vehicle=form.vehicle.data,
-                            appointment_type=form.appointment_type.data)
+                            appointment_type=form.appointment_type.data, status='PENDING')
         db.session.add(meeting)
         db.session.commit()
         return redirect(url_for('index'))
@@ -225,6 +225,24 @@ def deleteAppointment():
                 return redirect(url_for('index'))
 
     return render_template('delete_appointment.html', title='Edit Appointment', form=form)
+
+
+@app.route('/Confirmed', methods=['GET', 'POST'])
+def Confirmed():
+    appointments2 = Schedules.query.all()
+    for x in appointments2:
+        x.status = 'CONFIRMED'
+        db.session.commit()
+    return redirect(url_for('mechanicDashboard'))
+
+
+@app.route('/Declined', methods=['GET', 'POST'])
+def Declined():
+    appointments3 = Schedules.query.all()
+    for x in appointments3:
+        x.status = 'DECLINED'
+        db.session.commit()
+    return redirect(url_for('mechanicDashboard'))
 
 
 @app.route('/DisplayAvailability', methods=['GET', 'POST'])
