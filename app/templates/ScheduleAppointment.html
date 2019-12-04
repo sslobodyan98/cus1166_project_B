@@ -1,15 +1,12 @@
 {% extends "base.html" %}
 
-
 {% block content %}
-
-
 <div>
 
     <ul class="nav nav-pills">
-
         <li role="presentation"><a href="{{url_for('index') }}">Home</a></li>
         <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+        <li role="presentation"><a href="{{url_for('deleteVehicle}}">Delete Vehicle</a></li>
         <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
         <li role="presentation" class="active"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
         <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a></li>
