@@ -1,9 +1,8 @@
 from flask import flash
 from flask_wtf import FlaskForm, Form
 
-
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, RadioField, DateField,\
-    TimeField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, RadioField, DateField, \
+    TimeField, SelectField, DecimalField
 from wtforms.validators import DataRequired, ValidationError, EqualTo
 
 from app.models import User, Car
@@ -19,8 +18,6 @@ class LoginForm(FlaskForm):
         role = User.query.filter_by(role=role.data).first()
         if role is not None:
             raise ValidationError('Please select a role')
-
-
 
 
 class AddVehicle(FlaskForm):
@@ -57,8 +54,6 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Please use a different email')
 
 
-
-
 class AddAvailability(FlaskForm):
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
     start_time = TimeField('Start Time', validators=[DataRequired()])
@@ -69,13 +64,11 @@ class AddAvailability(FlaskForm):
 class ScheduleAppointment(FlaskForm):
     vehicle = StringField('Which Car', validators=[DataRequired()])
     date = DateField('Date (year-month-date)', validators=[DataRequired()])
-
     start_time = TimeField('Start Time', validators=[DataRequired()])
-    Mechanics=User.query.filter_by(role='mechanic')
-    for x in Mechanics:
-        flash(x.user)
-    mechanic = StringField('Mechanics',validators=[DataRequired()])
-
+    mechanic = StringField('Mechanics', validators=[DataRequired()])
+    appointment_type = SelectField(choices=[('Oil Change', 'Oil Change'), ('Tire Rotation', 'Tire Rotation'),
+                                            ('Registration', 'Registration'), ('Break Change', 'Break Change'),
+                                            ('Car Wash', 'Car Wash')], validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
@@ -84,14 +77,39 @@ class EditAppointmentForm(FlaskForm):
     start_time = TimeField('Update Start Time', validators=[DataRequired()])
     submit = SubmitField('Update')
 
+
 class OilChangeForm(FlaskForm):
     car = StringField('Which car', validators=[DataRequired()])
-    mileage = IntegerField('Mileage at last oil change: ', validators=[DataRequired()]) #input field #default value = Car.mileage
-    update_miles = IntegerField('Current Mileage: ') #input field #default value = Car.update_miles
-    submit = SubmitField('Submit') #bind this to the method that calculates miles_until_next_oil_change
+    update_miles = IntegerField('Current Mileage: ')  # input field #default value = Car.update_miles
+    submit = SubmitField('Submit')  # bind this to the method that calculates miles_until_next_oil_change
 
-    def validate_role(self, role):
-        user = User.query.filter_by(role=role.data).first()
-        if user is not None:
-            raise ValidationError('Please select a role')
 
+class DeleteAppointmentForm(FlaskForm):
+    date = DateField('Date (year-month-date)', validators=[DataRequired()])
+    start_time = TimeField('Start Time', validators=[DataRequired()])
+    mechanic = StringField('Mechanics', validators=[DataRequired()])
+    car = StringField('Car', validators=[DataRequired()])
+    submit = SubmitField('Delete')
+
+
+class ReviewMechanic(FlaskForm):
+    mechanic = StringField('Mechanic name', validators=[DataRequired()])
+    rating = DecimalField('Rating from 0-5', validators=[DataRequired()])
+    comments = StringField('Mechanic name', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
+class Suggestions(FlaskForm):
+    user = StringField('Who is the user', validators=[DataRequired()])
+    Tire_rotations = RadioField('Does the customer need a tire rotation', choices=[('Yes', 'Yes'), ('No', 'No')],
+                                validators=[DataRequired()])
+    Registration_update = RadioField('Does the customer need a registration update',
+                                     choices=[('Yes', 'Yes'), ('No', 'No')],
+                                     validators=[DataRequired()])
+    Change_break = RadioField('Does the customer need their breaks changed', choices=[('Yes', 'Yes'), ('No', 'No')],
+                              validators=[DataRequired()])
+    Car_Wash = RadioField('Does the customer need a car wash', choices=[('Yes', 'Yes'), ('No', 'No')],
+                          validators=[DataRequired()])
+    Oil_change = RadioField('Does the customer need an oil change', choices=[('Yes', 'Yes'), ('No', 'No')],
+                            validators=[DataRequired()])
+    submit = SubmitField('Submit')

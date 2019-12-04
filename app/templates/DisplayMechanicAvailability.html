@@ -1,27 +1,129 @@
 {% extends "base.html" %}
 
+
 {% block content %}
-<h2>The mechanic is available during these times</h2>
-    {% for x in Availabilities %}
-        <p>{{ x.user}} is available on {{x.date}} from :  {{ x.start_time }}  to {{x.end_time}}</p>
-    {% endfor %}
+<style>
+table {
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+</style>
+
+
+<div>
+    <ul class="nav nav-pills">
+        <li role="presentation" ><a href="{{url_for('index') }}">Home</a></li>
+        <li role="presentation"><a href="{{ url_for('RegisterCar') }}" >Add Vehicle</a></li>
+        <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+        <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
+        <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
+        <li role="presentation"><a href="{{url_for('recommendations')}}">Suggested Recommendations</a> </li>
+        <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+    </ul>
+
 <table id="myTable">
-<h2>Booked appointment are</h2>
+<h3>Booked appointment are</h3>
+    <p><button onclick="sortTable()">Sort by name</button></p>
     <tr>
-        <th>Name</th>
-        <th>Date</th>
-        <th>Time</th>
+        <th style="padding-right: 3em; font-size: 16px;">Name</th>
+        <th style="padding-right: 3em; font-size: 16px;">Date</th>
+        <th style="padding-right: 3em; font-size: 16px;">Time</th>
 
-    </tr>
-
-    {% for x in ScheduledAppointments %}
+    {% for x in appointments %}
         <tr>
-            <td>{{x.mechanic}}</td>
-            <td>{{x.appointment_date}}</td>
-            <td>{{x.appointment_time}} <a href="{{url_for('Schedule')}}"> Book your own appointment</a></td>
+            <td style="padding-right: 3em; font-size: 16px;">{{x.mechanic}}</td>
+            <td style="padding-right: 3em; font-size: 16px;">{{x.appointment_date}}</td>
+            <td style="padding-right: 3em; font-size: 16px;">{{x.appointment_time}} <a href="{{url_for('Schedule')}}"> Book your own appointment</a></td>
 
         </tr>
 
     {% endfor%}
 </table>
+
+
+<table id="myTable2">
+    <h3>The mechanic is available during these times</h3>
+    <p><button onclick="sortTable2()">Sort by date</button></p>
+    <tr>
+        <th style="padding-right: 3em; font-size: 16px;">Date</th>
+        <th style="padding-right: 3em; font-size: 16px;">Mechanic</th>
+        <th style="padding-right: 3em; font-size: 16px;">StartTime</th>
+        <th style="padding-right: 3em; font-size: 16px;">EndTime</th>
+    </tr>
+
+    {% for x in availabilities %}
+        <tr>
+            <td style="padding-right: 3em; font-size: 16px;">{{x.date}}</td>
+            <td style="padding-right: 3em; font-size: 16px;">{{x.user}}</td>
+            <td style="padding-right: 3em; font-size: 16px;">{{x.start_time}}</td>
+            <td style="padding-right: 3em; font-size: 16px;">{{x.end_time}}</td>
+
+        </tr>
+    {% endfor %}
+
+</table>
+<script>
+function sortTable() {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("myTable");
+  switching = true;
+  while (switching) {
+
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[0];
+      y = rows[i + 1].getElementsByTagName("TD")[0];
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+function sortTable2() {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("myTable2");
+  switching = true;
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[0];
+      y = rows[i + 1].getElementsByTagName("TD")[0];
+      if (x.innerHTML > y.innerHTML) {
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+</script>
 {% endblock %}
+
+
+
+
+
+

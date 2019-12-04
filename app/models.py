@@ -45,9 +45,7 @@ class Car(db.Model):
     miles_until_oil_change = db.Column(db.Integer, index=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-
-
-    def __init__(self, user,car_vin, make, model, color, mileage):
+    def __init__(self, user, car_vin, make, model, color, mileage):
         self.user = user
         self.car_vin = car_vin
         self.make = make
@@ -81,6 +79,40 @@ class Schedules(db.Model):
     mechanic = db.Column(db.String, index=True)
     appointment_date = db.Column(db.Date, index=True)
     appointment_time = db.Column(db.Time, index=True)
+    appointment_type = db.Column(db.String, index=True)
 
     def __repr__(self):
         return '<Schedules {}'.format(self.user.mechanic.appointment_date.appointment_time)
+
+
+class Reviews(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mechanic = db.Column(db.String, index=True)
+    rating = db.Column(db.DECIMAL, index=True)
+    comment = db.Column(db.String, index=True)
+    user = db.Column(db.Integer, index=True)
+
+    def __repr__(self):
+        return '<Reviews {}'.format(self.mechanic.rating.user)
+
+
+class Mechanic_Ratings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mechanic = db.Column(db.String, index=True)
+    average = db.Column(db.DECIMAL, index=True)
+
+    def __repr__(self):
+        return '<Reviews {}'.format(self.mechanic.average)
+
+
+class Recommendations(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String, index=True)
+    Tire_rotations = db.Column(db.String, index=True)
+    Registration_update = db.Column(db.String, index=True)
+    Change_break = db.Column(db.String, index=True)
+    Car_Wash = db.Column(db.String, index=True)
+    Oil_change = db.Column(db.String, index=True)
+
+    def __repr__(self):
+        return '<Reviews {}'.format(self.Tire_rotations.Registration_update.Change_break.Car_Wash.Oil_change)

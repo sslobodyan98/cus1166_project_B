@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
 <<<<<<< HEAD
+<div><div>
     <ul class="nav nav-pills">
-        <li role="presentation" class="active"><a href="{{url_for('index') }}">Home</a></li>
+        <li role="presentation"><a href="{{url_for('index') }}">Home</a></li>
         <li role="presentation"><a href="{{ url_for('RegisterCar') }}" >Add Vehicle</a></li>
         <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
         <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
@@ -13,27 +13,25 @@
         <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
     </ul>
 =======
+<div>
 
-      <ul class="nav nav-pills">
-            <li role="presentation"><a href="{{ url_for('index') }}">Home</a></li>
+ <ul class="nav nav-pills">
+     <li role="presentation" > <a href="{{ url_for('index') }}">Home</a></li>
+     <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+     <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+     <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
 
-             <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
-
-             <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
-
-      </ul>
-
-  <!--  <a href="{{ url_for('index') }}">Home</a>
+   <!-- <a href="{{ url_for('index') }}">Home</a>
     <a href="{{ url_for('logout') }}">Logout</a>
     <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>-->
+ </ul>
 </div>
 >>>>>>> 0698bbb604b2e95cbb821982c10de9e17c5bb669
-<h1>Edit Appointment!</h1>
+<h1>Delete Appointment!</h1>
 
 <form action="" method="post" class="text-center">
-    <div class="jumbotron">
+      <div class="jumbotron">
     {{ form.hidden_tag() }}
-
     <p>
         {{ form.date.label }}<br>
         {{ form.date(size=10) }}
@@ -51,7 +49,25 @@
         {% endfor %}
     </p>
 
+    <p>
+
+        {{ form.mechanic.label }}<br>
+        {{ form.mechanic(size=10) }}
+        {% for error in form.mechanic.errors %}
+        <span style="color: rebeccapurple;">[{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.car.label }}<br>
+        {{ form.car }}
+        {% for error in form.car.errors %}
+        <span style="color: rebeccapurple;">[{{ error }}</span>
+        {% endfor %}
+    </p>
+
+
     <p>{{ form.submit() }}</p>
-    </div>
+      </div>
 </form>
+
 {% endblock %}
