@@ -21,6 +21,17 @@ class LoginForm(FlaskForm):
         if role is not None:
             raise ValidationError('Please select a role')
 
+<<<<<<< HEAD
+=======
+class ForgotPasswordForm(FlaskForm):
+    user = StringField('Enter username', validators=[DataRequired()])
+    submit = SubmitField('Send Email')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Enter new password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat new password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Change password')
+>>>>>>> MaryG_forgot/reset_password
 
 class AddVehicle(FlaskForm):
     car_vin = StringField('VIN Number', validators=[DataRequired()])

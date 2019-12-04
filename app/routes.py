@@ -6,9 +6,16 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
+<<<<<<< HEAD
     EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions, ConfirmAppointmentCompletedForm,\
 ConfirmAppointmentPaidForm, DeleteVehicleForm
 from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings, Recommendations
+=======
+    EditAppointmentForm, DeleteAppointmentForm, ResetPasswordForm, ForgotPasswordForm
+from app.models import User, Car, Availability, Schedules
+import string
+import random
+>>>>>>> MaryG_forgot/reset_password
 
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
@@ -87,6 +94,42 @@ def login():
             return redirect(url_for('mechanicDashboard'))
     return render_template('login.html', title='Sign In', form=form)
 
+def GenerateRandomPassword():
+    string.ascii_letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    temp_password = ''
+    for i in [1, 2, 3, 4]:
+        temp_password += random.choice(string.ascii_letters)
+    return temp_password
+
+@app.route('/forgotPassword', methods=['GET', 'POST'])
+def ForgotPassword():
+    form = ForgotPasswordForm()
+    users = User.query.all() #query through users
+    if form.validate_on_submit(): #if submit button is pressed
+        for x in users: #for users
+            if x.user == form.user.data: #if a user in users == username entered in form
+                #set temp_password:
+                temp_password = GenerateRandomPassword()
+                x.set_password(temp_password)
+                db.session.commit()
+                #send email:
+                msg = Message('Forgot Password', recipients=[x.email])
+                msg.body = ' '
+                msg.html = 'Here is your temporary password: ' + temp_password + '<a'\
+                    'Use this password to sign into your account.</a>'
+                mail.send(msg)
+    return render_template('forgot_password.html', title='Forgot Password', form=form)
+
+@app.route('/resetPassword', methods=['GET', 'POST'])
+def ResetPassword():
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(user=current_user.user).first() #get user
+        user.set_password(form.password.data) #set new password data that they entered
+        db.session.commit()
+        flash('Your password has been changed')
+        return redirect(url_for('login'))  #redirect to login page
+    return render_template('reset_password.html', title='Reset Password', form=form)
 
 @app.route('/logout')
 def logout():
