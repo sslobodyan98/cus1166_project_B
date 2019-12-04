@@ -9,7 +9,7 @@
 - `routes.py`: includes the logic throughout the project
 #### CUS1166 Flask application.
 
-Once the project is cloned, all dependancies are met and you have a virtual environment setup
+Once the project is cloned, all dependencies are met and you have a virtual environment setup
 
 Type in:
 
