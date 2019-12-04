@@ -1,12 +1,14 @@
-import datetime
+from datetime import datetime, timedelta, date
+import calendar
+from flask import Flask
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions
+    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions, ConfirmAppointmentCompletedForm,\
+ConfirmAppointmentPaidForm, DeleteVehicleForm
 from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings, Recommendations
-from flask import Flask
 
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
@@ -19,46 +21,46 @@ app.config['MAIL_USERNAME'] = 'groupbsoftwareengineering1166@gmail.com'
 app.config['MAIL_PASSWORD'] = 'SoftwareEngineering1166'
 app.config['MAIL_DEFAULT_SENDER'] = 'groupbsoftwareengineering1166@gmail.com'
 app.config['MAIL_MAX_EMAILS'] = None
-# app.config['MAIL_SUPPRESS_SEND'] = False
+#app.config['MAIL_SUPPRESS_SEND'] = False  # comment out in production!
 app.config['MAIL_ASCII_ATTACHMENTS'] = False
 
 mail = Mail(app)
 
 
-def appointment_reminder():
-    appointments = Schedules.query.all()
-    users = User.query.all()
-
-    with app.app_context():
-        for x in appointments:
-            diff = x.appointment_date - datetime.date.today()
-            for i in users:
-                if diff.days == 3 and i.user == x.user and i.role == 'Car Owner':
-                    msg = Message('Appointment Reminder Notification', recipients=[i.email])
-                    msg.html = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
-                    mail.send(msg)
-                if diff.days < 1 and i.user == x.user and i.role == 'Car Owner':
-                    msg = Message('Follow up for oil change appointment', recipients=[i.email])
-                    msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
-                               'and review your mechanic we would highly appreciate it.'
-                    msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
-                               'and review your mechanic we would highly appreciate it.' \
-                               ' <a href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a>'
-                    mail.send(msg)
-                if diff.days < 1 and x.mechanic == i.user and i.role == 'Mechanic':
-                    msg = Message('Follow up for oil change appointment', recipients=[i.email])
-                    msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
-                               'and review your mechanic we would highly appreciate it.'
-                    msg.html = 'Hello, I hope your appointment went well. If you could please take a second to ' \
-                               'suggest other repairs that the customer may need we would highly appreciate it.' \
-                               '<a href="http://127.0.0.1:5000/suggest_recommendations"> Click here to access ' \
-                               'review</a> '
-                    mail.send(msg)
-
-    return app
-
-
-appointment_reminder()
+# def appointment_reminder():
+#     appointments = Schedules.query.all()
+#     users = User.query.all()
+#
+#     with app.app_context():
+#         for x in appointments:
+#             diff = x.appointment_date - datetime.date.today()
+#             for i in users:
+#                 if diff.days == 3 and i.user == x.user and i.role == 'Car Owner':
+#                     msg = Message('Appointment Reminder Notification', recipients=[i.email])
+#                     msg.html = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
+#                     mail.send(msg)
+#                 if diff.days < 1 and i.user == x.user and i.role == 'Car Owner':
+#                     msg = Message('Follow up for oil change appointment', recipients=[i.email])
+#                     msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+#                                'and review your mechanic we would highly appreciate it.'
+#                     msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+#                                'and review your mechanic we would highly appreciate it.' \
+#                                ' <a href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a>'
+#                     mail.send(msg)
+#                 if diff.days < 1 and x.mechanic == i.user and i.role == 'Mechanic':
+#                     msg = Message('Follow up for oil change appointment', recipients=[i.email])
+#                     msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+#                                'and review your mechanic we would highly appreciate it.'
+#                     msg.html = 'Hello, I hope your appointment went well. If you could please take a second to ' \
+#                                'suggest other repairs that the customer may need we would highly appreciate it.' \
+#                                '<a href="http://127.0.0.1:5000/suggest_recommendations"> Click here to access ' \
+#                                'review</a> '
+#                     mail.send(msg)
+#
+#     return app
+#
+#
+# appointment_reminder()
 
 
 @app.route('/')
@@ -67,7 +69,7 @@ appointment_reminder()
 def index():
     cars = Car.query.all()
     appointments = Schedules.query.all()
-    return render_template('index.html', title='Home',cars=cars, appointments=appointments)
+    return render_template('index.html', title='Home', cars=cars, appointments=appointments)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -120,14 +122,36 @@ def user(user):
 @app.route('/addVehicle', methods=['GET', 'POST'])
 def RegisterCar():
     form = AddVehicle()
+    cars = Car.query.all()
     if form.validate_on_submit():
         car = Car(user=current_user.user, car_vin=form.car_vin.data, make=form.make.data, model=form.model.data,
-                  color=form.color.data, mileage=form.mileage.data)
+                  color=form.color.data, mileage=form.mileage.data, registration_date=form.registration_date.data)
+        for x in cars:
+            old = x.registration_date
+            x.registration_date = old + timedelta(days=365)
+
         db.session.add(car)
         db.session.commit()
+#Assuming every time a user adds a car to their fleet, their previous vehicle inspections will be pushed back 1 year
+
+
         flash('You have added a car to use in our App!')
         return redirect(url_for('index'))
-    return render_template('addVehicle.html', title='Add Vehicle', form=form)
+    return render_template('addVehicle.html', title='Add Vehicle', form=form, cars=cars)
+
+
+@app.route('/deleteVehicle', methods=['GET', 'POST'])
+def deleteVehicle():
+    form = DeleteVehicleForm()
+    if form.validate_on_submit():
+        cars = Car.query.all()
+        for x in cars:
+            if x.make == form.make.data and x.model == form.model.data:
+                db.session.delete(x)
+                db.session.commit()
+                return redirect(url_for('index'))
+
+    return render_template('DeleteVehicle.html', title='Delete Vehicle', form=form)
 
 
 @app.route('/addAvailability', methods=['GET', 'POST'])
@@ -164,7 +188,7 @@ def Schedule():
                 return redirect(url_for('Schedule'))
         meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
                             appointment_time=form.start_time.data, vehicle=form.vehicle.data,
-                            appointment_type=form.appointment_type.data)
+                            appointment_type=form.appointment_type.data, status='PENDING')
         db.session.add(meeting)
         db.session.commit()
         return redirect(url_for('index'))
@@ -194,12 +218,31 @@ def deleteAppointment():
     if form.validate_on_submit():
         appointments = Schedules.query.all()
         for x in appointments:
-            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and x.mechanic == form.mechanic.data and x.vehicle == form.car.data:
+            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and x.mechanic == \
+                    form.mechanic.data and x.vehicle == form.car.data:
                 db.session.delete(x)
                 db.session.commit()
                 return redirect(url_for('index'))
 
     return render_template('delete_appointment.html', title='Edit Appointment', form=form)
+
+
+@app.route('/Confirmed', methods=['GET', 'POST'])
+def Confirmed():
+    appointments2 = Schedules.query.all()
+    for x in appointments2:
+        x.status = 'CONFIRMED'
+        db.session.commit()
+    return redirect(url_for('mechanicDashboard'))
+
+
+@app.route('/Declined', methods=['GET', 'POST'])
+def Declined():
+    appointments3 = Schedules.query.all()
+    for x in appointments3:
+        x.status = 'DECLINED'
+        db.session.commit()
+    return redirect(url_for('mechanicDashboard'))
 
 
 @app.route('/DisplayAvailability', methods=['GET', 'POST'])
@@ -222,7 +265,6 @@ def OilChange():
                 x.miles_until_oil_change = 5000 - difference
                 x.mileage = form.update_miles.data
                 db.session.commit()
-        print(difference)
         if difference < 5000:
             return redirect(url_for('index'))
         elif difference >= 5000:
@@ -236,11 +278,24 @@ def OilChange():
     return render_template('oil_change.html', title='Oil Change', form=form, cars=cars)
 
 
-@app.route('/mechanicDashboard')
+@app.route('/mechanicDashboard', methods=['GET', 'POST'])
 @login_required
 def mechanicDashboard():
     appointments = Schedules.query.all()
-    return render_template('mechanicDashboard.html', title='Mechanic Dashboard', appointments=appointments)
+    form = ConfirmAppointmentCompletedForm()
+    form2 = ConfirmAppointmentPaidForm()
+    #
+    # if form.validate_on_submit():  # and form2.validate_on_submit():
+    #     for x in appointments:
+    #         current_user.user and x.appointment_date and x.appointment_time
+    #             schedules = Schedules(confirm_service=form.confirm_service.data)  # , confirm_paid=form2.confirm_paid.data)
+    #             db.session.add(schedules)
+    #             db.session.commit()
+    #             return redirect(url_for('mechanicDashboard')) ### The view function of all appointments is hardcoded
+    # No way to identify a specific schedule record through current logic
+
+    return render_template('mechanicDashboard.html', title='Mechanic Dashboard', appointments=appointments, form=form,
+                           form2=form2)
 
 
 @app.route('/review_appointment', methods=['GET', 'POST'])

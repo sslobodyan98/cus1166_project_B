@@ -4,14 +4,14 @@
     <div>
 
          <ul class="nav nav-pills">
-            <li role="presentation"><a href="{{ url_for('index') }}">Home</a></li>
-            <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
-            <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
-            <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
-            <li role="presentation"><a href="{{url_for('recommendations')}}">Suggested Recommendations</a> </li>
-            <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
-         </ul>
-
+             <li role="presentation"><a href="{{ url_for('index') }}">Home</a></li>
+             <li role="presentation" class="active"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
+             <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
+             <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
+             <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
+             <li role="presentation"><a href="{{url_for('recommendations')}}">Suggested
+             <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
+            </ul>
     </div>
     <h1 class="text-center">Add Vehicle</h1>
     <form action="" method="post" novalidate class="text-center">
@@ -52,6 +52,13 @@
             {{ form.mileage.label }}<br>
             {{ form.mileage(size=32) }}
             {% for error in form.mileage.errors %}
+            <span style="color: rebeccapurple;">[{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.registration_date.label }}<br>
+            {{ form.registration_date(size=32) }}
+            {% for error in form.registration_date.errors %}
             <span style="color: rebeccapurple;">[{{ error }}</span>
             {% endfor %}
         </p>

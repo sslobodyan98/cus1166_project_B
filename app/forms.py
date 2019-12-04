@@ -1,10 +1,12 @@
 from flask import flash
 from flask_wtf import FlaskForm, Form
 
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, RadioField, DateField, \
-    TimeField, SelectField, DecimalField
-from wtforms.validators import DataRequired, ValidationError, EqualTo
 
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, RadioField, DateField,\
+    TimeField, SelectField, DecimalField, DateTimeField
+from wtforms.validators import DataRequired, ValidationError, EqualTo
+from datetime import datetime
+from datetime import date
 from app.models import User, Car
 
 
@@ -26,12 +28,20 @@ class AddVehicle(FlaskForm):
     model = StringField('Model', validators=[DataRequired()])
     color = StringField('Color', validators=[DataRequired()])
     mileage = IntegerField('Mileage', validators=[DataRequired()])
+    registration_date = DateField('Last Registration Date (year-month-date)', validators=[DataRequired()]
+                                  , format='%Y-%m-%d', default=date.today())
     submit = SubmitField('Submit')
 
     def validate_car_vin(self, car_vin):
         car_vin = Car.query.filter_by(car_vin=car_vin.data).first()
         if car_vin is not None:
             raise ValidationError('Please use a different VIN')
+
+
+class DeleteVehicleForm(FlaskForm):
+    make = StringField('Enter make to delete', validators=[DataRequired()])
+    model = StringField('Enter model to delete', validators=[DataRequired()])
+    submit = SubmitField('Delete')
 
 
 class RegistrationForm(FlaskForm):
@@ -113,3 +123,43 @@ class Suggestions(FlaskForm):
     Oil_change = RadioField('Does the customer need an oil change', choices=[('Yes', 'Yes'), ('No', 'No')],
                             validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+# class ConfirmAppointmentCompletedForm(FlaskForm):
+#     confirm_service = StringField('Confirm Service Performed', default='Done')
+#     submit = SubmitField('Confirm Service Performed')
+
+# Confirm_appointmentchoices = ('Service Completed', 'Service Incomplete', 'Service Denied',
+#                               'Did not show up to appointment')
+#
+#
+# class ConfirmAppointmentCompletedForm(FlaskForm):
+#     confirm_service = SelectField(label='Choice', choices=[(confirm_service, confirm_service) for
+#                                                            confirm_service in Confirm_appointmentchoices])
+#     submit = SubmitField('Confirm Appointment Status')
+#
+#
+# Confirm_paymentstatuschoices = ('Paid', 'Unpaid', 'Missing balance')
+#
+#
+# class ConfirmAppointmentPaidForm(FlaskForm):
+#     confirm_paid = SelectField(label='Choice', choices=[(confirm_paid, confirm_paid) for
+#                                                         confirm_paid in Confirm_paymentstatuschoices])
+#     submit = SubmitField('Confirm Payment Status')
+
+class ConfirmAppointmentCompletedForm(FlaskForm):
+    confirm_service = SelectField('Choice', [DataRequired()],
+                                  choices=[('Service Completed', 'Service Completed'),
+                                           ('Service Incomplete', 'Service Incomplete'),
+                                           ('Service Denied', 'Service Denied'),
+                                           ('Did not show up to appointment', 'Did not show up to appointment')])
+
+    submit = SubmitField('Confirm Appointment Status')
+
+
+class ConfirmAppointmentPaidForm(FlaskForm):
+    confirm_paid = SelectField('Choice', [DataRequired()],
+                               choices=[('Paid', 'Paid'),
+                                        ('Unpaid', 'Unpaid'),
+                                        ('Missing Balance', 'Missing Balance')])
+
+    submit = SubmitField('Confirm Payment Status')

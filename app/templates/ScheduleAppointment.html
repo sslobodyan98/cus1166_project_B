@@ -1,13 +1,7 @@
 {% extends "base.html" %}
-
-
 {% block content %}
-
-
 <div>
-
     <ul class="nav nav-pills">
-
         <li role="presentation"><a href="{{url_for('index') }}">Home</a></li>
         <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
         <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
@@ -15,14 +9,10 @@
         <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a></li>
         <li role="presentation"><a href="{{url_for('recommendations')}}">Suggested Recommendations</a></li>
         <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
-
     </ul>
-
 </div>
-
 <div class="jumbotron">
 <div class="text-center container">
-
     <h1>Schedule Appointment!</h1>
     <h5><b>If not redirected home the appointment wasn't successful</b></h5>
     <h4 style="color:red;"><em>Show Available Appointments</em>
@@ -40,8 +30,6 @@
             <span style="color: rebeccapurple;">[{{ error }}</span>
             {% endfor %}
         </p>
-
-
         <p>
             {{ form.start_time.label }}<br>
             <h6>The time is in a 24 hour clock</h6>
@@ -50,8 +38,6 @@
                 <span style="color: rebeccapurple;">[{{ error }}</span>
             {% endfor %}
         </p>
-
-
         <p>
             {{ form.mechanic.label }}<br>
             {%for x in mechanics%}
@@ -63,7 +49,6 @@
                 <span style="color: rebeccapurple;">[{{ error }}</span>
             {% endfor %}
         </p>
-
         <p>
             {{ form.vehicle.label }}<br>
             {{ form.vehicle(size=10) }}
@@ -71,7 +56,6 @@
                 <span style="color: rebeccapurple;">[{{ error }}</span>
             {% endfor %}
         </p>
-
         <p>
             {{ form.appointment_type.label }}<br>
             {{ form.appointment_type}}
@@ -79,22 +63,13 @@
                 <span style="color: rebeccapurple;">[{{ error }}</span>
             {% endfor %}
         </p>
-
-
         <p>{{ form.submit() }}</p>
-
-
     </form>
 </div>
 </div>
-
 {% endblock %}
-
-
 <script>
 $(document).ready(function () {
-
     $('[data-toggle="tooltip"]').tooltip();
-
 });
 </script>
