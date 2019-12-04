@@ -1,16 +1,14 @@
 from datetime import datetime, timedelta, date
 import calendar
+from flask import Flask
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions
+    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions, ConfirmAppointmentCompletedForm,\
+ConfirmAppointmentPaidForm, DeleteVehicleForm
 from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings, Recommendations
-from flask import Flask
-    EditAppointmentForm, DeleteAppointmentForm, ConfirmAppointmentCompletedForm, ConfirmAppointmentPaidForm, \
-    DeleteVehicleForm
-from app.models import User, Car, Availability, Schedules
 
 app.config['DEBUG'] = True
 app.config['TESTING'] = False

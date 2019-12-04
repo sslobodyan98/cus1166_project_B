@@ -84,7 +84,6 @@ class Schedules(db.Model):
     appointment_type = db.Column(db.String, index=True)
     status = db.Column(db.String, index=True)
 
-
     def __repr__(self):
         return '<Schedules {}'.format(self.user.mechanic.appointment_date.appointment_time.status)
 
@@ -95,7 +94,6 @@ class Reviews(db.Model):
     rating = db.Column(db.DECIMAL, index=True)
     comment = db.Column(db.String, index=True)
     user = db.Column(db.Integer, index=True)
-
 
     # confirm_service = db.Column(db.String, index=True)
     # confirm_paid = db.Column(db.String, index=True)
