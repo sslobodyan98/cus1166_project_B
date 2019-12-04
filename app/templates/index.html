@@ -32,7 +32,7 @@
         {%if current_user.user == x.user%}
             <div>
                 <p>{{ current_user.user }} has an appointment on: <b> {{ x.appointment_date}}</b> at <b>
-                    {{x.appointment_time}}</b> with <b>{{x.mechanic}}</b> for <b>{{x.appointment_type}}</b>
+                    {{x.appointment_time}}</b> with <b>{{x.mechanic}}</b> for <b>{{x.appointment_type}}</b>      &nbsp;&nbsp;&nbsp;    Status: <b> {{x.status}}</b>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="{{url_for('deleteAppointment')}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                         <path d="M 12 0 A 12 12 0 0 1 24 12 A 12 12 0 0 1 12 24 A 12 12 0 0 1 0 12 A 12 12 0 0 1 12 0 M 12 2 A 10 10 0 0 0 2 12 C 2 14.4 2.85 16.6 4.26 18.33 L 18.33 4.26 C 16.6 2.85 14.4 2 12 2 M 12 22 A 10 10 0 0 0 22 12 C 22 9.6 21.15 7.4 19.74 5.67 L 5.67 19.74 C 7.4 21.15 9.6 22 12 22 Z" /></svg></a>
                     <a href="{{url_for('editAppointment')}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
