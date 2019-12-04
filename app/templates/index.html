@@ -4,22 +4,12 @@
             <ul class="nav nav-pills">
 
              <li role="presentation"><a href="{{ url_for('RegisterCar') }}">Add Vehicle</a></li>
-
+             <li role="presentation"><a href="{{ url_for('deleteVehicle')}}">Delete Vehicle</a></li>
              <li role="presentation"><a href="{{ url_for('OilChange') }}">Oil Change</a></li>
-
              <li role="presentation"><a href="{{url_for('Schedule')}}">Schedule Appointment</a></li>
-              <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+             <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
             </ul>
 
-         <!--   <a href="{{ url_for('index') }}">Home</a> -->
-            <!--<a href="{{ url_for('login') }}">Login</a>-->
-         <!--     <a href="{{ url_for('RegisterCar') }}">Add Vehicle</a>
-
-            <a href="{{ url_for('OilChange') }}">Oil Change</a>
-
-            <a href="{{url_for('logout')}}">Logout</a>
-
-            <a href="{{url_for('Schedule')}}"> Schedule Appointment</a>-->
 
     </div>
 
@@ -33,6 +23,7 @@
 
              <div>
                  <p>{{ current_user.user }} owns: <b> {{ x.model }}</b>  and has <b>{{x.miles_until_oil_change}}</b> miles until they need an oil change</b> </p>
+                 <p>Their next inspection is due: <b>{{ x.registration_date }}</b></p>
              </div>
             {% endif %}
         {%endfor%}
