@@ -6,16 +6,14 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-<<<<<<< HEAD
     EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions, ConfirmAppointmentCompletedForm,\
 ConfirmAppointmentPaidForm, DeleteVehicleForm
-from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings, Recommendations
-=======
+from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings, Recommendations, \
     EditAppointmentForm, DeleteAppointmentForm, ResetPasswordForm, ForgotPasswordForm
 from app.models import User, Car, Availability, Schedules
 import string
 import random
->>>>>>> MaryG_forgot/reset_password
+
 
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
