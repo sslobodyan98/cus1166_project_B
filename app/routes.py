@@ -88,6 +88,7 @@ def login():
             return redirect(url_for('mechanicDashboard'))
     return render_template('login.html', title='Sign In', form=form)
 
+
 def GenerateRandomPassword():
     string.ascii_letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     temp_password = ''
@@ -95,35 +96,38 @@ def GenerateRandomPassword():
         temp_password += random.choice(string.ascii_letters)
     return temp_password
 
+
 @app.route('/forgotPassword', methods=['GET', 'POST'])
 def ForgotPassword():
     form = ForgotPasswordForm()
-    users = User.query.all() #query through users
-    if form.validate_on_submit(): #if submit button is pressed
-        for x in users: #for users
-            if x.user == form.user.data: #if a user in users == username entered in form
-                #set temp_password:
+    users = User.query.all()  # query through users
+    if form.validate_on_submit():  # if submit button is pressed
+        for x in users:  # for users
+            if x.user == form.user.data:  # if a user in users == username entered in form
+                # set temp_password:
                 temp_password = GenerateRandomPassword()
                 x.set_password(temp_password)
                 db.session.commit()
-                #send email:
+                # send email:
                 msg = Message('Forgot Password', recipients=[x.email])
                 msg.body = ' '
-                msg.html = 'Here is your temporary password: ' + temp_password + '<a'\
-                    'Use this password to sign into your account.</a>'
+                msg.html = 'Here is your temporary password: ' + temp_password + '<a' \
+                                                                                 'Use this password to sign into your account.</a>'
                 mail.send(msg)
     return render_template('forgot_password.html', title='Forgot Password', form=form)
+
 
 @app.route('/resetPassword', methods=['GET', 'POST'])
 def ResetPassword():
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(user=current_user.user).first() #get user
-        user.set_password(form.password.data) #set new password data that they entered
+        user = User.query.filter_by(user=current_user.user).first()  # get user
+        user.set_password(form.password.data)  # set new password data that they entered
         db.session.commit()
         flash('Your password has been changed')
-        return redirect(url_for('login'))  #redirect to login page
+        return redirect(url_for('login'))  # redirect to login page
     return render_template('reset_password.html', title='Reset Password', form=form)
+
 
 @app.route('/logout')
 def logout():
@@ -238,19 +242,14 @@ def editAppointment(id):
         appointments = Schedules.query.all()
         availabilities = Availability.query.all()
         for x in appointments:
-
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and \
-                    x.mechanic == form.mechanic.data:
-                return redirect(url_for('Schedule'))
+                    x.mechanic == form.mechanic.data and x.id != id:
+                return redirect(url_for('editAppointment', id=id))
         for i in availabilities:
             if i.user == form.mechanic.data and i.date == form.date.data and (form.start_time.data < i.start_time or
                                                                               form.start_time.data > i.end_time):
                 return redirect(url_for('Schedule'))
 
-        for i in availabilities:
-            if i.user == form.mechanic.data and i.date == form.date.data and (
-                    form.start_time.data < i.start_time or form.start_time.data > i.end_time):
-                return redirect(url_for('Schedule'))
         current_appointment = Schedules.query.filter_by(id=id).first_or_404()
         current_appointment.vehicle = form.vehicle.data
         current_appointment.mechanic = form.mechanic.data
