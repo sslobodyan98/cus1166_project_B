@@ -6,8 +6,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
 from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions, ConfirmAppointmentCompletedForm,\
-ConfirmAppointmentPaidForm, DeleteVehicleForm
+    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions, ConfirmAppointmentCompletedForm, \
+    ConfirmAppointmentPaidForm, DeleteVehicleForm
 from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings, Recommendations
 
 app.config['DEBUG'] = True
@@ -21,7 +21,7 @@ app.config['MAIL_USERNAME'] = 'groupbsoftwareengineering1166@gmail.com'
 app.config['MAIL_PASSWORD'] = 'SoftwareEngineering1166'
 app.config['MAIL_DEFAULT_SENDER'] = 'groupbsoftwareengineering1166@gmail.com'
 app.config['MAIL_MAX_EMAILS'] = None
-#app.config['MAIL_SUPPRESS_SEND'] = False  # comment out in production!
+# app.config['MAIL_SUPPRESS_SEND'] = False  # comment out in production!
 app.config['MAIL_ASCII_ATTACHMENTS'] = False
 
 mail = Mail(app)
@@ -132,26 +132,19 @@ def RegisterCar():
 
         db.session.add(car)
         db.session.commit()
-#Assuming every time a user adds a car to their fleet, their previous vehicle inspections will be pushed back 1 year
-
+        # Assuming every time a user adds a car to their fleet, their previous vehicle inspections will be pushed back 1 year
 
         flash('You have added a car to use in our App!')
         return redirect(url_for('index'))
     return render_template('addVehicle.html', title='Add Vehicle', form=form, cars=cars)
 
 
-@app.route('/deleteVehicle', methods=['GET', 'POST'])
-def deleteVehicle():
-    form = DeleteVehicleForm()
-    if form.validate_on_submit():
-        cars = Car.query.all()
-        for x in cars:
-            if x.make == form.make.data and x.model == form.model.data:
-                db.session.delete(x)
-                db.session.commit()
-                return redirect(url_for('index'))
+@app.route('/DeleteCar/<int:id>', methods=['GET', 'POST'])
+def deleteCar(id):
+    Car.query.filter_by(id=id).delete()
+    db.session.commit()
 
-    return render_template('DeleteVehicle.html', title='Delete Vehicle', form=form)
+    return redirect(url_for('index'))
 
 
 @app.route('/addAvailability', methods=['GET', 'POST'])
@@ -178,14 +171,17 @@ def Schedule():
             if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and \
                     x.mechanic == form.mechanic.data:
                 return redirect(url_for('Schedule'))
+                flash("try again")
         for i in availabilities:
             if i.user == form.mechanic.data and i.date == form.date.data and (form.start_time.data < i.start_time or
                                                                               form.start_time.data > i.end_time):
                 return redirect(url_for('Schedule'))
+                flash("try again")
         for i in availabilities:
             if i.user == form.mechanic.data and i.date == form.date.data and (
                     form.start_time.data < i.start_time or form.start_time.data > i.end_time):
                 return redirect(url_for('Schedule'))
+                flash("try again")
         meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
                             appointment_time=form.start_time.data, vehicle=form.vehicle.data,
                             appointment_type=form.appointment_type.data, status='PENDING')
@@ -196,35 +192,56 @@ def Schedule():
     return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form, mechanics=mechanics)
 
 
-@app.route('/EditAppointment', methods=['GET', 'POST'])
-def editAppointment():
-    form = EditAppointmentForm()
+@app.route('/EditAppointment/<int:id>', methods=['GET', 'POST'])
+def editAppointment(id):
+    form = ScheduleAppointment()
+    print(form.validate_on_submit())
+    error = None
     if form.validate_on_submit():
         appointments = Schedules.query.all()
+        availabilities = Availability.query.all()
         for x in appointments:
-            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data:
-                return render_template('EditApt.html', title='Edit Appointment', form=form)
-            elif current_user.user == x.user and form.date.data == x.appointment_date:
-                x.appointment_time = form.start_time.data
-                db.session.commit()
-                return redirect(url_for('index'))
 
-    return render_template('EditApt.html', title='Edit Appointment', form=form)
+            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and \
+                    x.mechanic == form.mechanic.data:
+                return redirect(url_for('Schedule'))
+        for i in availabilities:
+            if i.user == form.mechanic.data and i.date == form.date.data and (form.start_time.data < i.start_time or
+                                                                              form.start_time.data > i.end_time):
+                return redirect(url_for('Schedule'))
+
+        for i in availabilities:
+            if i.user == form.mechanic.data and i.date == form.date.data and (
+                    form.start_time.data < i.start_time or form.start_time.data > i.end_time):
+                return redirect(url_for('Schedule'))
+        current_appointment = Schedules.query.filter_by(id=id).first_or_404()
+        current_appointment.vehicle = form.vehicle.data
+        current_appointment.mechanic = form.mechanic.data
+        current_appointment.appointment_date = form.date.data
+        current_appointment.appointment_time = form.start_time.data
+        current_appointment.appointment_type = form.appointment_type.data
+
+        db.session.add(current_appointment)
+        db.session.commit()
+
+        return redirect(url_for('index'))
+
+    current_appointment = Schedules.query.filter_by(id=id).first_or_404()
+
+    form.vehicle.data = current_appointment.vehicle
+    form.mechanic.data = current_appointment.mechanic
+    form.date.data = current_appointment.appointment_date
+    form.start_time.data = current_appointment.appointment_time
+    form.appointment_type.data = current_appointment.appointment_type
+    return render_template('ScheduleAppointment.html', title='Edit Appointment', form=form, error=error)
 
 
-@app.route('/DeleteAppointment', methods=['GET', 'POST'])
-def deleteAppointment():
-    form = DeleteAppointmentForm()
-    if form.validate_on_submit():
-        appointments = Schedules.query.all()
-        for x in appointments:
-            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and x.mechanic == \
-                    form.mechanic.data and x.vehicle == form.car.data:
-                db.session.delete(x)
-                db.session.commit()
-                return redirect(url_for('index'))
+@app.route('/DeleteAppointment/<int:id>', methods=['GET', 'POST'])
+def deleteAppointment(id):
+    Schedules.query.filter_by(id=id).delete()
+    db.session.commit()
 
-    return render_template('delete_appointment.html', title='Edit Appointment', form=form)
+    return redirect(url_for('index'))
 
 
 @app.route('/Confirmed', methods=['GET', 'POST'])
