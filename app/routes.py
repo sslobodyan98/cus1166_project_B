@@ -5,21 +5,11 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from app import app, db
-from app.forms import LoginForm, AddVehicle, RegistrationForm, OilChangeForm, AddAvailability, ScheduleAppointment, \
-<<<<<<< HEAD
-    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions, ConfirmAppointmentCompletedForm, \
-    ConfirmAppointmentPaidForm, DeleteVehicleForm
-from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings, Recommendations
-=======
-    EditAppointmentForm, DeleteAppointmentForm, ReviewMechanic, Suggestions, ConfirmAppointmentCompletedForm,\
-ConfirmAppointmentPaidForm, DeleteVehicleForm
-from app.models import User, Car, Availability, Schedules, Reviews, Mechanic_Ratings, Recommendations, \
-    EditAppointmentForm, DeleteAppointmentForm, ResetPasswordForm, ForgotPasswordForm
+from app.forms import *
+from app.models import *
 from app.models import User, Car, Availability, Schedules
 import string
 import random
-
->>>>>>> bf044f144650f13b70634b8fd1da49fbf0479f21
 
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
