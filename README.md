@@ -1,10 +1,10 @@
 #### CUS1166 Project Group B.
 This project is a basic web application utlizing:
-Python
-Flask
-SQLAlchemy
-HTML
-Google maps API
+- Python
+- Flask
+- SQLAlchemy
+- HTML
+- Google maps API
 #### It's Purpose:
 To learn the microframework 'Flask'
 The application allows users to add vehicles to their 'fleet'
