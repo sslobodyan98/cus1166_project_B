@@ -1,8 +1,7 @@
 from flask import flash
 from flask_wtf import FlaskForm, Form
 
-
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, RadioField, DateField,\
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, RadioField, DateField, \
     TimeField, SelectField, DecimalField, DateTimeField
 from wtforms.validators import DataRequired, ValidationError, EqualTo
 from datetime import datetime
@@ -21,14 +20,17 @@ class LoginForm(FlaskForm):
         if role is not None:
             raise ValidationError('Please select a role')
 
+
 class ForgotPasswordForm(FlaskForm):
     user = StringField('Enter username', validators=[DataRequired()])
     submit = SubmitField('Send Email')
+
 
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('Enter new password', validators=[DataRequired()])
     password2 = PasswordField('Repeat new password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Change password')
+
 
 class AddVehicle(FlaskForm):
     car_vin = StringField('VIN Number', validators=[DataRequired()])
@@ -132,6 +134,7 @@ class Suggestions(FlaskForm):
                             validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+
 # class ConfirmAppointmentCompletedForm(FlaskForm):
 #     confirm_service = StringField('Confirm Service Performed', default='Done')
 #     submit = SubmitField('Confirm Service Performed')
@@ -171,3 +174,9 @@ class ConfirmAppointmentPaidForm(FlaskForm):
                                         ('Missing Balance', 'Missing Balance')])
 
     submit = SubmitField('Confirm Payment Status')
+
+
+class StatusForm(FlaskForm):
+    status = SelectField('Status', [DataRequired()],
+                         choices=[('Confirmed', 'Confirmed'),
+                                  ('Declined', 'Declined')])
