@@ -25,21 +25,10 @@
     <h6 class="card-subtitle mb-2 text-muted">Status: {{x.status}}</h6>
     <a href="{{url_for('Confirmed',id=x.id)}}"><button class="add btn btn-primary font-weight-bold ">Confirm</button></a> <a href="{{url_for('Declined',id=x.id)}}"><button class="add btn btn-primary font-weight-bold ">Decline</button></a>
     <p class="card-text">
-<!--      <div>-->
-<!--        {%if current_user.user == x.mechanic%}-->
-<!--        <p>You have a <b>{{x.appointment_type}}</b> appointment booked for {{ x.appointment_date }} at <b> {{ x.appointment_time }} </b>  &nbsp;&nbsp;&nbsp;&nbsp;  Status: <b>{{x.status}}</b>  &nbsp;&nbsp;  <a href="{{url_for('Confirmed',id=x.id)}}"><button class="add btn btn-primary font-weight-bold ">Confirm</button></a>  &nbsp;&nbsp; <a href="{{url_for('Declined',id=x.id)}}"><button class="add btn btn-primary font-weight-bold ">Decline</button></a> </p>-->
-<!--        {%endif%}-->
-<!--    </div>-->
       {%endif%}
   </div>
 </div>
 
-
-{#    <div>
-        {%if current_user.user == x.mechanic%}
-        <p>You have a <b>{{x.appointment_type}}</b> appointment booked for {{ x.appointment_date }} at <b> {{ x.appointment_time }} </b>  &nbsp;&nbsp;&nbsp;&nbsp;  Status: <b>{{x.status}}</b>  &nbsp;&nbsp;  <a href="{{url_for('Confirmed',id=x.id)}}"><button class="add btn btn-primary font-weight-bold ">Confirm</button></a>  &nbsp;&nbsp; <a href="{{url_for('Declined',id=x.id)}}"><button class="add btn btn-primary font-weight-bold ">Decline</button></a> </p>
-        {%endif%}
-    </div> #}
 {% endfor %}
 
 </div>
