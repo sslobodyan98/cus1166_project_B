@@ -1,7 +1,0 @@
-* ID:010:
-* Use-case: Allowing users (Car Owners and Mechanics) to reset password and sending emails with temporary password to the user if they forget their password.
-	
-	* Description: User can enter their username and click ‘Send Email’ on Forgot Password page. A randomly generated temporary password becomes the user’s password, and it will be sent to their email. Once they sign in, they can click on ‘Reset Password’ and create a new password. The user will be redirected to the Login page where they can sign in with their new password. 
-	* Actor: Regular User, Provider User
-	* Assigned to : Mary Garrity
-	* Refs: use-case_doc, issue (http://link_to_github_issue_item)
