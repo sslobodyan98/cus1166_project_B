@@ -290,21 +290,21 @@ def Declined(id):
     db.session.commit()
     return redirect(url_for('mechanicDashboard'))
 
-@app.route('/Paid/<int:id>', methods=['GET', 'POST'])
-@login_required
-def Paid(id):
-    current_appointment = Schedules.query.filter_by(id=id).first_or_404()
-    current_appointment.status = 'Paid'
-    db.session.commit()
-    return redirect(url_for('mechanicDashboard'))
-
-@app.route('/NotPaid/<int:id>', methods=['GET', 'POST'])
-@login_required
-def NotPaid(id):
-    current_appointment = Schedules.query.filter_by(id=id).first_or_404()
-    current_appointment.status = 'Not Paid'
-    db.session.commit()
-    return redirect(url_for('mechanicDashboard'))
+# @app.route('/Paid/<int:id>', methods=['GET', 'POST'])
+# @login_required
+# def Paid(id):
+#     current_appointment = Schedules.query.filter_by(id=id).first_or_404()
+#     current_appointment.status = 'Paid'
+#     db.session.commit()
+#     return redirect(url_for('mechanicDashboard'))
+#
+# @app.route('/NotPaid/<int:id>', methods=['GET', 'POST'])
+# @login_required
+# def NotPaid(id):
+#     current_appointment = Schedules.query.filter_by(id=id).first_or_404()
+#     current_appointment.status = 'Not Paid'
+#     db.session.commit()
+#     return redirect(url_for('mechanicDashboard'))
 
 
 @app.route('/DisplayAvailability', methods=['GET', 'POST'])
