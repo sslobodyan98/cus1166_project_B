@@ -43,7 +43,7 @@
     
 | Subtask     | Assigned    | Who did it         | Completion status |  Problems    | 
 | ----------- | ----------- | ------------------ | ----------- | ----------- |
-|  |Farin Habib|Farin Habib, Svyatoslav|Done||
+|  |Farin Habib|Farin Habib |Done||
 
 * ID:015: 
 	* Use-case: Mechanic Approve or Decline Schedules (Mechanics)
