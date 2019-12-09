@@ -180,3 +180,248 @@ def RegisterCar():
     return render_template('addVehicle.html', title='Add Vehicle', form=form, cars=cars)
 
 
+@app.route('/DeleteCar/<int:id>', methods=['GET', 'POST'])
+def deleteCar(id):
+    Car.query.filter_by(id=id).delete()
+    db.session.commit()
+
+    return redirect(url_for('index'))
+
+
+@app.route('/addAvailability', methods=['GET', 'POST'])
+def addAvailability():
+    form = AddAvailability()
+    if form.validate_on_submit():
+        time = Availability(user=current_user.user, date=form.date.data, start_time=form.start_time.data,
+                            end_time=form.end_time.data)
+        db.session.add(time)
+        db.session.commit()
+        return redirect(url_for('mechanicDashboard'))
+    return render_template('Mechanic_AvaialablityForm.html', title='Add availability', form=form)
+
+
+@app.route('/ScheduleAppointment', methods=['GET', 'POST'])
+def Schedule():
+    form = ScheduleAppointment()
+    availabilities = Availability.query.all()
+    mechanics = User.query.filter_by(role="Mechanic")
+    if form.validate_on_submit():
+        appointments = Schedules.query.all()
+        for x in appointments:
+
+            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and \
+                    x.mechanic == form.mechanic.data:
+                return redirect(url_for('Schedule'))
+                flash("try again")
+        for i in availabilities:
+            if i.user == form.mechanic.data and i.date == form.date.data and (form.start_time.data < i.start_time or
+                                                                              form.start_time.data > i.end_time):
+                return redirect(url_for('Schedule'))
+                flash("try again")
+        for i in availabilities:
+            if i.user == form.mechanic.data and i.date == form.date.data and (
+                    form.start_time.data < i.start_time or form.start_time.data > i.end_time):
+                return redirect(url_for('Schedule'))
+                flash("try again")
+        meeting = Schedules(user=current_user.user, mechanic=form.mechanic.data, appointment_date=form.date.data,
+                            appointment_time=form.start_time.data, vehicle=form.vehicle.data,
+                            appointment_type=form.appointment_type.data, status='PENDING')
+        db.session.add(meeting)
+        db.session.commit()
+        return redirect(url_for('index'))
+
+    return render_template('ScheduleAppointment.html', title='Schedule Appointment', form=form, mechanics=mechanics)
+
+
+@app.route('/EditAppointment/<int:id>', methods=['GET', 'POST'])
+def editAppointment(id):
+    form = ScheduleAppointment()
+    print(form.validate_on_submit())
+    error = None
+    if form.validate_on_submit():
+        appointments = Schedules.query.all()
+        availabilities = Availability.query.all()
+        for x in appointments:
+            if x.appointment_date == form.date.data and x.appointment_time == form.start_time.data and \
+                    x.mechanic == form.mechanic.data and x.id != id:
+                return redirect(url_for('editAppointment', id=id))
+        for i in availabilities:
+            if i.user == form.mechanic.data and i.date == form.date.data and (form.start_time.data < i.start_time or
+                                                                              form.start_time.data > i.end_time):
+                return redirect(url_for('Schedule'))
+
+        current_appointment = Schedules.query.filter_by(id=id).first_or_404()
+        current_appointment.vehicle = form.vehicle.data
+        current_appointment.mechanic = form.mechanic.data
+        current_appointment.appointment_date = form.date.data
+        current_appointment.appointment_time = form.start_time.data
+        current_appointment.appointment_type = form.appointment_type.data
+
+        db.session.add(current_appointment)
+        db.session.commit()
+
+        return redirect(url_for('index'))
+
+    current_appointment = Schedules.query.filter_by(id=id).first_or_404()
+
+    form.vehicle.data = current_appointment.vehicle
+    form.mechanic.data = current_appointment.mechanic
+    form.date.data = current_appointment.appointment_date
+    form.start_time.data = current_appointment.appointment_time
+    form.appointment_type.data = current_appointment.appointment_type
+    return render_template('ScheduleAppointment.html', title='Edit Appointment', form=form, error=error)
+
+
+@app.route('/DeleteAppointment/<int:id>', methods=['GET', 'POST'])
+def deleteAppointment(id):
+    Schedules.query.filter_by(id=id).delete()
+    db.session.commit()
+
+    return redirect(url_for('index'))
+
+
+@app.route('/Confirmed', methods=['GET', 'POST'])
+def Confirmed():
+    appointments2 = Schedules.query.all()
+    for x in appointments2:
+        x.status = 'CONFIRMED'
+        db.session.commit()
+    return redirect(url_for('mechanicDashboard'))
+
+
+@app.route('/Declined', methods=['GET', 'POST'])
+def Declined():
+    appointments3 = Schedules.query.all()
+    for x in appointments3:
+        x.status = 'DECLINED'
+        db.session.commit()
+    return redirect(url_for('mechanicDashboard'))
+
+
+@app.route('/DisplayAvailability', methods=['GET', 'POST'])
+def DisplayAvailabilities():
+    availabilities = Availability.query.all()
+    appointments = Schedules.query.all()
+    return render_template('DisplayMechanicAvailability.html',
+                           availabilities=availabilities, appointments=appointments)
+
+
+@app.route('/oil_change', methods=['GET', 'POST'])
+@login_required
+def OilChange():
+    form = OilChangeForm()
+    cars = Car.query.all()
+    if form.validate_on_submit():  # if submit button is pressed
+        for x in cars:
+            if x.user == current_user.user and x.model == form.car.data:
+                difference = form.update_miles.data - x.mileage
+                x.miles_until_oil_change = 5000 - difference
+                x.mileage = form.update_miles.data
+                db.session.commit()
+        if difference < 5000:
+            return redirect(url_for('index'))
+        elif difference >= 5000:
+            msg = Message('Oil Change Reminder Notification', recipients=[current_user.email])
+            msg.body = 'Hi, Its time for you to schedule your next car maintenance appointment as your oil needs to ' \
+                       'be changed! '
+            msg.html = '<b>This is a Reminder Notification </b>'
+            mail.send(msg)
+            return redirect(url_for('Schedule'))
+
+    return render_template('oil_change.html', title='Oil Change', form=form, cars=cars)
+
+
+@app.route('/mechanicDashboard', methods=['GET', 'POST'])
+@login_required
+def mechanicDashboard():
+    appointments = Schedules.query.all()
+    form = ConfirmAppointmentCompletedForm()
+    form2 = ConfirmAppointmentPaidForm()
+    #
+    # if form.validate_on_submit():  # and form2.validate_on_submit():
+    #     for x in appointments:
+    #         current_user.user and x.appointment_date and x.appointment_time
+    #             schedules = Schedules(confirm_service=form.confirm_service.data)  # , confirm_paid=form2.confirm_paid.data)
+    #             db.session.add(schedules)
+    #             db.session.commit()
+    #             return redirect(url_for('mechanicDashboard')) ### The view function of all appointments is hardcoded
+    # No way to identify a specific schedule record through current logic
+
+    return render_template('mechanicDashboard.html', title='Mechanic Dashboard', appointments=appointments, form=form,
+                           form2=form2)
+
+
+@app.route('/review_appointment', methods=['GET', 'POST'])
+@login_required
+def rate_mechanic():
+    form = ReviewMechanic()
+    all_reviews = Reviews.query.order_by(Reviews.mechanic)
+    all_averages = Mechanic_Ratings.query.all()
+    if form.validate_on_submit():
+        total = 0
+        total_reviews = []
+        review_made = Reviews(mechanic=form.mechanic.data, comment=form.comments.data, rating=form.rating.data,
+                              user=current_user.user)
+        db.session.add(review_made)
+
+        for x in all_reviews:
+            if x.mechanic == form.mechanic.data:
+                total_reviews += [x.rating]
+
+        for x in total_reviews:
+            total += x
+        avg = total / len(total_reviews)
+        print(avg)
+
+        if Mechanic_Ratings.query.first() is None:
+            mechanic_reviews = Mechanic_Ratings(mechanic=form.mechanic.data, average=round(avg, 2))
+            db.session.add(mechanic_reviews)
+        else:
+            for j in all_averages:
+                if Mechanic_Ratings.query.filter_by(mechanic=form.mechanic.data) is None:
+                    if j.mechanic == form.mechanic.data:
+                        print("2nd if")
+                        j.average = round(avg, 2)
+                else:
+                    print("else")
+                    mechanic_reviews = Mechanic_Ratings(mechanic=form.mechanic.data, average=round(avg, 2))
+                    db.session.add(mechanic_reviews)
+        db.session.commit()
+
+        return redirect(url_for('view_rating'))
+    return render_template('MechanicRating.html', title='Review Mechanic', form=form)
+
+
+@app.route('/view_reviews')
+@login_required
+def view_rating():
+    mechanics_ratings = Mechanic_Ratings.query.all()
+    all_reviews = Reviews.query.all()
+    users = User.query.filter_by(role='Mechanic')
+    return render_template('DisplayRatings.html', title='Mechanic Reviews', mechanics_ratings=mechanics_ratings,
+                           all_reviews=all_reviews, users=users)
+
+
+@app.route('/suggest_recommendations', methods=['GET', 'POST'])
+@login_required
+def suggest_recommendations():
+    form = Suggestions()
+    if form.validate_on_submit():
+        recommendations_suggested = Recommendations(user=form.user.data, Tire_rotations=form.Tire_rotations.data,
+                                                    Registration_update=form.Registration_update.data,
+                                                    Change_break=form.Change_break.data, Car_Wash=form.Car_Wash.data,
+                                                    Oil_change=form.Oil_change.data)
+        db.session.add(recommendations_suggested)
+        db.session.commit()
+
+        return redirect(url_for('mechanicDashboard'))
+
+    return render_template('Suggestions.html', title='Recommendations', form=form)
+
+
+@app.route('/suggested_recommendations', methods=['GET', 'POST'])
+@login_required
+def recommendations():
+    recommendations_made = Recommendations.query.all()
+    return render_template('Suggestions_Proposed.html', title='Recommendations Made',
+                           recommendations_made=recommendations_made)
