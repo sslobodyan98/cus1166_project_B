@@ -4,6 +4,8 @@ from flask import Flask
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
+from sqlalchemy import func
+
 from app import app, db
 from app.forms import *
 from app.models import *
@@ -28,40 +30,31 @@ app.config['MAIL_ASCII_ATTACHMENTS'] = False
 mail = Mail(app)
 
 
-# def appointment_reminder():
-#     appointments = Schedules.query.all()
-#     users = User.query.all()
-#
-#     with app.app_context():
-#         for x in appointments:
-#             diff = x.appointment_date - datetime.date.today()
-#             for i in users:
-#                 if diff.days == 3 and i.user == x.user and i.role == 'Car Owner':
-#                     msg = Message('Appointment Reminder Notification', recipients=[i.email])
-#                     msg.html = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
-#                     mail.send(msg)
-#                 if diff.days < 1 and i.user == x.user and i.role == 'Car Owner':
-#                     msg = Message('Follow up for oil change appointment', recipients=[i.email])
-#                     msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
-#                                'and review your mechanic we would highly appreciate it.'
-#                     msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
-#                                'and review your mechanic we would highly appreciate it.' \
-#                                ' <a href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a>'
-#                     mail.send(msg)
-#                 if diff.days < 1 and x.mechanic == i.user and i.role == 'Mechanic':
-#                     msg = Message('Follow up for oil change appointment', recipients=[i.email])
-#                     msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
-#                                'and review your mechanic we would highly appreciate it.'
-#                     msg.html = 'Hello, I hope your appointment went well. If you could please take a second to ' \
-#                                'suggest other repairs that the customer may need we would highly appreciate it.' \
-#                                '<a href="http://127.0.0.1:5000/suggest_recommendations"> Click here to access ' \
-#                                'review</a> '
-#                     mail.send(msg)
-#
-#     return app
-#
-#
-# appointment_reminder()
+def appointment_reminder():
+    appointments = Schedules.query.all()
+    users = User.query.all()
+    today = date.today()
+    with app.app_context():
+        for x in appointments:
+            diff = x.appointment_date - today
+            for i in users:
+                if diff.days == 3 and i.user == x.user and i.role == 'Car Owner':
+                    msg = Message('Appointment Reminder Notification', recipients=[i.email])
+                    msg.html = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
+                    mail.send(msg)
+                if diff.days < 1 and i.user == x.mechanic:
+                    msg = Message('Follow up for oil change appointment', recipients=[i.email])
+                    msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+                               'and review your mechanic we would highly appreciate it.'
+                    msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+                               'and review your mechanic we would highly appreciate it.' \
+                               ' <a href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a>'
+                    mail.send(msg)
+
+    return app
+
+
+appointment_reminder()
 
 
 @app.route('/')
@@ -280,21 +273,19 @@ def deleteAppointment(id):
     return redirect(url_for('index'))
 
 
-@app.route('/Confirmed', methods=['GET', 'POST'])
-def Confirmed():
-    appointments2 = Schedules.query.all()
-    for x in appointments2:
-        x.status = 'CONFIRMED'
-        db.session.commit()
+@app.route('/Confirmed/<int:id>', methods=['GET', 'POST'])
+def Confirmed(id):
+    current_appointment = Schedules.query.filter_by(id=id).first_or_404()
+    current_appointment.status = 'CONFIRMED'
+    db.session.commit()
     return redirect(url_for('mechanicDashboard'))
 
 
-@app.route('/Declined', methods=['GET', 'POST'])
-def Declined():
-    appointments3 = Schedules.query.all()
-    for x in appointments3:
-        x.status = 'DECLINED'
-        db.session.commit()
+@app.route('/Declined/<int:id>', methods=['GET', 'POST'])
+def Declined(id):
+    current_appointment = Schedules.query.filter_by(id=id).first_or_404()
+    current_appointment.status = 'DECLINED'
+    db.session.commit()
     return redirect(url_for('mechanicDashboard'))
 
 
@@ -334,18 +325,10 @@ def OilChange():
 @app.route('/mechanicDashboard', methods=['GET', 'POST'])
 @login_required
 def mechanicDashboard():
-    appointments = Schedules.query.all()
+    appointments = Schedules.query.order_by(func.DATE(Schedules.appointment_date)).all()
     form = ConfirmAppointmentCompletedForm()
     form2 = ConfirmAppointmentPaidForm()
-    #
-    # if form.validate_on_submit():  # and form2.validate_on_submit():
-    #     for x in appointments:
-    #         current_user.user and x.appointment_date and x.appointment_time
-    #             schedules = Schedules(confirm_service=form.confirm_service.data)  # , confirm_paid=form2.confirm_paid.data)
-    #             db.session.add(schedules)
-    #             db.session.commit()
-    #             return redirect(url_for('mechanicDashboard')) ### The view function of all appointments is hardcoded
-    # No way to identify a specific schedule record through current logic
+
 
     return render_template('mechanicDashboard.html', title='Mechanic Dashboard', appointments=appointments, form=form,
                            form2=form2)
