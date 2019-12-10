@@ -31,7 +31,7 @@
              <h4 class="card-title">{{ current_user.user }} owns:
                  <i> {{ x.model }}</i>  and has <b>{{x.miles_until_oil_change}}</b>
                  miles until they need an oil change</b>
-                 <a href="{{url_for('deleteVehicle',id=x.id)}}" class="remove">
+                 <a href="{{url_for('deleteCar',id=x.id)}}" class="remove">
                      <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                             <path fill="#000000" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53
                             2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,
@@ -86,40 +86,35 @@
 </div>
 
 <!--PAYPAL buttons-->
+    <div id="paypal-button" data-sdk-integration-source="button-factory" align="center"></div>
 
- <br> <div id="paypal-button-container" style="width: auto" align="center" class="text-center" class="text-align"></div>
-<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD" data-sdk-integration-source="button-factory" align="center" ></script>
-<script align="center">
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
-    paypal.Buttons({
-        style: {
-            size: 'small',
-            tagline: 'false',
-            shape: 'pill',
-            color: 'gold',
-            layout: 'horizontal',
-            label: 'paypal',
-            align: 'center',
-
+<script>
+    var CREATE_PAYMENT_URL  = 'http://127.0.0.1:5000/payment';
+    var EXECUTE_PAYMENT_URL = 'http://127.0.0.1:5000/execute';
+    paypal.Button.render({
+        style:{
+        size: 'large',
         },
-
-
-
-        createOrder: function(data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: '1'
-                    }
-                }]
+        env: 'sandbox', // Or 'sandbox'
+        commit: true, // Show a 'Pay Now' button
+        payment: function() {
+            return paypal.request.post(CREATE_PAYMENT_URL).then(function(data) {
+                return data.paymentID;
             });
         },
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                alert('Transaction completed by ' + details.payer.name.given_name + '!');
+        onAuthorize: function(data) {
+            return paypal.request.post(EXECUTE_PAYMENT_URL, {
+                paymentID: data.paymentID,
+                payerID:   data.payerID
+            }).then(function(res) {
+                console.log(res.success)
+                // The payment is complete!
+                // You can now show a confirmation message to the customer
             });
         }
-    }).render('#paypal-button-container');
+    }, '#paypal-button');
 </script>
 
         {%endif%}

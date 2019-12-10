@@ -15,6 +15,7 @@ flask-wtforms = "*"
 pipenv = "*"
 dateutil = "*"
 timedelta = "*"
+paypalrestsdk = "*"
 
 [requires]
 python_version = "3.6"
