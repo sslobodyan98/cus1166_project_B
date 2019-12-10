@@ -412,3 +412,4 @@ def recommendations():
     recommendations_made = Recommendations.query.all()
     return render_template('Suggestions_Proposed.html', title='Recommendations Made',
                            recommendations_made=recommendations_made)
+

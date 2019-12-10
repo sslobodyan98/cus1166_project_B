@@ -64,8 +64,53 @@
 <div class="text-center">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d6047.516175670799!2d-73.80340917357222!3d40.723341648386345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e3!4m3!3m2!1d40.7221457!2d-73.7950558!4m5!1s0x89c260fafe62ae9b%3A0x1d8a6378e6c83504!2sProfessional%20Auto%20Repair%2C%20Fresh%20Meadows%2C%20NY!3m2!1d40.7219374!2d-73.8040362!5e0!3m2!1sen!2sus!4v1575473089168!5m2!1sen!2sus" name= "iframe_a" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
                 <br> <button type="button" class="btn btn-secondary" target="iframe_a" onclick=" window.open('https://goo.gl/maps/zYFG2jUWpKtsNGPf7','_blank')" > Get Directions</button>
+
+
 </div>
-            </div>
+
+
+                <h4 class="text-center"> Pay Online</h4>
+
+
+
+<!--PAYPAL buttons-->
+
+ <br> <div id="paypal-button-container" style="width: 200px" align="center" class="text-center" class="text-align"></div>
+<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD" data-sdk-integration-source="button-factory" align="center" ></script>
+<script align="center">
+
+    paypal.Buttons({
+        style: {
+            layout: 'vertical',
+            size: 'responsive',
+            tagline: 'false',
+            shape: 'pill',
+            color: 'gold',
+            layout: 'horizontal',
+            label: 'paypal',
+            align: 'center',
+
+        },
+
+
+
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '1'
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                alert('Transaction completed by ' + details.payer.name.given_name + '!');
+            });
+        }
+    }).render('#paypal-button-container');
+</script>
+
         {%endif%}
   {% endfor %}
   </div>
