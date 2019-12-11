@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div>
+    <ul class="nav nav-pills">
+        <li role="presentation" class="active"><a href="{{ url_for('mechanicDashboard') }}">Home</a></li>
+        <li role="presentation"><a href="{{url_for('view_rating')}}">View Mechanic Ratings</a> </li>
+        <li role="presentation"><a href="{{url_for('addAvailability')}}">Add Availability</a></li>
+        <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
+
+    </ul>
+</div>
+
+<div class="jumbotron">
+<div class="container text-center">
+<h1>Hi {{ current_user.user }}!</h1>
+{% for x in appointments %}
+
+    <div>
+        {%if current_user.user == x.mechanic%}
+        <p>You have a <b>{{x.appointment_type}}</b> appointment booked for {{ x.appointment_date }} at <b> {{ x.appointment_time }} </b>  &nbsp;&nbsp;&nbsp;&nbsp;  Status: <b>{{x.status}}</b>  &nbsp;&nbsp;  <a href="{{url_for('edit_status',id=x.id)}}">Status</a></p>
+    <form method="POST" action="{{url_for('edit_status',id=id)}}" >
+        <div class="add-items d-flex">
+        {{ form.csrf_token }}
+        {{ form.status }}
+        <button class="add btn btn-primary font-weight-bold editstatus-btn">Update</button>
+        </div>
+    </form>
+
+
+
+        {%endif%}
+    </div>
+{% endfor %}
+
+</div>
+</div>
+
+
+{% endblock %}

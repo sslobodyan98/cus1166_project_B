@@ -7,7 +7,7 @@
 
          <ul class="nav nav-pills">
             <li role="presentation" class="active"><a href="{{ url_for('index') }}">Home</a></li>
-            <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li>
+            {# <li role="presentation"><a href="{{url_for('logout')}}">Logout</a></li> #}
          </ul>
     </div>
 
@@ -17,9 +17,13 @@
 
     <p>New Users  <a href="{{ url_for('register') }}">Sign Up Here!</a></p>
 
+    <!-- adding forgot_password link -->
+    <p>Forgot password?  <a href="{{ url_for('ForgotPassword') }}">Click Here</a></p>
+
+
     <form action="" method="post" novalidate>
     <div class="jumbotron">
-
+        {{form.csrf}}
         {{ form.hidden_tag() }}
         <p>
 
@@ -47,7 +51,7 @@
 
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
 
-        <p>{{ form.submit() }}</p>
+        <button type="submit" class="btn btn-success">Sign In</button>
 
 </div>
     </form>

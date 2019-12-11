@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block content %}
@@ -62,7 +63,7 @@
             <span style="color: rebeccapurple;">[{{ error }}</span>
             {% endfor %}
         </p>
-        <p>{{ form.submit() }}</p>
+        <button type="submit" class="btn btn-success">Add Vehicle</button>
         </div>
     </form>
 {% endblock %}

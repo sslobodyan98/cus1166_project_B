@@ -22,7 +22,7 @@
     * Subtasks for Add Vehicle to User:
       * Mary Kelly
 	* Table for oil changes, including date and mileage
-      * Mary Garrity
+      * Mary Garrity, Farin Habib
 	* Calculating miles until next oil change
 	* Adding mileage update
       * Mariyam Elshrief

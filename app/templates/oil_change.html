@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% block content %}
 <div>
@@ -12,10 +11,13 @@
         <li role="presentation"><a href="{{url_for('logout')}}">Logout</a> </li>
     </ul>
 
-<div class="container text-center">
-<div class="jumbotron">
+
+
 
     <h2 class="text-center">Oil Change</h2>
+
+    <div class="jumbotron">
+
     <form action="" method="post" class="text-center">
         {{ form.hidden_tag() }}
 
@@ -29,13 +31,18 @@
 
         <p>
             {{ form.car.label }}<br>
+            {% for x in cars %}
+            {%if current_user.user == x.user%}
+            {{x.model}}<br>
+            {%endif%}
+            {%endfor%}
             {{ form.car(size=32) }}<br>
             {% for error in form.car.errors %}
             <span style="color: #ff0000;">[{{ error }}]</span>
             {% endfor %}
         </p>
 
-        <p>{{ form.submit() }}</p>
+        <button type="submit" class="btn btn-success">Update</button>
     </form>
 
 </div>
