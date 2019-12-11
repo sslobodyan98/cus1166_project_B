@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from sqlalchemy import func
-import paypalrestsdk
+#import paypalrestsdk
 
 from app import app, db
 from app.forms import *
@@ -17,10 +17,10 @@ import random
 app.config['DEBUG'] = True
 app.config['TESTING'] = False
 
-paypalrestsdk.configure({
-    "mode": "sandbox",  # sandbox or live
-    "client_id": "AZjCcKtxPjinLV1ZX_e_jJ7qPAfV9MTCOwdn2-Ehsv4hrsRWndTrHcIrKBH5CExCJ2OrmLr30v995MdK",
-    "client_secret": "EOpjc-2uD385GWOOmiWc863OajXPOwp-wbdPFg3fK72_F0sxv5T7-QXMY1evWfD_HQ6NXWwJVo5MyEnV"})
+# paypalrestsdk.configure({
+#     "mode": "sandbox",  # sandbox or live
+#     "client_id": "AZjCcKtxPjinLV1ZX_e_jJ7qPAfV9MTCOwdn2-Ehsv4hrsRWndTrHcIrKBH5CExCJ2OrmLr30v995MdK",
+#     "client_secret": "EOpjc-2uD385GWOOmiWc863OajXPOwp-wbdPFg3fK72_F0sxv5T7-QXMY1evWfD_HQ6NXWwJVo5MyEnV"})
 
 
 # app.config['MAIL_SERVER'] = 'smtp.gmail.com'
