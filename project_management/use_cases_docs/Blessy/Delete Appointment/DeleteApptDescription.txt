@@ -1,0 +1,6 @@
+Blessy Varghese
+Delete Appointment
+Use Case Description:
+User is able to delete an existing appointment from the database by clicking
+on a button linked to existing appointments. This will immediately update 
+schedule database and display the updated database for the user. 

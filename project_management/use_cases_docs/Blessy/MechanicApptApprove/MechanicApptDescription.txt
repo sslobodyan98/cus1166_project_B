@@ -1,0 +1,8 @@
+Blessy Varghese
+Mechanic Appointment Approval
+Use Case Description: Mechanic is able to view list of schedules made and be
+able to change the status of appointments made by the user(car owner) by either 
+confirming or declining it. Confirming it will update the schedule database 
+status to confirmed and user is able to view it. Declining it will delete the 
+appointment in the schedule database and user will be able to only see active 
+appointments that have been made. 
