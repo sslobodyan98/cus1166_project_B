@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail, Message
 from sqlalchemy import func
-#import paypalrestsdk
+# import paypalrestsdk
 
 from app import app, db
 from app.forms import *
@@ -23,46 +23,46 @@ app.config['TESTING'] = False
 #     "client_secret": "EOpjc-2uD385GWOOmiWc863OajXPOwp-wbdPFg3fK72_F0sxv5T7-QXMY1evWfD_HQ6NXWwJVo5MyEnV"})
 
 
-# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-# app.config['MAIL_PORT'] = 587
-# app.config['MAIL_USE_TLS'] = True
-# app.config['MAIL_USE_SSL'] = False
-# # app.config['MAIL_DEBUG'] = True
-# app.config['MAIL_USERNAME'] = 'groupbsoftwareengineering1166@gmail.com'
-# app.config['MAIL_PASSWORD'] = 'SoftwareEngineering1166'
-# app.config['MAIL_DEFAULT_SENDER'] = 'groupbsoftwareengineering1166@gmail.com'
-# app.config['MAIL_MAX_EMAILS'] = None
-# # app.config['MAIL_SUPPRESS_SEND'] = False  # comment out in production!
-# app.config['MAIL_ASCII_ATTACHMENTS'] = False
-#
-# mail = Mail(app)
-#
-#
-# def appointment_reminder():
-#     appointments = Schedules.query.all()
-#     users = User.query.all()
-#     today = date.today()
-#     with app.app_context():
-#         for x in appointments:
-#             diff = x.appointment_date - today
-#             for i in users:
-#                 if diff.days == 3 and i.user == x.user :
-#                     msg = Message('Appointment Reminder Notification', recipients=[i.email])
-#                     msg.html = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
-#                     mail.send(msg)
-#                 if diff.days < 1 and i.user == x.user :
-#                     msg = Message('Follow up for oil change appointment', recipients=[i.email])
-#                     msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
-#                                'and review your mechanic we would highly appreciate it.'
-#                     msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
-#                                'and review your mechanic we would highly appreciate it.' \
-#                                ' <a href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a>'
-#                     mail.send(msg)
-#
-#     return app
-#
-#
-# appointment_reminder()
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+# app.config['MAIL_DEBUG'] = True
+app.config['MAIL_USERNAME'] = 'groupbsoftwareengineering1166@gmail.com'
+app.config['MAIL_PASSWORD'] = 'SoftwareEngineering1166'
+app.config['MAIL_DEFAULT_SENDER'] = 'groupbsoftwareengineering1166@gmail.com'
+app.config['MAIL_MAX_EMAILS'] = None
+# app.config['MAIL_SUPPRESS_SEND'] = False  # comment out in production!
+app.config['MAIL_ASCII_ATTACHMENTS'] = False
+
+mail = Mail(app)
+
+
+def appointment_reminder():
+    appointments = Schedules.query.all()
+    users = User.query.all()
+    today = date.today()
+    with app.app_context():
+        for x in appointments:
+            diff = x.appointment_date - today
+            for i in users:
+                if diff.days == 3 and i.user == x.user :
+                    msg = Message('Appointment Reminder Notification', recipients=[i.email])
+                    msg.html = 'Hello, You have an appointment scheduled in 3 days. We hope to see you!'
+                    mail.send(msg)
+                if diff.days < 1 and i.user == x.user :
+                    msg = Message('Follow up for oil change appointment', recipients=[i.email])
+                    msg.body = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+                               'and review your mechanic we would highly appreciate it.'
+                    msg.html = 'Hello, I hope your appointment went well. If you could please take the brief survey ' \
+                               'and review your mechanic we would highly appreciate it.' \
+                               ' <a href="http://127.0.0.1:5000/review_appointment"> Click here to access review</a>'
+                    mail.send(msg)
+
+    return app
+
+
+appointment_reminder()
 
 
 @app.route('/')
@@ -168,6 +168,7 @@ def RegisterCar():
     if form.validate_on_submit():
         car = Car(user=current_user.user, car_vin=form.car_vin.data, make=form.make.data, model=form.model.data,
                   color=form.color.data, mileage=form.mileage.data, registration_date=form.registration_date.data)
+
         for x in cars:
             old = x.registration_date
             x.registration_date = old + timedelta(days=365)
@@ -436,45 +437,45 @@ def recommendations():
                            recommendations_made=recommendations_made)
 
 
-@app.route('/payment', methods=['POST'])
-def payment():
-    payment = paypalrestsdk.Payment({
-        "intent": "sale",
-        "payer": {
-            "payment_method": "paypal"},
-        "redirect_urls": {
-            "return_url": "http://localhost:3000/payment/execute",
-            "cancel_url": "http://localhost:3000/"},
-        "transactions": [{
-            "item_list": {
-                "items": [{
-                    "name": "Service",
-                    "sku": "12345",
-                    "price": "50.00",
-                    "currency": "USD",
-                    "quantity": 1}]},
-            "amount": {
-                "total": "50.00",
-                "currency": "USD"},
-            "description": "Payment Transaction For Service."}]})
+# @app.route('/payment', methods=['POST'])
+# def payment():
+#     payment = paypalrestsdk.Payment({
+#         "intent": "sale",
+#         "payer": {
+#             "payment_method": "paypal"},
+#         "redirect_urls": {
+#             "return_url": "http://localhost:3000/payment/execute",
+#             "cancel_url": "http://localhost:3000/"},
+#         "transactions": [{
+#             "item_list": {
+#                 "items": [{
+#                     "name": "Service",
+#                     "sku": "12345",
+#                     "price": "50.00",
+#                     "currency": "USD",
+#                     "quantity": 1}]},
+#             "amount": {
+#                 "total": "50.00",
+#                 "currency": "USD"},
+#             "description": "Payment Transaction For Service."}]})
+#
+#     if payment.create():
+#         print('Payment success!')
+#     else:
+#         print(payment.error)
+#
+#     return jsonify({'paymentID': payment.id})
 
-    if payment.create():
-        print('Payment success!')
-    else:
-        print(payment.error)
-
-    return jsonify({'paymentID': payment.id})
-
-
-@app.route('/execute', methods=['POST'])
-def execute():
-    success = False
-    payment = paypalrestsdk.Payment.find(request.form['paymentID'])
-
-    if payment.execute({'payer_id': request.form['payerID']}):
-        print('Execute success!')
-        success = True
-    else:
-        print(payment.error)
-
-    return jsonify({'success': success})
+#
+# @app.route('/execute', methods=['POST'])
+# def execute():
+#     success = False
+#     payment = paypalrestsdk.Payment.find(request.form['paymentID'])
+#
+#     if payment.execute({'payer_id': request.form['payerID']}):
+#         print('Execute success!')
+#         success = True
+#     else:
+#         print(payment.error)
+#
+#     return jsonify({'success': success})
